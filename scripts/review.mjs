@@ -1,32 +1,35 @@
 import { chromium } from 'playwright';
+import sharp from 'sharp';
 import { spawn } from 'node:child_process';
-import { mkdir, rm, readdir, writeFile, readFile, rename } from 'node:fs/promises';
-import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
+import { mkdir, rm, rename, writeFile, readFile } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
 
-// PNG -> Base64 plain-text chunks. Each chunk is kept small to make connector reads robust.
-// Exact reconstruction is checked using the SHA-256 of the ORIGINAL PNG bytes.
-const output = resolve('reviews');
+const mode = process.argv.includes('--quick') ? 'quick' : process.argv.includes('--full') ? 'full' : 'standard';
+const limits = {quick:5, standard:15, full:25};
 const staging = resolve('review-staging');
-const chunkChars = 24000; // divisible by 4, so concatenation recreates original Base64
+const output = resolve('reviews');
 const port = 4178;
 const url = `http://127.0.0.1:${port}`;
-await rm(staging, {recursive:true, force:true});
-await mkdir(staging, {recursive:true});
-const server = spawn('npm', ['run','dev','--','--host','127.0.0.1','--port',String(port),'--strictPort'], {
-  stdio:'ignore', detached: process.platform !== 'win32',
-});
-const sleep = ms => new Promise(done => setTimeout(done,ms));
+// Text fragments are capped to remain readable through the GitHub connector.
+const chunkChars = 48000;
+const quality = 86;
+await rm(staging, {recursive:true,force:true});
+await mkdir(staging,{recursive:true});
 let browser;
-let finished = false;
+let success = false;
+const server = spawn('npm',['run','dev','--','--host','127.0.0.1','--port',String(port),'--strictPort'], {
+  stdio:'ignore', detached:process.platform!=='win32',
+});
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
 try {
   let ready=false;
   for(let i=0;i<80;i++) {
-    if(server.exitCode !== null) break;
+    if(server.exitCode!==null)break;
     try {if((await fetch(url)).ok){ready=true;break;}}catch{}
     await sleep(250);
   }
-  if(!ready) throw Error('Vite indisponible sur le port 4178');
+  if(!ready)throw Error(`Serveur Vite inaccessible sur ${url}`);
   browser=await chromium.launch({headless:true});
   const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
   const errors=[];
@@ -36,58 +39,81 @@ try {
   await canvas.waitFor({state:'visible'});
   await page.locator('#reset').click();
   await page.waitForTimeout(600);
-  const manifest={version:1,format:'lossless PNG encoded as base64 chunks',chunkChars,images:[]};
+  const manifest={version:2,mode,format:'WebP lossy, encoded as Base64',quality,chunkChars,images:[]};
   async function capture(name) {
-    // Capture the actual rendered garden area, not the surrounding UI.
-    const box=await page.locator('#viewport').boundingBox();
-    if(!box || box.width<500 || box.height<350) throw Error('Viewport trop petit');
-    const filename=`${name}.png`;
-    const bytes=await page.locator('#viewport').screenshot({type:'png',animations:'disabled'});
-    const hash=createHash('sha256').update(bytes).digest('hex');
-    const encoded=bytes.toString('base64');
-    const count=Math.ceil(encoded.length/chunkChars);
+    const shot=await page.locator('#viewport').screenshot({type:'png',animations:'disabled'});
+    const bytes=await sharp(shot).webp({quality,effort:5}).toBuffer();
+    const file=`${name}.webp`;
+    const sha256=createHash('sha256').update(bytes).digest('hex');
+    const base64=bytes.toString('base64');
     const parts=[];
-    for(let i=0;i<count;i++){
-      const part=`${name}.part-${String(i+1).padStart(3,'0')}.b64`;
-      await writeFile(join(staging,part),encoded.slice(i*chunkChars,(i+1)*chunkChars),'ascii');
+    for(let at=0,i=1;at<base64.length;at+=chunkChars,i++){
+      const part=`${name}.part-${String(i).padStart(3,'0')}.b64`;
+      await writeFile(join(staging,part),base64.slice(at,at+chunkChars),'ascii');
       parts.push(part);
     }
-    await writeFile(join(staging,filename),bytes);
-    manifest.images.push({file:filename,sha256:hash,bytes:bytes.length,parts});
-    console.log(`${filename}: ${bytes.length} octets, ${count} fragments, SHA256 ${hash.slice(0,12)}…`);
+    // Verify reconstruction locally before publishing.
+    const reconstructed=Buffer.from((await Promise.all(parts.map(p=>readFile(join(staging,p),'ascii')))).join(''),'base64');
+    if(!bytes.equals(reconstructed))throw Error(`Reconstruction Base64 incorrecte : ${file}`);
+    await writeFile(join(staging,file),bytes);
+    manifest.images.push({file,bytes:bytes.length,sha256,parts});
+    console.log(`✓ ${file}: ${(bytes.length/1024).toFixed(0)} Kio, ${parts.length} fragments`);
   }
-  async function orbit(fromX,fromY,dx,dy){
+  async function orbit(dx,dy){
     const box=await canvas.boundingBox();
     if(!box)throw Error('Canvas inaccessible');
-    const x=box.x+box.width*fromX,y=box.y+box.height*fromY;
-    await page.mouse.move(x,y);
-    await page.mouse.down();
-    await page.mouse.move(x+dx,y+dy,{steps:12});
-    await page.mouse.up();
-    await page.waitForTimeout(400);
+    const x=box.x+box.width*.5,y=box.y+box.height*.5;
+    await page.mouse.move(x,y);await page.mouse.down();
+    await page.mouse.move(x+dx,y+dy,{steps:14});await page.mouse.up();
+    await page.waitForTimeout(280);
   }
-  await capture('01-default');
-  await orbit(.5,.5,230,-45);
-  await capture('02-left-angle');
-  await orbit(.5,.5,-430,30);
-  await capture('03-right-angle');
-  await page.locator('#home').click();
-  await orbit(.5,.5,0,115);
-  await capture('04-high-angle');
-  await page.locator('#home').click();
-  await page.locator('#density').click();
-  await page.waitForTimeout(850);
-  await capture('05-dense');
-  if(errors.length)throw Error(`Erreurs navigateur: ${errors.join(' ; ')}`);
+  async function zoom(steps){
+    const box=await canvas.boundingBox();if(!box)throw Error('Canvas inaccessible');
+    await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);
+    for(let i=0;i<Math.abs(steps);i++)await page.mouse.wheel(0,steps>0?-100:100);
+    await page.waitForTimeout(300);
+  }
+  async function home(){await page.locator('#home').click();await page.waitForTimeout(200);}
+  const shots = [
+    ['01-overview',async()=>home()],
+    ['02-angle-left',async()=>{await home();await orbit(205,-15)}],
+    ['03-angle-right',async()=>{await home();await orbit(-210,0)}],
+    ['04-overhead',async()=>{await home();await orbit(0,110)}],
+    ['05-close-overview',async()=>{await home();await zoom(3)}],
+    ['06-tree-canopy',async()=>{await home();await orbit(-80,-15);await zoom(5)}],
+    ['07-tree-profile',async()=>{await home();await orbit(250,-60);await zoom(5)}],
+    ['08-conifer',async()=>{await home();await orbit(-160,-35);await zoom(4)}],
+    ['09-shrubs',async()=>{await home();await orbit(110,20);await zoom(4)}],
+    ['10-wildflowers',async()=>{await home();await orbit(-40,75);await zoom(5)}],
+    ['11-water',async()=>{await home();await orbit(60,65);await zoom(5)}],
+    ['12-path',async()=>{await home();await orbit(-100,55);await zoom(4)}],
+    ['13-dense-overview',async()=>{await page.locator('#density').click();await home()}],
+    ['14-dense-angle',async()=>{await home();await orbit(235,-10)}],
+    ['15-dense-close',async()=>{await home();await zoom(4)}],
+    ['16-dense-overhead',async()=>{await home();await orbit(0,100)}],
+    ['17-dense-profile',async()=>{await home();await orbit(-230,-60)}],
+    ['18-dense-alt',async()=>{await home();await orbit(135,40)}],
+    ['19-dense-zoom',async()=>{await home();await orbit(100,60);await zoom(5)}],
+    ['20-dense-isometric',async()=>{await home();await orbit(-80,-20)}],
+    ['21-light-reverse',async()=>{await page.locator('#density').click();await home();await orbit(390,0)}],
+    ['22-light-low-angle',async()=>{await home();await orbit(120,-100)}],
+    ['23-light-close-alt',async()=>{await home();await orbit(-240,-35);await zoom(5)}],
+    ['24-light-high-alt',async()=>{await home();await orbit(160,115)}],
+    ['25-light-final',async()=>home()],
+  ];
+  for(const [name,setup] of shots.slice(0,limits[mode])){
+    await setup();await page.waitForTimeout(160);await capture(name);
+  }
+  if(errors.length)throw Error(`Erreurs JavaScript : ${errors.join(' ; ')}`);
   await writeFile(join(staging,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
-  // Only replace the previous review once all 5 captures have succeeded.
+  // Previous review is only replaced if all captures completed.
   await rm(output,{recursive:true,force:true});
   await rename(staging,output);
-  finished=true;
-  console.log('✓ 5 PNG + fichiers Base64 fragmentés + manifest SHA256 dans reviews/');
+  success=true;
+  console.log(`✓ Revue ${mode} : ${manifest.images.length} captures WebP publiables dans reviews/`);
 } finally {
   await browser?.close();
   if(process.platform==='win32')server.kill();
-  else {try{process.kill(-server.pid,'SIGTERM');}catch{server.kill();}}
-  if(!finished)await rm(staging,{recursive:true,force:true});
+  else {try{process.kill(-server.pid,'SIGTERM')}catch{server.kill();}}
+  if(!success)await rm(staging,{recursive:true,force:true});
 }
