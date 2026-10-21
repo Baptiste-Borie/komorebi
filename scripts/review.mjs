@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
-import { spawn, execFileSync } from 'node:child_process';
-import { mkdir, readdir, rm } from 'node:fs/promises';
+import { spawn } from 'node:child_process';
+import { mkdir, readdir, rm, rename } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const reviewsDir = resolve('reviews');
@@ -8,11 +8,6 @@ const tempDir = resolve('review-temp');
 await mkdir(reviewsDir, { recursive: true });
 await rm(tempDir, { recursive: true, force: true });
 await mkdir(tempDir, { recursive: true });
-const existing = await readdir(reviewsDir);
-const numbers = existing.map(name => /^komorebi-review-(\d+)\.zip$/.exec(name)?.[1])
-  .filter(Boolean).map(Number);
-const sequence = String(Math.max(0, ...numbers) + 1).padStart(3, '0');
-const archive = resolve(reviewsDir, `komorebi-review-${sequence}.zip`);
 const port = 4178;
 const server = spawn('npm', ['run', 'dev', '--', '--host', '127.0.0.1', '--port', String(port), '--strictPort'], {
   stdio: 'ignore', detached: process.platform !== 'win32',
@@ -56,8 +51,14 @@ try {
   await page.locator('#reset').click();
   if (errors.length) throw new Error(`Erreurs dans le navigateur : ${errors.join(' ; ')}`);
   const screenshots = (await readdir(tempDir)).filter(file => file.endsWith('.png')).sort();
-  execFileSync('zip', ['-q', '-j', archive, ...screenshots.map(file => resolve(tempDir, file))]);
-  console.log(`Revue créée : reviews/komorebi-review-${sequence}.zip (${screenshots.length} captures)`);
+  if (screenshots.length !== 2) throw new Error(`Deux captures attendues, ${screenshots.length} obtenues`);
+  for (const file of await readdir(reviewsDir)) {
+    if (file.endsWith('.png') || /^komorebi-review-\d+\.zip$/.test(file)) {
+      await rm(resolve(reviewsDir, file), { force: true });
+    }
+  }
+  for (const file of screenshots) await rename(resolve(tempDir, file), resolve(reviewsDir, file));
+  console.log(`Revue créée : reviews/ (${screenshots.join(', ')})`);
 } finally {
   await browser?.close();
   if (process.platform === 'win32') server.kill();
