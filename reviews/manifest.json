@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "format": "lossless PNG encoded as base64 chunks",
+  "chunkChars": 24000,
+  "images": [
+    {
+      "file": "01-default.png",
+      "sha256": "fb51486d41a706072bae5ce39f4430da86499030f7af46c0e3bf1ad023c1e644",
+      "bytes": 168803,
+      "parts": [
+        "01-default.part-001.b64",
+        "01-default.part-002.b64",
+        "01-default.part-003.b64",
+        "01-default.part-004.b64",
+        "01-default.part-005.b64",
+        "01-default.part-006.b64",
+        "01-default.part-007.b64",
+        "01-default.part-008.b64",
+        "01-default.part-009.b64",
+        "01-default.part-010.b64"
+      ]
+    },
+    {
+      "file": "02-left-angle.png",
+      "sha256": "1b4194812d0edd8eac6c58890dbd4b04cbbd6dbc1001642dd4f54818fa9d0c7c",
+      "bytes": 146071,
+      "parts": [
+        "02-left-angle.part-001.b64",
+        "02-left-angle.part-002.b64",
+        "02-left-angle.part-003.b64",
+        "02-left-angle.part-004.b64",
+        "02-left-angle.part-005.b64",
+        "02-left-angle.part-006.b64",
+        "02-left-angle.part-007.b64",
+        "02-left-angle.part-008.b64",
+        "02-left-angle.part-009.b64"
+      ]
+    },
+    {
+      "file": "03-right-angle.png",
+      "sha256": "b67cd4f60e24ce81a85f636ec8d419c16b98b13431e1a9925f7d04ee452023f3",
+      "bytes": 165115,
+      "parts": [
+        "03-right-angle.part-001.b64",
+        "03-right-angle.part-002.b64",
+        "03-right-angle.part-003.b64",
+        "03-right-angle.part-004.b64",
+        "03-right-angle.part-005.b64",
+        "03-right-angle.part-006.b64",
+        "03-right-angle.part-007.b64",
+        "03-right-angle.part-008.b64",
+        "03-right-angle.part-009.b64",
+        "03-right-angle.part-010.b64"
+      ]
+    },
+    {
+      "file": "04-high-angle.png",
+      "sha256": "1e288b7d57979fe7e2941bbd895ea45b61f2761261b3cc1d260685b35fb7fdb4",
+      "bytes": 168649,
+      "parts": [
+        "04-high-angle.part-001.b64",
+        "04-high-angle.part-002.b64",
+        "04-high-angle.part-003.b64",
+        "04-high-angle.part-004.b64",
+        "04-high-angle.part-005.b64",
+        "04-high-angle.part-006.b64",
+        "04-high-angle.part-007.b64",
+        "04-high-angle.part-008.b64",
+        "04-high-angle.part-009.b64",
+        "04-high-angle.part-010.b64"
+      ]
+    },
+    {
+      "file": "05-dense.png",
+      "sha256": "c8abd5d651921be2e6223ed06433a760960949ea985508b493739cc2c4faa3af",
+      "bytes": 247491,
+      "parts": [
+        "05-dense.part-001.b64",
+        "05-dense.part-002.b64",
+        "05-dense.part-003.b64",
+        "05-dense.part-004.b64",
+        "05-dense.part-005.b64",
+        "05-dense.part-006.b64",
+        "05-dense.part-007.b64",
+        "05-dense.part-008.b64",
+        "05-dense.part-009.b64",
+        "05-dense.part-010.b64",
+        "05-dense.part-011.b64",
+        "05-dense.part-012.b64",
+        "05-dense.part-013.b64",
+        "05-dense.part-014.b64"
+      ]
+    }
+  ]
+}
