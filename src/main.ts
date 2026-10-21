@@ -7,8 +7,8 @@ type Kind = 'tree'|'sapling'|'bush'|'flower'|'rock'|'pond';
 type Plant = {id:number;kind:Kind;x:number;z:number;seed:number};
 const storageKey = 'komorebi-lab-v1';
 const seedGarden: Plant[] = [
-  {id:1,kind:'tree',x:-2.7,z:-2.0,seed:1},{id:2,kind:'tree',x:2.7,z:1.2,seed:2},
-  {id:3,kind:'sapling',x:0.1,z:-2.9,seed:3},{id:4,kind:'sapling',x:3.3,z:-2.6,seed:4},
+  {id:1,kind:'tree',x:-2.7,z:-2.0,seed:4},{id:2,kind:'tree',x:2.7,z:1.2,seed:5},
+  {id:3,kind:'sapling',x:0.1,z:-2.9,seed:6},{id:4,kind:'sapling',x:3.3,z:-2.6,seed:7},
   {id:5,kind:'bush',x:-3,z:1,seed:5},{id:6,kind:'bush',x:1.7,z:-1.8,seed:6},
   {id:7,kind:'bush',x:3.2,z:2.8,seed:7},{id:8,kind:'flower',x:-1.2,z:2.1,seed:8},
   {id:9,kind:'flower',x:0.8,z:2.8,seed:9},{id:10,kind:'flower',x:-3.6,z:3,seed:10},
@@ -111,20 +111,64 @@ function buildPlant(p:Plant){
  const g=new THREE.Group();g.position.set(p.x,groundHeight(p.x,p.z),p.z);g.userData.id=p.id;
  const r=(n:number)=>rand(p.seed,n);
  if(p.kind==='tree'||p.kind==='sapling'){
-  const young=p.kind==='sapling';const scale=young?.6:1;g.scale.setScalar(scale);
-  const species=p.seed%4;const h=species===2?2.25:1.9;
-  const lean=(r(1)-.5)*.24;
-  tapered(g,new THREE.Vector3(0,0,0),new THREE.Vector3(lean,h,0),.22,.105,species===1?0xc1b59b:0x796249,7);
-  if(species===2){ // conifer: distinct layered silhouette
-   for(let i=0;i<3;i++){foliage(g,lean,h-.17+i*.55,0,.99-i*.2,p.seed+i,'cone');}
-  } else if(species===1){ // silver birch, airy foliage and light trunk
-   for(let i=0;i<5;i++){const a=i*2.39;const x=Math.cos(a)*(.56+r(i)*.15),z=Math.sin(a)*(.46+r(i+10)*.12);tapered(g,new THREE.Vector3(lean,h*.56,0),new THREE.Vector3(x,h+(.2+r(i+20)*.45),z),.085,.025,0xa99e85,5);foliage(g,x,h+.18+r(i+20)*.45,z,.55,p.seed+i);}
-   foliage(g,lean,h+.75,0,.64,p.seed+11);
-  } else if(species===3){ // slender cypress / tall column
-   for(let i=0;i<4;i++){const crown=shape(g,new THREE.IcosahedronGeometry(.64-i*.085,1),green[i%green.length],lean,h*.66+i*.47,0);crown.scale.set(.75,1.06,.75);}
-  } else { // mature broadleaf tree
-   for(let i=0;i<6;i++){const a=i*Math.PI*2/6;const x=lean+Math.cos(a)*.62,z=Math.sin(a)*.55; tapered(g,new THREE.Vector3(lean,h*.67,0),new THREE.Vector3(x,h+.28,z),.085,.03,0x806749,5);foliage(g,x,h+.42+(i%2)*.2,z,.72,p.seed+i);}
-   foliage(g,lean,h+.89,0,.78,p.seed+9);
+  const young=p.kind==='sapling';
+  g.scale.setScalar(young?.62:1);
+  const species=p.seed%4;
+  const lean=(r(1)-.5)*.16;
+  const trunk=species===1?0xc9c2ac:species===2?0x6f624c:0x796448;
+  const v=(x:number,y:number,z:number)=>new THREE.Vector3(x,y,z);
+  if(species===0){ // Oak-like spreading crown: broad, layered, asymmetrical.
+   tapered(g,v(0,0,0),v(lean,1.65,0),.26,.13,trunk,7);
+   for(let i=0;i<7;i++){
+    const a=i*2.399,reach=.75+r(10+i)*.45;
+    const x=lean+Math.cos(a)*reach,z=Math.sin(a)*reach*.87;
+    const top=2.05+r(20+i)*.32;
+    tapered(g,v(lean,1.15,0),v(x,top-.20,z),.095,.025,trunk,5);
+    const c=shape(g,new THREE.IcosahedronGeometry(.64+r(30+i)*.21,1),
+      [0x426e43,0x59834a,0x779b55,0x90a963][i%4],x,top,z);
+    c.scale.set(1.16,.67+r(i+36)*.13,1.01);c.rotation.y=a;
+   }
+   const cap=shape(g,new THREE.IcosahedronGeometry(.89,1),0x608a4c,lean,2.43,0);
+   cap.scale.set(1.3,.58,1.17);
+  }else if(species===1){ // Birch: visible light trunk and separate airy sprays.
+   tapered(g,v(0,0,0),v(lean,2.7,0),.16,.065,trunk,7);
+   for(let i=0;i<4;i++){
+    const a=i*2.4,reach=.50+r(50+i)*.33;
+    const x=lean+Math.cos(a)*reach,z=Math.sin(a)*reach*.85;
+    const h=1.62+i*.28;
+    tapered(g,v(lean,h-.53,0),v(x,h+.27,z),.055,.012,0x9e9682,5);
+    const crown=shape(g,new THREE.IcosahedronGeometry(.49+r(i+60)*.14,1),
+      [0x86a968,0x9bb875,0x719954,0xacc18a][i],x,h+.32,z);
+    crown.scale.set(.72,1.28,.75);
+   }
+   const top=shape(g,new THREE.IcosahedronGeometry(.53,1),0x91b06e,lean,2.75,0);
+   top.scale.set(.70,1.25,.72);
+   for(let i=0;i<4;i++){
+    const bark=shape(g,new THREE.BoxGeometry(.15,.035,.025),0x827e71,
+      lean+(i%2?-.025:.03),.44+i*.45,.12);
+    bark.castShadow=false;
+   }
+  }else if(species===2){ // Pine: staggered conical whorls with the trunk below.
+   tapered(g,v(0,0,0),v(lean,3.12,0),.22,.045,trunk,7);
+   for(let i=0;i<4;i++){
+    const y=1.17+i*.51;
+    const tier=shape(g,new THREE.ConeGeometry(1.08-i*.19,.98,7,1),
+      [0x345f43,0x416e48,0x507c4a,0x638c53][i],lean,y,0);
+    tier.scale.z=.89;
+    tier.rotation.y=.24+i*.22;
+   }
+   const tip=shape(g,new THREE.ConeGeometry(.30,.65,7),0x628a52,lean,3.04,0);
+   tip.rotation.y=.3;
+  }else{ // Cypress: slender, tall and clustered but not a green column.
+   tapered(g,v(0,0,0),v(lean,3.04,0),.14,.038,trunk,6);
+   for(let i=0;i<5;i++){
+    const y=.94+i*.46;
+    const crown=shape(g,new THREE.IcosahedronGeometry(.38-i*.024,1),
+      [0x2f6044,0x3b7047,0x457a49,0x4e8250,0x628b55][i],lean,y,0);
+    crown.scale.set(.83,1.30,.78);
+   }
+   const tip=shape(g,new THREE.ConeGeometry(.20,.57,7),0x53864f,lean,3.14,0);
+   tip.rotation.y=.33;
   }
  }
  if(p.kind==='bush'){
