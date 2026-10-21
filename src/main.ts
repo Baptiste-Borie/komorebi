@@ -45,7 +45,7 @@ const ico:Record<Kind,string>={tree:'♠',sapling:'♣',bush:'✿',flower:'✳',
 function load(){try{const v=JSON.parse(localStorage.getItem(storageKey)||'null'); if(Array.isArray(v)&&v.every(p=>typeof p.id==='number'&&typeof p.kind==='string'&&typeof p.x==='number'&&typeof p.z==='number'))return v as Plant[];}catch{}return seedGarden.map(p=>({...p}));}
 function save(){localStorage.setItem(storageKey,JSON.stringify(plants));}
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main class="garden-shell"><div id="viewport" class="viewport"><div id="scene"></div></div><nav class="hud hud-top"><div class="wordmark">木 <strong>Komorebi</strong></div><div class="hud-actions"><button id="home" title="Recentrer">⌖</button><button id="density" title="Basculer la densité">♧</button><button id="focus" title="Masquer les commandes">◱</button><button id="menu-toggle" title="Ouvrir le menu">☰</button></div></nav><section id="build-panel" class="build-panel" aria-label="Outils du jardin"><div class="panel-top"><span>Construire</span><button id="erase" title="Supprimer un élément">✕ Effacer</button></div><div id="tools" class="tools"></div></section><aside id="menu-panel" class="menu-panel" hidden><h2>Komorebi</h2><p>Un jardin à composer librement.</p><button id="reset">↺ Restaurer le jardin</button><div id="counter"></div><div id="fps"></div><small id="scene-title">01 — Low-poly</small><p id="scene-description">Jardin miniature</p><small id="hint">Glisser : rotation · Molette : zoom · Clic : planter</small></aside><button id="build-toggle" class="build-toggle" title="Afficher les outils">✿</button></main>`;
+app.innerHTML=`<main class="garden-shell"><div id="viewport" class="viewport"><div id="scene"></div></div><nav class="hud hud-top"><div class="wordmark">木 <strong>Komorebi</strong></div><div class="hud-actions"><button id="home" title="Recentrer">⌖</button><button id="botany-open" title="Atelier botanique" aria-label="Ouvrir l’atelier botanique">✿</button><button id="density" title="Basculer la densité">♧</button><button id="focus" title="Masquer les commandes">◱</button><button id="menu-toggle" title="Ouvrir le menu">☰</button></div></nav><section id="build-panel" class="build-panel" aria-label="Outils du jardin"><div class="panel-top"><span>Construire</span><button id="erase" title="Supprimer un élément">✕ Effacer</button></div><div id="tools" class="tools"></div></section><aside id="menu-panel" class="menu-panel" hidden><h2>Komorebi</h2><p>Un jardin à composer librement.</p><button id="reset">↺ Restaurer le jardin</button><div id="counter"></div><div id="fps"></div><small id="scene-title">01 — Low-poly</small><p id="scene-description">Jardin miniature</p><small id="hint">Glisser : rotation · Molette : zoom · Clic : planter</small></aside><section id="botany" class="botany" hidden aria-label="Atelier botanique"><div class="botany-shell"><header class="botany-top"><div><small>ATELIER BOTANIQUE · ÉTUDE 01</small><h2>Les espèces du jardin</h2><p>Observer les formes, comparer les variantes, puis retourner composer.</p></div><button id="botany-close" title="Retourner au jardin">✕ &nbsp; Retour au jardin</button></header><div class="botany-body"><aside class="botany-list" id="botany-list"></aside><div class="botany-view"><div id="botany-canvas" class="botany-canvas"></div><div class="botany-variants" id="botany-variants"></div><div class="botany-help">Glisser pour tourner · Molette pour zoomer</div></div><aside class="botany-card"><small>FICHE D’ESPÈCE</small><h3 id="botany-name"></h3><p id="botany-desc"></p><div id="botany-facts"></div><button id="botany-plant">Choisir pour le jardin ↗</button><small>Étude visuelle · aucune progression ni ressource</small></aside></div></div></section><button id="build-toggle" class="build-toggle" title="Afficher les outils">✿</button></main>`;
 const viewport=app.querySelector<HTMLDivElement>('#scene')!;
 const tools=app.querySelector<HTMLDivElement>('#tools')!;
 app.querySelector<HTMLButtonElement>('#menu-toggle')!.onclick=()=>{
@@ -363,7 +363,7 @@ function addLandscape(world:THREE.Scene){
   stone.scale.set(1,.45,1.2);stone.rotation.y=rand(i,34)*6.28;stone.castShadow=false;
  }world.add(pebbles);
 }
-function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.28;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#dfe8dc');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xfff9ec,0x83816c,1.95));const sun=new THREE.DirectionalLight(0xfff4da,1.65);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=5;sun.shadow.blurSamples=8;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
+function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.34;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#e9e9d8');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xfff4d5,0x8d8866,2.02));const sun=new THREE.DirectionalLight(0xffedbf,1.65);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=5;sun.shadow.blurSamples=8;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
 function refreshPlants3d(){if(!objects)return;while(objects.children.length){const child=objects.children[0];objects.remove(child);child.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh){obj.geometry.dispose();/* shared materials are cached; only geometry is per object */}});}if(land){const geo=land.geometry;const position=geo.getAttribute('position');
  for(let i=0;i<position.count;i++)position.setY(i,groundHeight(position.getX(i),position.getZ(i)));
  position.needsUpdate=true;geo.computeVertexNormals();}
@@ -422,4 +422,70 @@ app.querySelector<HTMLButtonElement>('#density')!.onclick=()=>{dense=!dense;if(d
   if(Math.hypot(x-.65,z+.45)<1.65)continue;
   plants.push({id:nextId++,kind,x,z,seed:i+100});
  }}else{plants=plants.filter(p=>p.seed<100);}changed();};
+// Botanical workshop: isolated renderer, same procedural plant builders as the garden.
+// Species records specify the seed family; variations change only the procedural seed.
+type SpeciesRecord={id:string;name:string;group:string;kind:Kind;family:number;description:string;habitat:string};
+const speciesCatalog:SpeciesRecord[]=[
+ {id:'oak',name:'Chêne',group:'Arbres',kind:'tree',family:0,description:'Large houppier asymétrique et branches étalées. Une silhouette qui structure le jardin.',habitat:'Boisement · mi-ombre'},
+ {id:'birch',name:'Bouleau',group:'Arbres',kind:'tree',family:1,description:'Tronc clair, feuillage léger et couronne plus aérée.',habitat:'Lisière · soleil'},
+ {id:'pine',name:'Conifère',group:'Arbres',kind:'tree',family:2,description:'Une silhouette verticale et persistante, plus graphique que les feuillus.',habitat:'Sol drainé · soleil'},
+ {id:'cypress',name:'Cyprès',group:'Arbres',kind:'tree',family:3,description:'Une ponctuation étroite et élancée pour rythmer la composition.',habitat:'Sol drainé · soleil'},
+ {id:'young',name:'Jeune arbre',group:'Arbres',kind:'sapling',family:1,description:'Une déclinaison plus petite des arbres, parfaite en bordure de bosquet.',habitat:'Lisière'},
+ {id:'shrub',name:'Arbuste',group:'Sous-bois',kind:'bush',family:0,description:'Masses arrondies et feuillage dense pour relier arbres et prairie.',habitat:'Lisière · sous-bois'},
+ {id:'flower',name:'Fleurs sauvages',group:'Prairie',kind:'flower',family:0,description:'Petites floraisons claires rassemblées en touffes naturelles.',habitat:'Prairie · soleil'},
+ {id:'rock',name:'Roche',group:'Minéraux',kind:'rock',family:0,description:'Pierre facettée aux volumes simples et aux teintes minérales.',habitat:'Partout'},
+ {id:'pond',name:'Mare',group:'Eau',kind:'pond',family:0,description:'Une surface d’eau calme aux berges irrégulières.',habitat:'Terrain humide'},
+];
+const botanyPanel=app.querySelector<HTMLElement>('#botany')!;
+const botanicalList=app.querySelector<HTMLElement>('#botany-list')!;
+const variantBar=app.querySelector<HTMLElement>('#botany-variants')!;
+let botanicalSpecies=speciesCatalog[0],botanicalVariant=0;
+let botanicalRenderer:THREE.WebGLRenderer|undefined,botanicalScene:THREE.Scene|undefined,botanicalCamera:THREE.PerspectiveCamera|undefined,botanicalGroup:THREE.Group|undefined;
+let botanicalAzimuth=.66, botanicalElevation=.36, botanicalDistance=6.8,botanicalFrame=0,botanicalDrag=false,botanicalX=0,botanicalY=0;
+const botanicalTarget=app.querySelector<HTMLElement>('#botany-canvas')!;
+function botanicalSeed(species:SpeciesRecord,variant:number){return (variant*16+4+species.family)%256;}
+function updateBotanicalCamera(){if(!botanicalCamera)return;botanicalCamera.position.set(Math.sin(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance,Math.sin(botanicalElevation)*botanicalDistance+1,Math.cos(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance);botanicalCamera.lookAt(0,1,0);}
+function resizeBotanical(){if(!botanicalRenderer||!botanicalCamera)return;const w=botanicalTarget.clientWidth,h=botanicalTarget.clientHeight;if(w<2||h<2)return;botanicalRenderer.setSize(w,h,false);botanicalCamera.aspect=w/h;botanicalCamera.updateProjectionMatrix();}
+function renderBotanical(){if(!botanicalRenderer||!botanicalScene||!botanicalCamera)return;botanicalRenderer.render(botanicalScene,botanicalCamera);botanicalFrame=requestAnimationFrame(renderBotanical);}
+function selectBotanical(species:SpeciesRecord,variant=0){
+ botanicalSpecies=species;botanicalVariant=variant;
+ app.querySelector('#botany-name')!.textContent=species.name;
+ app.querySelector('#botany-desc')!.textContent=species.description;
+ app.querySelector('#botany-facts')!.textContent=`${species.group} · ${species.habitat}`;
+ botanicalList.innerHTML=speciesCatalog.map(entry=>`<button data-species="${entry.id}" class="${entry.id===species.id?'active':''}">${entry.name}<span>${entry.group}</span></button>`).join('');
+ botanicalList.querySelectorAll<HTMLButtonElement>('[data-species]').forEach(b=>b.onclick=()=>selectBotanical(speciesCatalog.find(entry=>entry.id===b.dataset.species)!,0));
+ variantBar.innerHTML=Array.from({length:6},(_,i)=>`<button data-variant="${i}" class="${i===variant?'active':''}">Variante ${String(i+1).padStart(2,'0')}</button>`).join('');
+ variantBar.querySelectorAll<HTMLButtonElement>('[data-variant]').forEach(b=>b.onclick=()=>selectBotanical(species,Number(b.dataset.variant)));
+ if(!botanicalScene)return;
+ if(botanicalGroup){botanicalScene.remove(botanicalGroup);botanicalGroup.traverse(o=>{if(o instanceof THREE.Mesh)o.geometry.dispose();});}
+ botanicalGroup=buildPlant({id:-1,kind:species.kind,x:0,z:0,seed:botanicalSeed(species,variant)});
+ // Plant builders use garden coordinates; normalize them to the studio plinth.
+ botanicalGroup.position.set(0,.12,0);botanicalScene.add(botanicalGroup);
+}
+function openBotanical(){
+ botanyPanel.hidden=false;
+ document.body.classList.add('botany-open');
+ if(!botanicalRenderer){
+  botanicalRenderer=new THREE.WebGLRenderer({antialias:true,alpha:true});botanicalRenderer.setPixelRatio(Math.min(devicePixelRatio,1.5));botanicalRenderer.outputColorSpace=THREE.SRGBColorSpace;botanicalRenderer.toneMapping=THREE.ACESFilmicToneMapping;botanicalRenderer.toneMappingExposure=1.35;botanicalRenderer.shadowMap.enabled=true;botanicalRenderer.shadowMap.type=THREE.PCFSoftShadowMap;botanicalTarget.append(botanicalRenderer.domElement);
+  botanicalScene=new THREE.Scene();botanicalScene.background=new THREE.Color('#eef0de');
+  botanicalCamera=new THREE.PerspectiveCamera(36,1,.1,100);
+  botanicalScene.add(new THREE.HemisphereLight(0xfff3d8,0x89937b,2.2));
+  const light=new THREE.DirectionalLight(0xffecc6,2.7);light.position.set(-4,8,6);light.castShadow=true;botanicalScene.add(light);
+  const plinth=new THREE.Mesh(new THREE.CylinderGeometry(1.85,1.96,.23,48),new THREE.MeshStandardMaterial({color:0xdbdfc3,roughness:1}));plinth.position.y=-.14;botanicalScene.add(plinth);
+  const floor=new THREE.Mesh(new THREE.CircleGeometry(2.0,64),new THREE.MeshStandardMaterial({color:0xa5bd86,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=.005;botanicalScene.add(floor);
+  const canvas=botanicalRenderer.domElement;canvas.style.touchAction='none';
+  canvas.addEventListener('pointerdown',e=>{botanicalDrag=true;botanicalX=e.clientX;botanicalY=e.clientY;canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointerup',()=>botanicalDrag=false);
+  canvas.addEventListener('pointermove',e=>{if(!botanicalDrag)return;botanicalAzimuth+=(e.clientX-botanicalX)*.008;botanicalElevation=THREE.MathUtils.clamp(botanicalElevation+(e.clientY-botanicalY)*.006,-.15,1.3);botanicalX=e.clientX;botanicalY=e.clientY;updateBotanicalCamera();});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();botanicalDistance=THREE.MathUtils.clamp(botanicalDistance+Math.sign(e.deltaY)*.5,3.6,11);updateBotanicalCamera();},{passive:false});
+ }
+ resizeBotanical();updateBotanicalCamera();selectBotanical(botanicalSpecies,botanicalVariant);cancelAnimationFrame(botanicalFrame);renderBotanical();
+}
+function closeBotanical(){botanyPanel.hidden=true;document.body.classList.remove('botany-open');cancelAnimationFrame(botanicalFrame);}
+app.querySelector<HTMLButtonElement>('#botany-open')!.onclick=openBotanical;
+app.querySelector<HTMLButtonElement>('#botany-close')!.onclick=closeBotanical;
+app.querySelector<HTMLButtonElement>('#botany-plant')!.onclick=()=>{selected=botanicalSpecies.kind;deleting=false;closeBotanical();refreshUI();};
+window.addEventListener('resize',()=>{if(!botanyPanel.hidden)resizeBotanical();});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!botanyPanel.hidden)closeBotanical();});
+
 window.addEventListener('resize',resize);init3d();refreshUI();

@@ -106,6 +106,23 @@ try {
   for(const [name,setup] of shots.slice(0,limits[mode])){
     await setup();await page.waitForTimeout(160);await capture(name);
   }
+  // Botanical workshop snapshots: capture the whole application, not only the garden viewport.
+  await page.locator('#botany-open').click();
+  await page.waitForTimeout(400);
+  for(const [id,name] of [['oak','botany-oak'],['pine','botany-conifer'],['flower','botany-flowers'],['shrub','botany-shrub']]){
+    await page.locator(`[data-species="${id}"]`).click();
+    await page.waitForTimeout(240);
+    const raw=await page.screenshot({type:'png',animations:'disabled'});
+    const bytes=await sharp(raw).webp({quality,effort:5}).toBuffer();
+    const base64=bytes.toString('base64'),parts=[];
+    for(let at=0,i=1;at<base64.length;at+=chunkChars,i++){
+      const part=`${name}.part-${String(i).padStart(3,'0')}.b64`;
+      await writeFile(join(staging,part),base64.slice(at,at+chunkChars),'ascii');parts.push(part);
+    }
+    await writeFile(join(staging,`${name}.webp`),bytes);
+    manifest.images.push({file:`${name}.webp`,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),parts});
+  }
+  await page.locator('#botany-close').click();
   if(errors.length)throw Error(`Erreurs JavaScript : ${errors.join(' ; ')}`);
   await writeFile(join(staging,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   // Previous review is only replaced if all captures completed.
