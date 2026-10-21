@@ -468,7 +468,7 @@ function selectBotanical(species:SpeciesRecord,variant=0){
  // Plant builders use garden coordinates; normalize them to the studio plinth.
  botanicalGroup.position.set(0,.12,0);
  // Visual scale is independent of world scale: compare silhouettes comfortably.
- const previewScale=species.kind==='flower'?2.5:species.kind==='bush'?1.8:species.kind==='rock'?1.6:species.kind==='fern'?2.3:species.kind==='pond'?1.15:1;
+ const previewScale=species.kind==='flower'?1.7:species.kind==='bush'?1.15:species.kind==='rock'?1.25:species.kind==='fern'?2.05:species.kind==='pond'?1.15:1;
  botanicalGroup.scale.multiplyScalar(previewScale);
  botanicalScene.add(botanicalGroup);
  const bounds=new THREE.Box3().setFromObject(botanicalGroup);
@@ -476,7 +476,7 @@ function selectBotanical(species:SpeciesRecord,variant=0){
   const size=bounds.getSize(new THREE.Vector3());
   const center=bounds.getCenter(new THREE.Vector3());
   botanicalAimY=species.kind==='pond' ? 0.2 : Math.max(.45,center.y*.80);
-  botanicalDistance=THREE.MathUtils.clamp(Math.max(size.y*1.6,size.x*1.8,4.0),4,11);
+  botanicalDistance=THREE.MathUtils.clamp(Math.max(size.y*1.75,size.x*2.15,4.6),4.6,13);
   botanicalElevation=.33;updateBotanicalCamera();
  }
 }

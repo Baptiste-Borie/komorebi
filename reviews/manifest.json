@@ -142,25 +142,24 @@
     },
     {
       "file": "botany-oak.webp",
-      "bytes": 37546,
-      "sha256": "815cb1605251733adcca054362df143885a0f4fe171332fda040f2a2bbae8bf6",
+      "bytes": 35602,
+      "sha256": "51109c73921fb520cc599df7c6c70f7d137954b87ced653aa27ffee70723855c",
       "parts": [
-        "botany-oak.part-001.b64",
-        "botany-oak.part-002.b64"
+        "botany-oak.part-001.b64"
       ]
     },
     {
       "file": "botany-conifer.webp",
-      "bytes": 33200,
-      "sha256": "e67a653865f3c9a4116276ff3a8d873d2c4d2ece72e9781ffc623b2685526b69",
+      "bytes": 32962,
+      "sha256": "3f023d58147738829512d1417633cb7dc847d3d07488dae9d42bf815791953fe",
       "parts": [
         "botany-conifer.part-001.b64"
       ]
     },
     {
       "file": "botany-flowers.webp",
-      "bytes": 43280,
-      "sha256": "91c609d40befee1a9d82c2cd1ad0767689256cb89f32f8a3f81030b98be15b88",
+      "bytes": 37862,
+      "sha256": "cfe34839888d4600bffb7dfa6616a3164d714b319c466c9e0d8bc8564cf08a94",
       "parts": [
         "botany-flowers.part-001.b64",
         "botany-flowers.part-002.b64"
@@ -168,17 +167,16 @@
     },
     {
       "file": "botany-shrub.webp",
-      "bytes": 36846,
-      "sha256": "8dd1d0fdf5e7dc31c770ae1b68cb1fab9ebe6d3eed124c40d2246b7cb574ad5c",
+      "bytes": 33596,
+      "sha256": "fb5608857fb7a309a933ea214269230e547122f3d0dce553015d339be6972ab0",
       "parts": [
-        "botany-shrub.part-001.b64",
-        "botany-shrub.part-002.b64"
+        "botany-shrub.part-001.b64"
       ]
     },
     {
       "file": "botany-fern.webp",
-      "bytes": 47754,
-      "sha256": "e519f573acbb1ba99528affeb6eaa3c1e780d8b026bc2b0b1ba9a6b021ff872f",
+      "bytes": 47308,
+      "sha256": "f350125fd6284fe7d882691e98f054f3eb26da910a049e72121bf3767f88fdf9",
       "parts": [
         "botany-fern.part-001.b64",
         "botany-fern.part-002.b64"

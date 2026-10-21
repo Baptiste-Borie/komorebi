@@ -1,49 +1,68 @@
 import * as THREE from 'three';
 
-/** One recognizable woodland fern. Variants alter frond directions and leaf span,
- *  while geometry stays small and flat-shaded. This is a real placeable species. */
+/** Low-poly fern with paired pinnules along curved, tapering fronds.
+ *  Each frond uses a coherent orientation; it is not a cloud of triangles. */
 export function createFern(seed: number): THREE.Group {
   const group = new THREE.Group();
-  const palette = [0x477943, 0x568a48, 0x66984e, 0x759b58, 0x86ab62];
-  const rand = (n: number) => { const v = Math.sin((seed + 17) * 127.1 + n * 311.7) * 43758.5453; return v - Math.floor(v); };
-  const frondCount = 6 + Math.floor(rand(2) * 3);
-  const stemMat = new THREE.MeshStandardMaterial({color:0x577d42,roughness:1,flatShading:true});
-  const leafMats = palette.map(color=>new THREE.MeshStandardMaterial({color,roughness:1,side:THREE.DoubleSide,flatShading:true}));
-  const stalkGeom = new THREE.CylinderGeometry(.008,.017,1,4);
-  const leafletGeom = new THREE.BufferGeometry();
-  leafletGeom.setAttribute('position', new THREE.Float32BufferAttribute([
-    0,0,0,  .16,.012,.065,  .08,.022,.19,
-    0,0,0,  .08,.022,.19,  .03,0,.28,
-    0,0,0, -.16,.012,.065, -.08,.022,.19,
-    0,0,0, -.08,.022,.19, -.03,0,.28,
-  ],3));
-  leafletGeom.computeVertexNormals();
-  for(let i=0;i<frondCount;i++){
-    const angle=2*Math.PI*i/frondCount+(rand(i+4)-.5)*.4;
-    const height=.65+rand(i+22)*.36;
-    const spread=.48+rand(i+33)*.26;
-    const radial = new THREE.Vector3(Math.cos(angle),0,Math.sin(angle));
-    const end = new THREE.Vector3(radial.x*spread,height*.72,radial.z*spread);
-    const mid = new THREE.Vector3(radial.x*spread*.40,height*.82,radial.z*spread*.40);
-    const segments=6;
-    for(let j=0;j<segments;j++){
-      const t0=j/segments,t1=(j+1)/segments;
-      const at=(t:number)=>new THREE.Vector3()
-        .addScaledVector(mid,2*(1-t)*t)
-        .addScaledVector(end,t*t);
-      const a=at(t0),b=at(t1);
-      const d=b.clone().sub(a),stem=new THREE.Mesh(stalkGeom,stemMat);
-      stem.position.copy(a).add(b).multiplyScalar(.5);
-      stem.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());
-      stem.scale.set(1,d.length(),1);stem.castShadow=false;group.add(stem);
-      if(j===0)continue;
-      const u=(j-.5)/segments;
-      const leaflet=new THREE.Mesh(leafletGeom,leafMats[(i+j+seed)%leafMats.length]);
-      leaflet.position.copy(a);
-      leaflet.rotation.set(0,angle,0);
-      const k=(.7+.4*rand(i*8+j+50))*Math.sin(Math.PI*u);
-      leaflet.scale.set(k*.75,1,k*.8);
-      leaflet.castShadow=false;group.add(leaflet);
+  const rand = (n: number) => {
+    const v = Math.sin((seed + 17) * 127.1 + n * 311.7) * 43758.5453;
+    return v - Math.floor(v);
+  };
+  const colors = [0x467b40, 0x538947, 0x60974e, 0x73a45d, 0x86b368];
+  const materials = colors.map(color => new THREE.MeshStandardMaterial({color, roughness: 1, flatShading: true, side: THREE.DoubleSide}));
+  const rachisMaterial = new THREE.MeshStandardMaterial({color: 0x47723b, roughness: 1, flatShading: true});
+  const rachisGeo = new THREE.CylinderGeometry(.004, .009, 1, 4);
+  const count = 7 + Math.floor(rand(1) * 3);
+  for (let frond = 0; frond < count; frond++) {
+    const angle = (frond / count) * Math.PI * 2 + (rand(frond + 3) - .5) * .26;
+    const spread = .45 + rand(frond + 16) * .24;
+    const tall = .68 + rand(frond + 27) * .28;
+    const direction = new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle));
+    const sideways = new THREE.Vector3(-Math.sin(angle), 0, Math.cos(angle));
+    const point = (t: number) => new THREE.Vector3(
+      direction.x * spread * t * t,
+      tall * Math.sin(t * Math.PI * .72),
+      direction.z * spread * t * t
+    );
+    const segments = 10;
+    for (let j = 0; j < segments; j++) {
+      const t0 = j / segments, t1 = (j + 1) / segments;
+      const start = point(t0), end = point(t1);
+      const d = end.clone().sub(start);
+      const rachis = new THREE.Mesh(rachisGeo, rachisMaterial);
+      rachis.position.copy(start).add(end).multiplyScalar(.5);
+      rachis.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
+      rachis.scale.y = d.length();
+      rachis.castShadow = false;
+      group.add(rachis);
+      if (j === 0 || j === segments - 1) continue;
+      const midT = (t0 + t1) * .5;
+      const stem = point(midT);
+      const profile = Math.pow(Math.sin(Math.PI * midT), .85);
+      const length = (.12 + .11 * rand(frond * 31 + j)) * profile;
+      for (const side of [-1, 1]) {
+        // Small, tapered leaflets reach sideways and angle toward the tip.
+        const leafTip = stem.clone().addScaledVector(sideways, side * length)
+          .addScaledVector(direction, .055 + midT * .04);
+        leafTip.y -= .025 * midT;
+        const leading = stem.clone().lerp(leafTip, .35).addScaledVector(direction, .035);
+        const trailing = stem.clone().lerp(leafTip, .62).addScaledVector(direction, -.025);
+        leading.y += .015;
+        const verts = [
+          stem.x, stem.y, stem.z,
+          leading.x, leading.y, leading.z,
+          leafTip.x, leafTip.y, leafTip.z,
+          stem.x, stem.y, stem.z,
+          leafTip.x, leafTip.y, leafTip.z,
+          trailing.x, trailing.y, trailing.z,
+        ];
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+        geo.computeVertexNormals();
+        const leaf = new THREE.Mesh(geo, materials[(frond + j + (side === 1 ? 1 : 0) + seed) % materials.length]);
+        leaf.castShadow = false;
+        group.add(leaf);
+      }
     }
   }
   return group;
