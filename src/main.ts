@@ -182,30 +182,52 @@ function buildPlant(p:Plant){
  }
  if(p.kind==='rock'){const rock=shape(g,new THREE.DodecahedronGeometry(.45+r(2)*.19,0),0x959e91,0,.3,0);rock.scale.set(1.3,.65,.85);rock.rotation.y=r(4)*6.28;}
  if(p.kind==='pond'){
-  // A scalloped, shallow wetland pool instead of a circular blue disc.
-  const edge:number[]=[];
-  for(let i=0;i<25;i++){const a=i*Math.PI*2/24,rad=1.13+.11*Math.sin(a*3+.2)+.07*Math.cos(a*5);edge.push(Math.cos(a)*rad,Math.sin(a)*rad*.76);}
-  const makePool=(radius:number,y:number,color:number)=>{
-   const vertices=[0,y,0];for(let i=0;i<edge.length/2;i++)vertices.push(edge[i*2]*radius,y,edge[i*2+1]*radius);
-   const idx:number[]=[];for(let i=1;i<edge.length/2;i++)idx.push(0,i+1,i);
-   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geo.setIndex(idx);geo.computeVertexNormals();
-   const pool=shape(g,geo,color,0,0,0);pool.castShadow=false;return pool;
+  // Irregular, gently stepped shoreline. The water is framed by vegetation and a
+  // low earth transition instead of a raised circular stone rim.
+  const steps=32;
+  const perimeter=(i:number,scale:number)=>{
+   const a=i*Math.PI*2/steps;
+   const r=(1.07+.105*Math.sin(a*3+.3)+.06*Math.cos(a*7-.4))*scale;
+   return {x:Math.cos(a)*r,z:Math.sin(a)*r*.8};
   };
-  makePool(1.15,.035,0x738f6a);makePool(1,.055,0x8fbdb4);
-  for(let i=0;i<11;i++){
-   const a=i*2.399,rad=1.13+.12*r(i+10);
-   const rock=shape(g,new THREE.DodecahedronGeometry(.075+.085*r(i+20),0),i%3===0?0xa5a994:0x939b86,Math.cos(a)*rad,.067,Math.sin(a)*rad*.77);
-   rock.scale.set(1.3,.36,.85);rock.rotation.y=a;rock.castShadow=false;
+  const disk=(scale:number,y:number,color:number)=>{
+   const verts:number[]=[0,y,0],indices:number[]=[];
+   for(let i=0;i<=steps;i++){const q=perimeter(i,scale);verts.push(q.x,y,q.z);if(i<steps)indices.push(0,i+2,i+1);}
+   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));geo.setIndex(indices);geo.computeVertexNormals();
+   const mesh=shape(g,geo,color,0,0,0);mesh.castShadow=false;return mesh;
+  };
+  const bank=(inner:number,outer:number,low:number,high:number,color:number)=>{
+   const verts:number[]=[],indices:number[]=[];
+   for(let i=0;i<=steps;i++){
+    const a=perimeter(i,inner),b=perimeter(i,outer);
+    verts.push(a.x,low,a.z,b.x,high,b.z);
+    if(i<steps){const v=i*2;indices.push(v,v+2,v+1,v+1,v+2,v+3);}
+   }
+   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));geo.setIndex(indices);geo.computeVertexNormals();
+   const mesh=shape(g,geo,color,0,0,0);mesh.castShadow=false;mesh.receiveShadow=false;
+  };
+  disk(1.30,.038,0x809e72);
+  bank(1.06,1.29,.059,.025,0x8ea978);
+  disk(1.07,.060,0x83b9ad);
+  disk(.98,.064,0x92c5b9);
+  // Small natural bankside clusters, leaving most shoreline open.
+  for(let i=0;i<12;i++){
+   const a=i*2.399,rad=1.20+.13*r(i+10),x=Math.cos(a)*rad,z=Math.sin(a)*rad*.8;
+   if(i%3===0){
+    const rock=shape(g,new THREE.DodecahedronGeometry(.09+.065*r(i+20),0),i%2?0xa9ac94:0x858f79,x,.065,z);
+    rock.scale.set(1.35,.43,.86);rock.castShadow=false;
+   }else{
+    for(let j=0;j<3;j++){
+     const lean=(j-1)*.09;
+     tapered(g,new THREE.Vector3(x,0,z),new THREE.Vector3(x+lean,.24+.15*r(i+j+30),z+.06),.012,.003,0x53794e,4);
+    }
+   }
   }
-  // Two small lily pads anchor the water at a human-readable scale.
-  for(let i=0;i<2;i++){
-   const x=i===0?-.38:.42,z=i===0?-.15:.23;
-   const pad=shape(g,new THREE.CylinderGeometry(.18,.18,.012,7),i===0?0x648e64:0x7da16b,x,.071,z);
-   pad.scale.z=.75;pad.castShadow=false;
-  }
-  for(let i=0;i<8;i++){
-   const a=i*2.4,rad=1.23+.13*r(i+40),x=Math.cos(a)*rad,z=Math.sin(a)*rad*.77;
-   tapered(g,new THREE.Vector3(x,0,z),new THREE.Vector3(x+.07,.37+r(i+44)*.25,z+.04),.025,.007,0x5a7450,5);
+  // Water lily leaves sit just above the pool and do not cast hard shadows.
+  for(let i=0;i<3;i++){
+   const a=i*2.35+.4,rr=.32+.29*r(i+50),x=Math.cos(a)*rr,z=Math.sin(a)*rr*.75;
+   const leaf=shape(g,new THREE.CylinderGeometry(.13,.13,.012,7),i===1?0x668d53:0x729d5b,x,.081,z);
+   leaf.scale.z=.78;leaf.rotation.y=a;leaf.castShadow=false;
   }
  }
  g.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh)obj.userData.id=p.id;});return batchPlant(g);
@@ -304,7 +326,7 @@ function addLandscape(world:THREE.Scene){
   stone.scale.set(1,.45,1.2);stone.rotation.y=rand(i,34)*6.28;stone.castShadow=false;
  }world.add(pebbles);
 }
-function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#cbdcd2');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xf5ffec,0x65775b,1.35));const sun=new THREE.DirectionalLight(0xffe6c5,2.65);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=2.5;sun.shadow.blurSamples=8;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
+function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#cbdcd2');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xf5ffec,0x728269,1.95));const sun=new THREE.DirectionalLight(0xffe6c5,1.65);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=5;sun.shadow.blurSamples=8;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
 function refreshPlants3d(){if(!objects)return;while(objects.children.length){const child=objects.children[0];objects.remove(child);child.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh){obj.geometry.dispose();/* shared materials are cached; only geometry is per object */}});}plants.forEach(p=>objects!.add(buildPlant(p)));}
 function updateCamera(){if(!camera)return;camera.position.set(Math.sin(yaw)*Math.cos(pitch)*distance,Math.sin(pitch)*distance,Math.cos(yaw)*Math.cos(pitch)*distance);camera.lookAt(0,0,0);camera.updateProjectionMatrix();}
 function resize(){
