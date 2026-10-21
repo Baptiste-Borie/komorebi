@@ -25,7 +25,7 @@ const ico:Record<Kind,string>={tree:'♠',sapling:'♣',bush:'✿',flower:'✳',
 function load(){try{const v=JSON.parse(localStorage.getItem(storageKey)||'null'); if(Array.isArray(v)&&v.every(p=>typeof p.id==='number'&&typeof p.kind==='string'&&typeof p.x==='number'&&typeof p.z==='number'))return v as Plant[];}catch{}return seedGarden.map(p=>({...p}));}
 function save(){localStorage.setItem(storageKey,JSON.stringify(plants));}
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<header><div class="brand"><span class="brand-mark">木</span><div><div class="eyebrow">ATELIER DU JARDIN · 02</div><h1>Komorebi<span> / atelier</span></h1></div></div><div class="switcher" role="status"><button data-style="lowpoly" class="active">01 <strong>Low-poly · direction retenue</strong></button></div><div class="header-right"><span class="status-dot"></span> Prototype interactif</div></header><main><aside class="sidebar"><div class="side-heading"><div class="eyebrow">COMPOSITION</div><h2>Faire pousser<br/>un jardin.</h2><p>Un petit jardin à sculpter, morceau par morceau. Choisissez un élément, puis plantez-le sur le terrain.</p></div><div class="tool-title">VÉGÉTATION & MATÉRIAUX</div><div id="tools" class="tools"></div><div class="tool-title">ÉDITION</div><button id="erase" class="secondary full">✕ &nbsp; Supprimer un élément</button><button id="reset" class="quiet full">↺ &nbsp; Restaurer le jardin</button><div class="sidebar-footer">Les éléments sont sauvegardés automatiquement dans ce navigateur.</div></aside><section class="workspace"><div class="scene-heading"><div><div class="eyebrow">ÉTUDE DE STYLE</div><h2 id="scene-title">01 — Low-poly</h2><p id="scene-description">Des essences reconnaissables, de la lumière et une parcelle vivante.</p></div><div class="scene-actions"><button id="density">＋ Jardin dense</button><button id="home">⤢ Recentrer</button></div></div><div id="viewport" class="viewport"><div id="scene"></div><div class="scene-label">KOMOREBI / GARDEN STUDY</div><div class="hint" id="hint">Glisser pour tourner · Molette pour zoomer · Clic pour planter</div></div><div class="bottom"><span id="counter"></span><span id="fps">— FPS</span><span>100 % procédural · aucune image ni modèle externe</span></div></section></main>`;
+app.innerHTML=`<header><div class="brand"><span class="brand-mark">木</span><div><div class="eyebrow">ATELIER DU JARDIN · 02</div><h1>Komorebi<span> / atelier</span></h1></div></div><div class="switcher" role="status"><button data-style="lowpoly" class="active">01 <strong>Low-poly · direction retenue</strong></button></div><div class="header-right"><span class="status-dot"></span> Prototype interactif</div></header><main><aside class="sidebar"><div class="side-heading"><div class="eyebrow">COMPOSITION</div><h2>Faire pousser<br/>un jardin.</h2><p>Un petit jardin à sculpter, morceau par morceau. Choisissez un élément, puis plantez-le sur le terrain.</p></div><div class="tool-title">VÉGÉTATION & MATÉRIAUX</div><div id="tools" class="tools"></div><div class="tool-title">ÉDITION</div><button id="erase" class="secondary full">✕ &nbsp; Supprimer un élément</button><button id="reset" class="quiet full">↺ &nbsp; Restaurer le jardin</button><div class="sidebar-footer">Les éléments sont sauvegardés automatiquement dans ce navigateur.</div></aside><section class="workspace"><div class="scene-heading"><div><div class="eyebrow">ÉTUDE DE STYLE</div><h2 id="scene-title">01 — Low-poly</h2><p id="scene-description">Une prairie miniature, des silhouettes végétales et une lumière dorée.</p></div><div class="scene-actions"><button id="density">＋ Jardin dense</button><button id="home">⤢ Recentrer</button></div></div><div id="viewport" class="viewport"><div id="scene"></div><div class="scene-label">KOMOREBI / GARDEN STUDY</div><div class="hint" id="hint">Glisser pour tourner · Molette pour zoomer · Clic pour planter</div></div><div class="bottom"><span id="counter"></span><span id="fps">— FPS</span><span>Rendu procédural · herbes instanciées</span></div></section></main>`;
 const viewport=app.querySelector<HTMLDivElement>('#scene')!;
 const tools=app.querySelector<HTMLDivElement>('#tools')!;
 (Object.keys(labels) as Kind[]).forEach(k=>{const btn=document.createElement('button');btn.dataset.kind=k;btn.innerHTML=`<span class="tool-icon">${ico[k]}</span><span>${labels[k]}</span>`;btn.onclick=()=>{selected=k;deleting=false;refreshUI();};tools.append(btn);});
@@ -38,10 +38,10 @@ let request=0;
 let yaw=Math.PI/4, pitch=.99, distance=16;
 let dragging=false, moved=false, downX=0,downY=0;
 let lastFrame=performance.now(),frames=0;
-const green=[0x507b49,0x648e52,0x7ca05a,0x466c4c,0x9caf71];
+const green=[0x3e6644,0x57834d,0x739d59,0x476e4b,0x92ac69];
 const mCache=new Map<string, THREE.MeshStandardMaterial>();
 function mat(color:number,roughness=1){const key=`${color}-${roughness}`;let m=mCache.get(key);if(!m){m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});mCache.set(key,m);}return m;}
-function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){const mesh=new THREE.Mesh(geometry,mat(color));mesh.position.set(x,y,z);mesh.rotation.set(rx,0,rz);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;}
+function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){const mesh=new THREE.Mesh(geometry,mat(color));mesh.position.set(x,y,z);mesh.rotation.set(rx,0,rz);mesh.castShadow=geometry.type === 'CylinderGeometry' || geometry.type === 'IcosahedronGeometry';mesh.receiveShadow=true;group.add(mesh);return mesh;}
 function rand(seed:number,n:number){const v=Math.sin(seed*127.1+n*311.7)*43758.5453;return v-Math.floor(v);}
 function tapered(group:THREE.Group,a:THREE.Vector3,b:THREE.Vector3,r0:number,r1:number,color:number,segments=6){const d=new THREE.Vector3().subVectors(b,a);const mesh=shape(group,new THREE.CylinderGeometry(r1,r0,d.length(),segments),color,0,0,0);mesh.position.copy(a).addScaledVector(d,.5);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return mesh;}
 function foliage(group:THREE.Group,x:number,y:number,z:number,r:number,seed:number,shapeKind:'round'|'cone'='round'){
@@ -92,21 +92,58 @@ function buildPlant(p:Plant){
  }
  g.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh)obj.userData.id=p.id;});return g;
 }
-function groundHeight(x:number,z:number){return .035*Math.sin(x*1.5)*Math.cos(z*1.2)+.018*Math.sin(z*2.8+x);}
-function addLandscape(scene:THREE.Scene){
- const groundGeo=new THREE.PlaneGeometry(11,11,44,44);groundGeo.rotateX(-Math.PI/2);const pos=groundGeo.getAttribute('position');for(let i=0;i<pos.count;i++){const x=pos.getX(i),z=pos.getZ(i);pos.setY(i,groundHeight(x,z));}groundGeo.computeVertexNormals();
- land=new THREE.Mesh(groundGeo,mat(0x9db881));land.receiveShadow=true;scene.add(land);
- const side=shape(new THREE.Group(),new THREE.BoxGeometry(11,.58,11),0x7a8365,0,-.36,0);scene.add(side);
- // A subtle walking path, assembled from visible irregular stepping-stones.
- const path=new THREE.Group();for(let i=0;i<12;i++){const z=-4.85+i*.8,x=-.92+Math.sin(i*.55)*.42;const stone=shape(path,new THREE.DodecahedronGeometry(.34+(i%3)*.055,0),i%3===0?0xb4aa8e:0xbbb39a,x,groundHeight(x,z)+.07,z);stone.scale.set(1.4,.14,.82);stone.rotation.y=i*.47;}scene.add(path);
- // Grass tufts sit directly in the renderer and never obstruct object picking.
- const tufts=new THREE.Group();const bladeMat=mat(0x769b61);for(let i=0;i<150;i++){const x=(rand(i,5)-.5)*10.1,z=(rand(i,8)-.5)*10.1;if(Math.abs(x+1)<.65)continue;const h=.065+rand(i,9)*.11;const blade=new THREE.Mesh(new THREE.ConeGeometry(.025,h,3),bladeMat);blade.position.set(x,groundHeight(x,z)+h/2,z);blade.rotation.z=(rand(i,11)-.5)*.5;tufts.add(blade);}scene.add(tufts);
+function groundHeight(x:number,z:number){
+ return .13*Math.sin(x*.6+.5)*Math.cos(z*.7)+.075*Math.sin(x*1.4+z*.9)+.035*Math.cos(z*2.1-x*.5);
 }
-function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.55;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#dce9e2');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xf4fff2,0x879b85,2.15));const sun=new THREE.DirectionalLight(0xffe6be,3.1);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=3;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
+function addLandscape(world:THREE.Scene){
+ const groundGeo=new THREE.PlaneGeometry(11,11,64,64);groundGeo.rotateX(-Math.PI/2);
+ const pos=groundGeo.getAttribute('position');const colors:number[]=[];
+ const moss=new THREE.Color(0x789666),meadow=new THREE.Color(0x9fba7c),warm=new THREE.Color(0xb2bd85);
+ for(let i=0;i<pos.count;i++){
+  const x=pos.getX(i),z=pos.getZ(i);pos.setY(i,groundHeight(x,z));
+  const t=.5+.25*Math.sin(x*1.05+z*.75)+.18*Math.cos(z*1.63-x*.48);
+  const color=moss.clone().lerp(meadow,THREE.MathUtils.clamp(t,0,1));
+  color.lerp(warm,.14*Math.max(0,Math.sin(z*1.9+x*.7)));
+  colors.push(color.r,color.g,color.b);
+ }
+ groundGeo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));groundGeo.computeVertexNormals();
+ land=new THREE.Mesh(groundGeo,new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,flatShading:true}));land.receiveShadow=true;world.add(land);
+ // Earth underneath the grassy terrain: it gives the diorama an actual cutaway edge.
+ const earth=new THREE.Mesh(new THREE.BoxGeometry(11,.8,11),mat(0x776c50));earth.position.y=-.51;earth.receiveShadow=true;world.add(earth);
+ const lip=new THREE.Mesh(new THREE.BoxGeometry(11,.12,11),mat(0x596c48));lip.position.y=-.14;world.add(lip);
+ // Path stones form a gentle S-curve instead of an arrow-straight line.
+ const stepping=new THREE.Group();
+ for(let i=0;i<17;i++){
+  const z=-5+i*.61,x=-.9+.48*Math.sin(i*.32);
+  const stone=shape(stepping,new THREE.DodecahedronGeometry(.24+.07*rand(i,3),0),i%3===0?0x9d9b85:0xb7ad92,x,groundHeight(x,z)+.035,z);
+  stone.scale.set(1.38,.21,1.05);stone.rotation.y=rand(i,8)*1.5;stone.castShadow=false;
+ }
+ world.add(stepping);
+ // Thousands of blades cost one draw call, not thousands of individual meshes.
+ const count=900, bladeGeo=new THREE.ConeGeometry(.027,.13,3),bladeMat=new THREE.MeshStandardMaterial({color:0x638850,roughness:1,flatShading:true,side:THREE.DoubleSide});
+ const grass=new THREE.InstancedMesh(bladeGeo,bladeMat,count);grass.castShadow=false;grass.receiveShadow=false;
+ const dummy=new THREE.Object3D(),color=new THREE.Color();
+ for(let i=0;i<count;i++){
+  const x=(rand(i,5)-.5)*10.4,z=(rand(i,8)-.5)*10.4;
+  const h=.45+rand(i,9)*1.35;dummy.position.set(x,groundHeight(x,z)+.065*h,z);
+  dummy.rotation.set((rand(i,11)-.5)*.4,rand(i,12)*6.28,(rand(i,13)-.5)*.5);
+  dummy.scale.set(.6+rand(i,14)*.8,h,.6+rand(i,15)*.8);dummy.updateMatrix();grass.setMatrixAt(i,dummy.matrix);
+  color.setHex([0x4e7b47,0x6c9552,0x83a260,0x9eb77b][i%4]);grass.setColorAt(i,color);
+ }
+ grass.instanceMatrix.needsUpdate=true;world.add(grass);
+ // Small clusters of stones ground the trees in the landscape.
+ const pebbles=new THREE.Group();for(let i=0;i<34;i++){
+  const x=(rand(i,30)-.5)*9.8,z=(rand(i,31)-.5)*9.8;
+  if(Math.abs(x+.9)<.55)continue;
+  const stone=shape(pebbles,new THREE.DodecahedronGeometry(.08+.08*rand(i,32),0),i%3?0x899587:0xa3a597,x,groundHeight(x,z)+.035,z);
+  stone.scale.set(1,.45,1.2);stone.rotation.y=rand(i,34)*6.28;stone.castShadow=false;
+ }world.add(pebbles);
+}
+function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#cbdcd2');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xf5ffec,0x65775b,1.35));const sun=new THREE.DirectionalLight(0xffe6c5,2.65);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=3;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
 function refreshPlants3d(){if(!objects)return;while(objects.children.length){const child=objects.children[0];objects.remove(child);child.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh){obj.geometry.dispose();/* shared materials are cached; only geometry is per object */}});}plants.forEach(p=>objects!.add(buildPlant(p)));}
 function updateCamera(){if(!camera)return;camera.position.set(Math.sin(yaw)*Math.cos(pitch)*distance,Math.sin(pitch)*distance,Math.cos(yaw)*Math.cos(pitch)*distance);camera.lookAt(0,0,0);camera.updateProjectionMatrix();}
-function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;if(w<1||h<1)return;if(camera){const span=7.7;camera.left=-span*w/h;camera.right=span*w/h;camera.top=span;camera.bottom=-span;camera.updateProjectionMatrix();}renderer?.setSize(w,h,false);}
-function loop(){request=requestAnimationFrame(loop);renderer?.render(scene!,camera!);frames++;const now=performance.now();if(now-lastFrame>1000){app.querySelector('#fps')!.textContent=`${Math.round(frames*1000/(now-lastFrame))} FPS`;frames=0;lastFrame=now;}}
+function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;if(w<1||h<1)return;if(camera){const span=7.25;camera.left=-span*w/h;camera.right=span*w/h;camera.top=span;camera.bottom=-span;camera.updateProjectionMatrix();}renderer?.setSize(w,h,false);}
+function loop(){request=requestAnimationFrame(loop);renderer?.render(scene!,camera!);frames++;const now=performance.now();if(now-lastFrame>1000){app.querySelector('#fps')!.textContent=`${Math.round(frames*1000/(now-lastFrame))} FPS · ${renderer?.info.render.calls ?? 0} appels GPU`;frames=0;lastFrame=now;}}
 function pointerDown(e:PointerEvent){dragging=true;moved=false;downX=e.clientX;downY=e.clientY;(e.currentTarget as HTMLCanvasElement).setPointerCapture(e.pointerId);}
 function pointerMove(e:PointerEvent){if(!dragging)return;const dx=e.clientX-downX,dy=e.clientY-downY;if(Math.abs(dx)+Math.abs(dy)>3)moved=true;if(moved){yaw-=dx*.008;pitch=Math.max(.35,Math.min(1.5,pitch+dy*.006));updateCamera();}downX=e.clientX;downY=e.clientY;}
 const raycaster=new THREE.Raycaster();const mouse=new THREE.Vector2();
