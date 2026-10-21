@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import './style.css';
 
 type Style = 'lowpoly'|'organic'|'vector';
@@ -55,6 +56,57 @@ function foliage(group:THREE.Group,x:number,y:number,z:number,r:number,seed:numb
   for(let j=0;j<4;j++){const a=j*Math.PI*.5+rand(seed,j+10); const small=shape(group,new THREE.IcosahedronGeometry(r*.4,0),green[(j+Math.floor(seed))%green.length],x+Math.cos(a)*r*.72,y-r*.12+rand(seed,j+14)*r*.38,z+Math.sin(a)*r*.72);small.scale.y=.78;}
  }
 }
+/**
+ * A procedural flower can contain 40+ meshes; the GPU should not receive
+ * a separate draw call for every petal or branch. Merge same-material
+ * meshes within each plant while preserving the parent group's identity.
+ * Mesh positions are baked in local space, so placement, scale and picking
+ * continue to work as before.
+ */
+function batchPlant(group:THREE.Group):THREE.Group {
+ const meshes=group.children.filter((child):child is THREE.Mesh => child instanceof THREE.Mesh);
+ const groups=new Map<THREE.Material, THREE.Mesh[]>();
+ for (const mesh of meshes) {
+  const material=mesh.material;
+  if (Array.isArray(material)) return group;
+  const list=groups.get(material) ?? [];
+  list.push(mesh);
+  groups.set(material,list);
+ }
+ const combined:THREE.Mesh[]=[];
+ const geometriesToDispose:THREE.BufferGeometry[]=[];
+ try {
+  for (const [material,list] of groups) {
+   if(list.length===1){combined.push(list[0]);continue;}
+   const geometries=list.map(mesh=>{
+    mesh.updateMatrix();
+    const source=mesh.geometry;
+    const copy=source.index ? source.toNonIndexed() : source.clone();
+    copy.applyMatrix4(mesh.matrix);
+    return copy;
+   });
+   const merged=mergeGeometries(geometries,false);
+   for(const geometry of geometries)geometry.dispose();
+   if(!merged)throw new Error('Unable to merge plant geometry');
+   geometriesToDispose.push(merged);
+   const mesh=new THREE.Mesh(merged,material);
+   mesh.castShadow=list.some(item=>item.castShadow);
+   mesh.receiveShadow=list.some(item=>item.receiveShadow);
+   mesh.userData.id=group.userData.id;
+   combined.push(mesh);
+  }
+ }catch(error){
+  geometriesToDispose.forEach(geometry=>geometry.dispose());
+  console.warn('Geometry batching skipped for this plant',error);
+  return group;
+ }
+ const retained=new Set(combined);
+ for(const mesh of meshes){if(!retained.has(mesh))mesh.geometry.dispose();}
+ group.clear();
+ combined.forEach(mesh=>group.add(mesh));
+ return group;
+}
+
 function buildPlant(p:Plant){
  const g=new THREE.Group();g.position.set(p.x,groundHeight(p.x,p.z),p.z);g.userData.id=p.id;
  const r=(n:number)=>rand(p.seed,n);
@@ -90,7 +142,7 @@ function buildPlant(p:Plant){
   const water=shape(g,new THREE.CylinderGeometry(1.14,1.17,.05,20),0x80b4ac,0,.085,0);water.scale.z=.77;water.castShadow=false;
   for(let i=0;i<5;i++){const a=i*2.47,rad=1.16+r(i)*.16;const stone=shape(g,new THREE.DodecahedronGeometry(.19+r(i+5)*.09,0),0x9da99a,Math.cos(a)*rad,.1,Math.sin(a)*rad*.73);stone.scale.y=.46;}
  }
- g.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh)obj.userData.id=p.id;});return g;
+ g.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh)obj.userData.id=p.id;});return batchPlant(g);
 }
 function groundHeight(x:number,z:number){
  return .13*Math.sin(x*.6+.5)*Math.cos(z*.7)+.075*Math.sin(x*1.4+z*.9)+.035*Math.cos(z*2.1-x*.5);
