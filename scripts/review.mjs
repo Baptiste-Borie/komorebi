@@ -33,8 +33,22 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(`http://127.0.0.1:${port}`, { waitUntil: 'networkidle' });
   await page.locator('canvas').waitFor({ state: 'visible' });
+  // Validate that WebGL backing dimensions, CSS canvas size, and viewport agree.
+  const validateCanvas = async () => {
+    await page.waitForFunction(() => {
+      const canvas = document.querySelector('#scene canvas');
+      const parent = document.querySelector('#scene');
+      if (!canvas || !parent) return false;
+      const a = canvas.getBoundingClientRect(), b = parent.getBoundingClientRect();
+      return a.width > 200 && a.height > 200 &&
+        Math.abs(a.width - b.width) < 3 && Math.abs(a.height - b.height) < 3 &&
+        Math.abs(canvas.width / canvas.height - b.width / b.height) < 0.02;
+    }, { timeout: 10000 });
+  };
+  await validateCanvas();
   await page.locator('#reset').click();
   await page.waitForTimeout(1000);
+  await validateCanvas();
   await page.screenshot({ path: resolve(tempDir, '01-lowpoly.png'), fullPage: true });
   await page.locator('#density').click();
   await page.waitForTimeout(1000);
