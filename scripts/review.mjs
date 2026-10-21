@@ -37,7 +37,9 @@ try {
   await page.goto(url,{waitUntil:'networkidle'});
   const canvas=page.locator('#scene canvas');
   await canvas.waitFor({state:'visible'});
+  await page.locator('#menu-toggle').click();
   await page.locator('#reset').click();
+  await page.locator('#menu-toggle').click();
   await page.waitForTimeout(600);
   const manifest={version:2,mode,format:'WebP lossy, encoded as Base64',quality,chunkChars,images:[]};
   async function capture(name) {
