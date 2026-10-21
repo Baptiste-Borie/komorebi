@@ -22,4 +22,4 @@ try{
   const files=(await readdir(folder)).filter(x=>x.endsWith('.png'));
   try{execFileSync('zip',['-j','-q',out,...files.map(f=>resolve(folder,f))]);}catch{throw new Error('Commande zip manquante (sudo apt install zip)');}
   console.log(`Revue créée : ${out} (${files.length} captures)`);
-}finally{await browser?.close();if(process.platform==='win32')server.kill();else {try{process.kill(-server.pid!,'SIGTERM')}catch{server.kill()}}await rm(folder,{recursive:true,force:true});}
+}finally{await browser?.close();if(process.platform==='win32')server.kill();else {try{process.kill(-server.pid,'SIGTERM')}catch{server.kill()}}await rm(folder,{recursive:true,force:true});}

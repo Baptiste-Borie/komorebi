@@ -25,7 +25,7 @@ const ico:Record<Kind,string>={tree:'♠',sapling:'♣',bush:'✿',flower:'✳',
 function load(){try{const v=JSON.parse(localStorage.getItem(storageKey)||'null'); if(Array.isArray(v)&&v.every(p=>typeof p.id==='number'&&typeof p.kind==='string'&&typeof p.x==='number'&&typeof p.z==='number'))return v as Plant[];}catch{}return seedGarden.map(p=>({...p}));}
 function save(){localStorage.setItem(storageKey,JSON.stringify(plants));}
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<header><div class="brand"><span class="brand-mark">木</span><div><div class="eyebrow">LABORATOIRE VISUEL · 01</div><h1>Komorebi<span> / atelier</span></h1></div></div><div class="switcher" role="tablist" aria-label="Style de rendu"><button data-style="lowpoly" class="active">01 <strong>Low-poly</strong></button><button data-style="organic">02 <strong>Organique</strong></button><button data-style="vector">03 <strong>Vectoriel</strong></button></div><div class="header-right"><span class="status-dot"></span> Prototype interactif</div></header><main><aside class="sidebar"><div class="side-heading"><div class="eyebrow">COMPOSITION</div><h2>Faire pousser<br/>un jardin.</h2><p>Trois manières de représenter un même petit monde. Sélectionnez un élément, puis cliquez sur le terrain.</p></div><div class="tool-title">VÉGÉTATION & MATÉRIAUX</div><div id="tools" class="tools"></div><div class="tool-title">ÉDITION</div><button id="erase" class="secondary full">✕ &nbsp; Supprimer un élément</button><button id="reset" class="quiet full">↺ &nbsp; Restaurer le jardin</button><div class="sidebar-footer">Les éléments sont sauvegardés automatiquement dans ce navigateur.</div></aside><section class="workspace"><div class="scene-heading"><div><div class="eyebrow">ÉTUDE DE STYLE</div><h2 id="scene-title">01 — Low-poly</h2><p id="scene-description">Une lecture géométrique, simple et chaleureuse de la nature.</p></div><div class="scene-actions"><button id="density">＋ Jardin dense</button><button id="home">⤢ Recentrer</button></div></div><div id="viewport" class="viewport"><div id="scene"></div><div class="scene-label">KOMOREBI / GARDEN STUDY</div><div class="hint" id="hint">Glisser pour tourner · Molette pour zoomer · Clic pour planter</div></div><div class="bottom"><span id="counter"></span><span id="fps">— FPS</span><span>Sans images · Rendu généré en temps réel</span></div></section></main>`;
+app.innerHTML=`<header><div class="brand"><span class="brand-mark">木</span><div><div class="eyebrow">ATELIER DU JARDIN · 02</div><h1>Komorebi<span> / atelier</span></h1></div></div><div class="switcher" role="status"><button data-style="lowpoly" class="active">01 <strong>Low-poly · direction retenue</strong></button></div><div class="header-right"><span class="status-dot"></span> Prototype interactif</div></header><main><aside class="sidebar"><div class="side-heading"><div class="eyebrow">COMPOSITION</div><h2>Faire pousser<br/>un jardin.</h2><p>Un petit jardin à sculpter, morceau par morceau. Choisissez un élément, puis plantez-le sur le terrain.</p></div><div class="tool-title">VÉGÉTATION & MATÉRIAUX</div><div id="tools" class="tools"></div><div class="tool-title">ÉDITION</div><button id="erase" class="secondary full">✕ &nbsp; Supprimer un élément</button><button id="reset" class="quiet full">↺ &nbsp; Restaurer le jardin</button><div class="sidebar-footer">Les éléments sont sauvegardés automatiquement dans ce navigateur.</div></aside><section class="workspace"><div class="scene-heading"><div><div class="eyebrow">ÉTUDE DE STYLE</div><h2 id="scene-title">01 — Low-poly</h2><p id="scene-description">Des essences reconnaissables, de la lumière et une parcelle vivante.</p></div><div class="scene-actions"><button id="density">＋ Jardin dense</button><button id="home">⤢ Recentrer</button></div></div><div id="viewport" class="viewport"><div id="scene"></div><div class="scene-label">KOMOREBI / GARDEN STUDY</div><div class="hint" id="hint">Glisser pour tourner · Molette pour zoomer · Clic pour planter</div></div><div class="bottom"><span id="counter"></span><span id="fps">— FPS</span><span>100 % procédural · aucune image ni modèle externe</span></div></section></main>`;
 const viewport=app.querySelector<HTMLDivElement>('#scene')!;
 const tools=app.querySelector<HTMLDivElement>('#tools')!;
 (Object.keys(labels) as Kind[]).forEach(k=>{const btn=document.createElement('button');btn.dataset.kind=k;btn.innerHTML=`<span class="tool-icon">${ico[k]}</span><span>${labels[k]}</span>`;btn.onclick=()=>{selected=k;deleting=false;refreshUI();};tools.append(btn);});
@@ -35,23 +35,75 @@ let camera:THREE.OrthographicCamera|undefined;
 let land:THREE.Mesh|undefined;
 let objects:THREE.Group|undefined;
 let request=0;
-let yaw=Math.PI/4, pitch=.89, distance=15;
+let yaw=Math.PI/4, pitch=.99, distance=16;
 let dragging=false, moved=false, downX=0,downY=0;
 let lastFrame=performance.now(),frames=0;
-const green=[0x638d53,0x779f5e,0x8aa96c,0x4c7951,0x9dbb7a];
-function mat(color:number,roughness=1){return new THREE.MeshStandardMaterial({color,roughness,flatShading:style==='lowpoly'});}
-function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){const m=new THREE.Mesh(geometry,mat(color));m.position.set(x,y,z);m.rotation.set(rx,0,rz);m.castShadow=true;m.receiveShadow=true;group.add(m);return m;}
-function leaf(group:THREE.Group,x:number,y:number,z:number,r:number,seed:number){const organic=style==='organic';const mesh=shape(group,organic?new THREE.IcosahedronGeometry(r,2):new THREE.IcosahedronGeometry(r,0),green[Math.abs(seed)%green.length],x,y,z);if(organic){mesh.scale.set(1.3,.78,1.05);mesh.rotation.z=(seed%5-2)*.13;}return mesh;}
-function buildPlant(p:Plant){const g=new THREE.Group();g.position.set(p.x,0,p.z);g.userData.id=p.id;const o=style==='organic';const r=(n:number)=>Math.sin(p.seed*12.9898+n*78.233)*.5+.5;
-  if(p.kind==='tree'||p.kind==='sapling') {const small=p.kind==='sapling',h=small?1.15:2.0;shape(g,new THREE.CylinderGeometry(small?.08:.13,small?.15:.23,h, o?9:6),0x836347,0,h/2,0,0,o?.08:0);const s=small?.66:1;leaf(g,0,h+.42*s,0,.93*s,p.seed);leaf(g,-.52*s,h+.15*s,.12,.65*s,p.seed+1);leaf(g,.48*s,h+.17*s,-.12,.68*s,p.seed+2);if(o){leaf(g,.04,h+.78*s,.1,.6*s,p.seed+3);leaf(g,.25,h-.16*s,.44,.5*s,p.seed+4);}}
-  if(p.kind==='bush'){for(let i=0;i<(o?7:4);i++){const a=i*2.4,rr=.2+.35*r(i);leaf(g,Math.cos(a)*rr,.35+.17*r(i+2),Math.sin(a)*rr,o?.38:.42,p.seed+i);}}
-  if(p.kind==='flower'){for(let i=0;i<7;i++){const a=i*2.399,rr=.15+.33*r(i);const x=Math.cos(a)*rr,z=Math.sin(a)*rr,h=.2+.16*r(i+3);shape(g,new THREE.CylinderGeometry(.016,.025,h,5),0x60844c,x,h/2,z);const col=[0xe7b3aa,0xf0cf7a,0xd6d1ed,0xf4e4ce][(p.seed+i)%4];for(let j=0;j<5;j++){const petal=shape(g,new THREE.SphereGeometry(o?.085:.075,o?9:5,o?7:4),col,x+Math.cos(j*1.257)*.08,h+.025,z+Math.sin(j*1.257)*.08);petal.scale.set(.8,.45,1.2);}shape(g,new THREE.SphereGeometry(.045,7,6),0xd7a544,x,h+.025,z);}}
-  if(p.kind==='rock'){const rock=shape(g,new THREE.DodecahedronGeometry(.55,o?1:0),0x9faaa0,0,.35,0);rock.scale.set(1.25,.74,.9);rock.rotation.y=r(2)*Math.PI;}
-  if(p.kind==='pond'){const water=shape(g,new THREE.CylinderGeometry(1.15,1.2,.055,o?64:12),0x7bb7b1,0,.035,0);water.scale.set(1,.95,.71);water.receiveShadow=true;const rim=shape(g,new THREE.TorusGeometry(1.13,.075,o?8:5,o?50:14),0xa3b59a,0,.055,0,Math.PI/2);rim.scale.set(1, .72,1);}
-  g.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh)obj.userData.id=p.id;});return g;
+const green=[0x507b49,0x648e52,0x7ca05a,0x466c4c,0x9caf71];
+const mCache=new Map<string, THREE.MeshStandardMaterial>();
+function mat(color:number,roughness=1){const key=`${color}-${roughness}`;let m=mCache.get(key);if(!m){m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});mCache.set(key,m);}return m;}
+function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){const mesh=new THREE.Mesh(geometry,mat(color));mesh.position.set(x,y,z);mesh.rotation.set(rx,0,rz);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);return mesh;}
+function rand(seed:number,n:number){const v=Math.sin(seed*127.1+n*311.7)*43758.5453;return v-Math.floor(v);}
+function tapered(group:THREE.Group,a:THREE.Vector3,b:THREE.Vector3,r0:number,r1:number,color:number,segments=6){const d=new THREE.Vector3().subVectors(b,a);const mesh=shape(group,new THREE.CylinderGeometry(r1,r0,d.length(),segments),color,0,0,0);mesh.position.copy(a).addScaledVector(d,.5);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return mesh;}
+function foliage(group:THREE.Group,x:number,y:number,z:number,r:number,seed:number,shapeKind:'round'|'cone'='round'){
+ const col=green[Math.floor(rand(seed,2)*green.length)];
+ const geo=shapeKind==='cone'?new THREE.ConeGeometry(r,r*2.2,7,2):new THREE.IcosahedronGeometry(r,1);
+ const crown=shape(group,geo,col,x,y,z);
+ crown.scale.set(1.05+rand(seed,3)*.25,.78+rand(seed,4)*.25,.94+rand(seed,5)*.23);
+ crown.rotation.y=rand(seed,6)*Math.PI;
+ if(shapeKind==='round'){
+  // Groups of facets keep the canopy readable at a distance, without spherical candy trees.
+  for(let j=0;j<4;j++){const a=j*Math.PI*.5+rand(seed,j+10); const small=shape(group,new THREE.IcosahedronGeometry(r*.4,0),green[(j+Math.floor(seed))%green.length],x+Math.cos(a)*r*.72,y-r*.12+rand(seed,j+14)*r*.38,z+Math.sin(a)*r*.72);small.scale.y=.78;}
+ }
 }
-function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#dce7d9');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xf4fff2,0x899684,2.0));const sun=new THREE.DirectionalLight(0xffefd6,2.7);sun.position.set(-3,10,6);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.02;scene.add(sun);const base=new THREE.Mesh(new THREE.BoxGeometry(11,.56,11),mat(0x8c9876));base.position.y=-.37;base.receiveShadow=true;scene.add(base);land=new THREE.Mesh(new THREE.PlaneGeometry(11,11),mat(0xb5c99a));land.rotation.x=-Math.PI/2;land.receiveShadow=true;scene.add(land);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
-function refreshPlants3d(){if(!objects)return;while(objects.children.length){const child=objects.children[0];objects.remove(child);child.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh){obj.geometry.dispose();(obj.material as THREE.Material).dispose();}});}plants.forEach(p=>objects!.add(buildPlant(p)));}
+function buildPlant(p:Plant){
+ const g=new THREE.Group();g.position.set(p.x,groundHeight(p.x,p.z),p.z);g.userData.id=p.id;
+ const r=(n:number)=>rand(p.seed,n);
+ if(p.kind==='tree'||p.kind==='sapling'){
+  const young=p.kind==='sapling';const scale=young?.6:1;g.scale.setScalar(scale);
+  const species=p.seed%4;const h=species===2?2.25:1.9;
+  const lean=(r(1)-.5)*.24;
+  tapered(g,new THREE.Vector3(0,0,0),new THREE.Vector3(lean,h,0),.22,.105,species===1?0xc1b59b:0x796249,7);
+  if(species===2){ // conifer: distinct layered silhouette
+   for(let i=0;i<3;i++){foliage(g,lean,h-.17+i*.55,0,.99-i*.2,p.seed+i,'cone');}
+  } else if(species===1){ // silver birch, airy foliage and light trunk
+   for(let i=0;i<5;i++){const a=i*2.39;const x=Math.cos(a)*(.56+r(i)*.15),z=Math.sin(a)*(.46+r(i+10)*.12);tapered(g,new THREE.Vector3(lean,h*.56,0),new THREE.Vector3(x,h+(.2+r(i+20)*.45),z),.085,.025,0xa99e85,5);foliage(g,x,h+.18+r(i+20)*.45,z,.55,p.seed+i);}
+   foliage(g,lean,h+.75,0,.64,p.seed+11);
+  } else if(species===3){ // slender cypress / tall column
+   for(let i=0;i<4;i++){const crown=shape(g,new THREE.IcosahedronGeometry(.64-i*.085,1),green[i%green.length],lean,h*.66+i*.47,0);crown.scale.set(.75,1.06,.75);}
+  } else { // mature broadleaf tree
+   for(let i=0;i<6;i++){const a=i*Math.PI*2/6;const x=lean+Math.cos(a)*.62,z=Math.sin(a)*.55; tapered(g,new THREE.Vector3(lean,h*.67,0),new THREE.Vector3(x,h+.28,z),.085,.03,0x806749,5);foliage(g,x,h+.42+(i%2)*.2,z,.72,p.seed+i);}
+   foliage(g,lean,h+.89,0,.78,p.seed+9);
+  }
+ }
+ if(p.kind==='bush'){
+  const num=5+Math.floor(r(3)*3);
+  for(let i=0;i<num;i++){const a=i*2.4,rad=.25+.17*r(i);foliage(g,Math.cos(a)*rad,.32+r(i+9)*.21,Math.sin(a)*rad,.25+r(i+6)*.13,p.seed+i);}
+ }
+ if(p.kind==='flower'){
+  const count=8;for(let i=0;i<count;i++){const a=i*2.399,rad=.13+.37*r(i),x=Math.cos(a)*rad,z=Math.sin(a)*rad,h=.25+.23*r(i+12);tapered(g,new THREE.Vector3(x,0,z),new THREE.Vector3(x+.04,h,z),.016,.008,0x527d49,5);
+   const color=[0xeedba8,0xe8b1a1,0xc7bbdf,0xf2eee0][(i+p.seed)%4];for(let j=0;j<5;j++){const angle=j*Math.PI*2/5;const petal=shape(g,new THREE.IcosahedronGeometry(.078,0),color,x+.04+Math.cos(angle)*.067,h,z+Math.sin(angle)*.067);petal.scale.set(.8,.48,1.2);}shape(g,new THREE.IcosahedronGeometry(.035,0),0xd7ab53,x+.04,h,z);
+  }
+ }
+ if(p.kind==='rock'){const rock=shape(g,new THREE.DodecahedronGeometry(.45+r(2)*.19,0),0x959e91,0,.3,0);rock.scale.set(1.3,.65,.85);rock.rotation.y=r(4)*6.28;}
+ if(p.kind==='pond'){
+  const shore=shape(g,new THREE.CylinderGeometry(1.35,1.38,.09,14),0x869e78,0,.025,0);shore.scale.z=.75;
+  const water=shape(g,new THREE.CylinderGeometry(1.14,1.17,.05,20),0x80b4ac,0,.085,0);water.scale.z=.77;water.castShadow=false;
+  for(let i=0;i<5;i++){const a=i*2.47,rad=1.16+r(i)*.16;const stone=shape(g,new THREE.DodecahedronGeometry(.19+r(i+5)*.09,0),0x9da99a,Math.cos(a)*rad,.1,Math.sin(a)*rad*.73);stone.scale.y=.46;}
+ }
+ g.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh)obj.userData.id=p.id;});return g;
+}
+function groundHeight(x:number,z:number){return .035*Math.sin(x*1.5)*Math.cos(z*1.2)+.018*Math.sin(z*2.8+x);}
+function addLandscape(scene:THREE.Scene){
+ const groundGeo=new THREE.PlaneGeometry(11,11,44,44);groundGeo.rotateX(-Math.PI/2);const pos=groundGeo.getAttribute('position');for(let i=0;i<pos.count;i++){const x=pos.getX(i),z=pos.getZ(i);pos.setY(i,groundHeight(x,z));}groundGeo.computeVertexNormals();
+ land=new THREE.Mesh(groundGeo,mat(0x9db881));land.receiveShadow=true;scene.add(land);
+ const side=shape(new THREE.Group(),new THREE.BoxGeometry(11,.58,11),0x7a8365,0,-.36,0);scene.add(side);
+ // A subtle walking path, assembled from visible irregular stepping-stones.
+ const path=new THREE.Group();for(let i=0;i<12;i++){const z=-4.85+i*.8,x=-.92+Math.sin(i*.55)*.42;const stone=shape(path,new THREE.DodecahedronGeometry(.34+(i%3)*.055,0),i%3===0?0xb4aa8e:0xbbb39a,x,groundHeight(x,z)+.07,z);stone.scale.set(1.4,.14,.82);stone.rotation.y=i*.47;}scene.add(path);
+ // Grass tufts sit directly in the renderer and never obstruct object picking.
+ const tufts=new THREE.Group();const bladeMat=mat(0x769b61);for(let i=0;i<150;i++){const x=(rand(i,5)-.5)*10.1,z=(rand(i,8)-.5)*10.1;if(Math.abs(x+1)<.65)continue;const h=.065+rand(i,9)*.11;const blade=new THREE.Mesh(new THREE.ConeGeometry(.025,h,3),bladeMat);blade.position.set(x,groundHeight(x,z)+h/2,z);blade.rotation.z=(rand(i,11)-.5)*.5;tufts.add(blade);}scene.add(tufts);
+}
+function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.55;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#dce9e2');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xf4fff2,0x879b85,2.15));const sun=new THREE.DirectionalLight(0xffe6be,3.1);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=3;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
+function refreshPlants3d(){if(!objects)return;while(objects.children.length){const child=objects.children[0];objects.remove(child);child.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh){obj.geometry.dispose();/* shared materials are cached; only geometry is per object */}});}plants.forEach(p=>objects!.add(buildPlant(p)));}
 function updateCamera(){if(!camera)return;camera.position.set(Math.sin(yaw)*Math.cos(pitch)*distance,Math.sin(pitch)*distance,Math.cos(yaw)*Math.cos(pitch)*distance);camera.lookAt(0,0,0);camera.updateProjectionMatrix();}
 function resize(){const w=viewport.clientWidth,h=viewport.clientHeight;if(w<1||h<1)return;if(camera){const span=7.7;camera.left=-span*w/h;camera.right=span*w/h;camera.top=span;camera.bottom=-span;camera.updateProjectionMatrix();}renderer?.setSize(w,h,false);}
 function loop(){request=requestAnimationFrame(loop);renderer?.render(scene!,camera!);frames++;const now=performance.now();if(now-lastFrame>1000){app.querySelector('#fps')!.textContent=`${Math.round(frames*1000/(now-lastFrame))} FPS`;frames=0;lastFrame=now;}}
