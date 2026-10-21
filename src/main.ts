@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import './style.css';
+import { createFern } from './vegetation/fern';
 
 type Style = 'lowpoly'|'organic'|'vector';
-type Kind = 'tree'|'sapling'|'bush'|'flower'|'rock'|'pond';
+type Kind = 'tree'|'sapling'|'bush'|'flower'|'rock'|'pond'|'fern';
 type Plant = {id:number;kind:Kind;x:number;z:number;seed:number};
 const storageKey = 'komorebi-lab-v1';
 // A composed reference garden, not a scattering of individual props.
@@ -40,8 +41,8 @@ let selected:Kind='tree';
 let deleting=false;
 let dense=false;
 let nextId=Math.max(0,...plants.map(p=>p.id))+1;
-const labels:Record<Kind,string>={tree:'Arbre',sapling:'Jeune arbre',bush:'Buisson',flower:'Fleurs',rock:'Rocher',pond:'Mare'};
-const ico:Record<Kind,string>={tree:'♠',sapling:'♣',bush:'✿',flower:'✳',rock:'◆',pond:'≈'};
+const labels:Record<Kind,string>={tree:'Arbre',sapling:'Jeune arbre',bush:'Buisson',flower:'Fleurs',rock:'Rocher',pond:'Mare',fern:'Fougère'};
+const ico:Record<Kind,string>={tree:'♠',sapling:'♣',bush:'✿',flower:'✳',rock:'◆',pond:'≈',fern:'❧'};
 function load(){try{const v=JSON.parse(localStorage.getItem(storageKey)||'null'); if(Array.isArray(v)&&v.every(p=>typeof p.id==='number'&&typeof p.kind==='string'&&typeof p.x==='number'&&typeof p.z==='number'))return v as Plant[];}catch{}return seedGarden.map(p=>({...p}));}
 function save(){localStorage.setItem(storageKey,JSON.stringify(plants));}
 const app=document.querySelector<HTMLDivElement>('#app')!;
@@ -194,6 +195,10 @@ function buildPlant(p:Plant){
    const tip=shape(g,new THREE.ConeGeometry(.20,.57,7),0x53864f,lean,3.14,0);
    tip.rotation.y=.33;
   }
+ }
+ if(p.kind==='fern'){
+  const fern=createFern(p.seed);
+  for(const child of [...fern.children])g.add(child);
  }
  if(p.kind==='bush'){
   const num=5+Math.floor(r(3)*3);
@@ -432,6 +437,7 @@ const speciesCatalog:SpeciesRecord[]=[
  {id:'cypress',name:'Cyprès',group:'Arbres',kind:'tree',family:3,description:'Une ponctuation étroite et élancée pour rythmer la composition.',habitat:'Sol drainé · soleil'},
  {id:'young',name:'Jeune arbre',group:'Arbres',kind:'sapling',family:1,description:'Une déclinaison plus petite des arbres, parfaite en bordure de bosquet.',habitat:'Lisière'},
  {id:'shrub',name:'Arbuste',group:'Sous-bois',kind:'bush',family:0,description:'Masses arrondies et feuillage dense pour relier arbres et prairie.',habitat:'Lisière · sous-bois'},
+ {id:'fern',name:'Fougère',group:'Sous-bois',kind:'fern',family:0,description:'Frondes arquées et folioles étagées. La silhouette du sous-bois.',habitat:'Sol frais · mi-ombre'},
  {id:'flower',name:'Fleurs sauvages',group:'Prairie',kind:'flower',family:0,description:'Petites floraisons claires rassemblées en touffes naturelles.',habitat:'Prairie · soleil'},
  {id:'rock',name:'Roche',group:'Minéraux',kind:'rock',family:0,description:'Pierre facettée aux volumes simples et aux teintes minérales.',habitat:'Partout'},
  {id:'pond',name:'Mare',group:'Eau',kind:'pond',family:0,description:'Une surface d’eau calme aux berges irrégulières.',habitat:'Terrain humide'},
@@ -441,10 +447,10 @@ const botanicalList=app.querySelector<HTMLElement>('#botany-list')!;
 const variantBar=app.querySelector<HTMLElement>('#botany-variants')!;
 let botanicalSpecies=speciesCatalog[0],botanicalVariant=0;
 let botanicalRenderer:THREE.WebGLRenderer|undefined,botanicalScene:THREE.Scene|undefined,botanicalCamera:THREE.PerspectiveCamera|undefined,botanicalGroup:THREE.Group|undefined;
-let botanicalAzimuth=.66, botanicalElevation=.36, botanicalDistance=6.8,botanicalFrame=0,botanicalDrag=false,botanicalX=0,botanicalY=0;
+let botanicalAzimuth=.66, botanicalElevation=.36, botanicalAimY=1, botanicalDistance=6.8,botanicalFrame=0,botanicalDrag=false,botanicalX=0,botanicalY=0;
 const botanicalTarget=app.querySelector<HTMLElement>('#botany-canvas')!;
 function botanicalSeed(species:SpeciesRecord,variant:number){return (variant*16+4+species.family)%256;}
-function updateBotanicalCamera(){if(!botanicalCamera)return;botanicalCamera.position.set(Math.sin(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance,Math.sin(botanicalElevation)*botanicalDistance+1,Math.cos(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance);botanicalCamera.lookAt(0,1,0);}
+function updateBotanicalCamera(){if(!botanicalCamera)return;botanicalCamera.position.set(Math.sin(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance,Math.sin(botanicalElevation)*botanicalDistance+botanicalAimY,Math.cos(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance);botanicalCamera.lookAt(0,botanicalAimY,0);}
 function resizeBotanical(){if(!botanicalRenderer||!botanicalCamera)return;const w=botanicalTarget.clientWidth,h=botanicalTarget.clientHeight;if(w<2||h<2)return;botanicalRenderer.setSize(w,h,false);botanicalCamera.aspect=w/h;botanicalCamera.updateProjectionMatrix();}
 function renderBotanical(){if(!botanicalRenderer||!botanicalScene||!botanicalCamera)return;botanicalRenderer.render(botanicalScene,botanicalCamera);botanicalFrame=requestAnimationFrame(renderBotanical);}
 function selectBotanical(species:SpeciesRecord,variant=0){
@@ -460,7 +466,19 @@ function selectBotanical(species:SpeciesRecord,variant=0){
  if(botanicalGroup){botanicalScene.remove(botanicalGroup);botanicalGroup.traverse(o=>{if(o instanceof THREE.Mesh)o.geometry.dispose();});}
  botanicalGroup=buildPlant({id:-1,kind:species.kind,x:0,z:0,seed:botanicalSeed(species,variant)});
  // Plant builders use garden coordinates; normalize them to the studio plinth.
- botanicalGroup.position.set(0,.12,0);botanicalScene.add(botanicalGroup);
+ botanicalGroup.position.set(0,.12,0);
+ // Visual scale is independent of world scale: compare silhouettes comfortably.
+ const previewScale=species.kind==='flower'?2.5:species.kind==='bush'?1.8:species.kind==='rock'?1.6:species.kind==='fern'?2.3:species.kind==='pond'?1.15:1;
+ botanicalGroup.scale.multiplyScalar(previewScale);
+ botanicalScene.add(botanicalGroup);
+ const bounds=new THREE.Box3().setFromObject(botanicalGroup);
+ if(!bounds.isEmpty()){
+  const size=bounds.getSize(new THREE.Vector3());
+  const center=bounds.getCenter(new THREE.Vector3());
+  botanicalAimY=species.kind==='pond' ? 0.2 : Math.max(.45,center.y*.80);
+  botanicalDistance=THREE.MathUtils.clamp(Math.max(size.y*1.6,size.x*1.8,4.0),4,11);
+  botanicalElevation=.33;updateBotanicalCamera();
+ }
 }
 function openBotanical(){
  botanyPanel.hidden=false;
@@ -471,13 +489,13 @@ function openBotanical(){
   botanicalCamera=new THREE.PerspectiveCamera(36,1,.1,100);
   botanicalScene.add(new THREE.HemisphereLight(0xfff3d8,0x89937b,2.2));
   const light=new THREE.DirectionalLight(0xffecc6,2.7);light.position.set(-4,8,6);light.castShadow=true;botanicalScene.add(light);
-  const plinth=new THREE.Mesh(new THREE.CylinderGeometry(1.85,1.96,.23,48),new THREE.MeshStandardMaterial({color:0xdbdfc3,roughness:1}));plinth.position.y=-.14;botanicalScene.add(plinth);
-  const floor=new THREE.Mesh(new THREE.CircleGeometry(2.0,64),new THREE.MeshStandardMaterial({color:0xa5bd86,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=.005;botanicalScene.add(floor);
+  const plinth=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.57,.18,48),new THREE.MeshStandardMaterial({color:0xdbdfc3,roughness:1}));plinth.position.y=-.14;botanicalScene.add(plinth);
+  const floor=new THREE.Mesh(new THREE.CircleGeometry(1.55,64),new THREE.MeshStandardMaterial({color:0xa5bd86,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=.005;botanicalScene.add(floor);
   const canvas=botanicalRenderer.domElement;canvas.style.touchAction='none';
   canvas.addEventListener('pointerdown',e=>{botanicalDrag=true;botanicalX=e.clientX;botanicalY=e.clientY;canvas.setPointerCapture(e.pointerId);});
   canvas.addEventListener('pointerup',()=>botanicalDrag=false);
   canvas.addEventListener('pointermove',e=>{if(!botanicalDrag)return;botanicalAzimuth+=(e.clientX-botanicalX)*.008;botanicalElevation=THREE.MathUtils.clamp(botanicalElevation+(e.clientY-botanicalY)*.006,-.15,1.3);botanicalX=e.clientX;botanicalY=e.clientY;updateBotanicalCamera();});
-  canvas.addEventListener('wheel',e=>{e.preventDefault();botanicalDistance=THREE.MathUtils.clamp(botanicalDistance+Math.sign(e.deltaY)*.5,3.6,11);updateBotanicalCamera();},{passive:false});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();botanicalDistance=THREE.MathUtils.clamp(botanicalDistance+Math.sign(e.deltaY)*.5,2.5,16);updateBotanicalCamera();},{passive:false});
  }
  resizeBotanical();updateBotanicalCamera();selectBotanical(botanicalSpecies,botanicalVariant);cancelAnimationFrame(botanicalFrame);renderBotanical();
 }

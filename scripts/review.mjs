@@ -109,7 +109,7 @@ try {
   // Botanical workshop snapshots: capture the whole application, not only the garden viewport.
   await page.locator('#botany-open').click();
   await page.waitForTimeout(400);
-  for(const [id,name] of [['oak','botany-oak'],['pine','botany-conifer'],['flower','botany-flowers'],['shrub','botany-shrub']]){
+  for(const [id,name] of [['oak','botany-oak'],['pine','botany-conifer'],['flower','botany-flowers'],['shrub','botany-shrub'],['fern','botany-fern']]){
     await page.locator(`[data-species="${id}"]`).click();
     await page.waitForTimeout(240);
     const raw=await page.screenshot({type:'png',animations:'disabled'});
