@@ -6,14 +6,33 @@ type Style = 'lowpoly'|'organic'|'vector';
 type Kind = 'tree'|'sapling'|'bush'|'flower'|'rock'|'pond';
 type Plant = {id:number;kind:Kind;x:number;z:number;seed:number};
 const storageKey = 'komorebi-lab-v1';
+// A composed reference garden, not a scattering of individual props.
+// Distinct planting zones: northern grove, woodland edge, pond margin,
+// flower meadow, and an open foreground. Coordinates remain editable.
 const seedGarden: Plant[] = [
-  {id:1,kind:'tree',x:-2.7,z:-2.0,seed:4},{id:2,kind:'tree',x:2.7,z:1.2,seed:5},
-  {id:3,kind:'sapling',x:0.1,z:-2.9,seed:6},{id:4,kind:'sapling',x:3.3,z:-2.6,seed:7},
-  {id:5,kind:'bush',x:-3,z:1,seed:5},{id:6,kind:'bush',x:1.7,z:-1.8,seed:6},
-  {id:7,kind:'bush',x:3.2,z:2.8,seed:7},{id:8,kind:'flower',x:-1.2,z:2.1,seed:8},
-  {id:9,kind:'flower',x:0.8,z:2.8,seed:9},{id:10,kind:'flower',x:-3.6,z:3,seed:10},
-  {id:11,kind:'rock',x:-1.3,z:-3.7,seed:11},{id:12,kind:'rock',x:3.8,z:-0.4,seed:12},
-  {id:13,kind:'pond',x:0.3,z:0.2,seed:13},
+  {id:1,kind:'tree',x:-3.7,z:-3.5,seed:4}, // mature broadleaf, grove
+  {id:2,kind:'tree',x:-1.6,z:-4.2,seed:5}, // light birch
+  {id:3,kind:'tree',x:3.55,z:-3.45,seed:6}, // evergreen backdrop
+  {id:4,kind:'sapling',x:4.35,z:-1.45,seed:7},
+  {id:5,kind:'sapling',x:-4.15,z:-.65,seed:9},
+  {id:6,kind:'bush',x:-3.45,z:-1.6,seed:25},
+  {id:7,kind:'bush',x:-2.35,z:-2.15,seed:26},
+  {id:8,kind:'bush',x:-4.25,z:1.35,seed:27},
+  {id:9,kind:'bush',x:2.45,z:-3.9,seed:28},
+  {id:10,kind:'bush',x:3.75,z:.75,seed:29},
+  {id:11,kind:'bush',x:3.15,z:1.6,seed:30},
+  {id:12,kind:'bush',x:1.85,z:3.55,seed:31},
+  {id:13,kind:'flower',x:-3.8,z:2.35,seed:40},
+  {id:14,kind:'flower',x:-3.05,z:2.75,seed:41},
+  {id:15,kind:'flower',x:-2.3,z:3.15,seed:42},
+  {id:16,kind:'flower',x:-1.85,z:3.95,seed:43},
+  {id:17,kind:'flower',x:3.15,z:2.6,seed:44},
+  {id:18,kind:'flower',x:3.9,z:2.3,seed:45},
+  {id:19,kind:'flower',x:2.9,z:3.85,seed:46},
+  {id:20,kind:'rock',x:-3.25,z:-4.75,seed:50},
+  {id:21,kind:'rock',x:4.45,z:-3.15,seed:51},
+  {id:22,kind:'rock',x:1.85,z:.95,seed:52},
+  {id:23,kind:'pond',x:.65,z:-.45,seed:60},
 ];
 let plants:Plant[] = load();
 let style:Style='lowpoly';
@@ -367,7 +386,16 @@ function refreshUI(){app.querySelectorAll<HTMLButtonElement>('[data-style]').for
 function changeStyle(s:Style){if(style===s)return;dispose();style=s;if(s==='vector')initVector();else init3d();refreshUI();}
 app.querySelectorAll<HTMLButtonElement>('[data-style]').forEach(b=>b.onclick=()=>changeStyle(b.dataset.style as Style));
 app.querySelector<HTMLButtonElement>('#erase')!.onclick=()=>{deleting=!deleting;refreshUI();};
-app.querySelector<HTMLButtonElement>('#reset')!.onclick=()=>{plants=seedGarden.map(p=>({...p}));dense=false;nextId=14;changed();};
+app.querySelector<HTMLButtonElement>('#reset')!.onclick=()=>{plants=seedGarden.map(p=>({...p}));dense=false;nextId=Math.max(0,...plants.map(p=>p.id))+1;changed();};
 app.querySelector<HTMLButtonElement>('#home')!.onclick=()=>{yaw=Math.PI/4;pitch=.89;if(camera)camera.zoom=1;updateCamera();};
-app.querySelector<HTMLButtonElement>('#density')!.onclick=()=>{dense=!dense;if(dense){for(let i=0;i<110;i++){const x=Math.sin(i*44.17)*4.65,z=Math.cos(i*19.73)*4.65;plants.push({id:nextId++,kind:(['flower','bush','flower','sapling','rock'] as Kind[])[i%5],x,z,seed:i+100});}}else{plants=plants.filter(p=>p.seed<100);}changed();};
+app.querySelector<HTMLButtonElement>('#density')!.onclick=()=>{dense=!dense;if(dense){for(let i=0;i<110;i++){
+  // Dense planting happens in woodland edges and meadow beds, not uniformly.
+  const a=i*2.399963229728653, ring=Math.sqrt((i%37)/37);
+  const zones=[[-3.15,-2.6,1.45],[3.25,-2.4,1.30],[-2.75,3.05,1.35],[3.05,2.95,1.25]];
+  const [cx,cz,radius]=zones[i%zones.length];
+  const x=Math.max(-4.8,Math.min(4.8,cx+Math.cos(a)*ring*radius));
+  const z=Math.max(-4.8,Math.min(4.8,cz+Math.sin(a)*ring*radius));
+  const kind:Kind=i%11===0?'sapling':i%5===0?'rock':i%3===0?'bush':'flower';
+  plants.push({id:nextId++,kind,x,z,seed:i+100});
+ }}else{plants=plants.filter(p=>p.seed<100);}changed();};
 window.addEventListener('resize',resize);init3d();refreshUI();
