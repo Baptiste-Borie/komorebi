@@ -270,14 +270,30 @@ function addLandscape(world:THREE.Scene){
  // Earth underneath the grassy terrain: it gives the diorama an actual cutaway edge.
  const earth=new THREE.Mesh(new THREE.BoxGeometry(11,.8,11),mat(0x776c50));earth.position.y=-.51;earth.receiveShadow=true;world.add(earth);
  const lip=new THREE.Mesh(new THREE.BoxGeometry(11,.12,11),mat(0x596c48));lip.position.y=-.14;world.add(lip);
- // Path stones form a gentle S-curve instead of an arrow-straight line.
- const stepping=new THREE.Group();
- for(let i=0;i<17;i++){
-  const z=-5+i*.61,x=-.9+.48*Math.sin(i*.32);
-  const stone=shape(stepping,new THREE.DodecahedronGeometry(.24+.07*rand(i,3),0),i%3===0?0x9d9b85:0xb7ad92,x,groundHeight(x,z)+.035,z);
-  stone.scale.set(1.38,.21,1.05);stone.rotation.y=rand(i,8)*1.5;stone.castShadow=false;
+ // An informal footpath: small, irregular stones in a gently meandering strip.
+ // Two instanced materials keep it inexpensive even as the garden grows.
+ const pathGeo=new THREE.DodecahedronGeometry(1,0);
+ const pathPalette=[0xb8ad91,0x969a82];
+ for(let tone=0;tone<2;tone++){
+  const count=21;
+  const pathMesh=new THREE.InstancedMesh(pathGeo,mat(pathPalette[tone]),count);
+  const transform=new THREE.Object3D();
+  pathMesh.castShadow=false;
+  pathMesh.receiveShadow=true;
+  for(let i=0;i<count;i++){
+   const step=i*2+tone;
+   const z=-4.9+step*.24;
+   const x=-1.30+.29*Math.sin(step*.23)+.13*Math.sin(step*.72)+(rand(step,74)-.5)*.28;
+   const radius=.13+.085*rand(step,76);
+   transform.position.set(x,groundHeight(x,z)+.025,z);
+   transform.rotation.set(0,rand(step,77)*Math.PI,0);
+   transform.scale.set(radius*(1.1+rand(step,78)*.5),.035+rand(step,79)*.025,radius*(.9+rand(step,80)*.5));
+   transform.updateMatrix();
+   pathMesh.setMatrixAt(i,transform.matrix);
+  }
+  pathMesh.instanceMatrix.needsUpdate=true;
+  world.add(pathMesh);
  }
- world.add(stepping);
  // Thousands of blades cost one draw call, not thousands of individual meshes.
  const count=900, bladeGeo=new THREE.ConeGeometry(.027,.13,3),bladeMat=new THREE.MeshStandardMaterial({color:0x638850,roughness:1,flatShading:true,side:THREE.DoubleSide});
  const grass=new THREE.InstancedMesh(bladeGeo,bladeMat,count);grass.castShadow=false;grass.receiveShadow=false;
@@ -395,7 +411,10 @@ app.querySelector<HTMLButtonElement>('#density')!.onclick=()=>{dense=!dense;if(d
   const [cx,cz,radius]=zones[i%zones.length];
   const x=Math.max(-4.8,Math.min(4.8,cx+Math.cos(a)*ring*radius));
   const z=Math.max(-4.8,Math.min(4.8,cz+Math.sin(a)*ring*radius));
-  const kind:Kind=i%11===0?'sapling':i%5===0?'rock':i%3===0?'bush':'flower';
+  // Keep broadleaf saplings sparse; crowding the water hid the shoreline.
+  const kind:Kind=i%23===0?'sapling':i%17===0?'rock':i%4===0?'bush':'flower';
+  // Leave a breathing area around the pond and its nearest paths.
+  if(Math.hypot(x-.65,z+.45)<1.65)continue;
   plants.push({id:nextId++,kind,x,z,seed:i+100});
  }}else{plants=plants.filter(p=>p.seed<100);}changed();};
 window.addEventListener('resize',resize);init3d();refreshUI();

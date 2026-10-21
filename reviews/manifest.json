@@ -7,8 +7,8 @@
   "images": [
     {
       "file": "01-overview.webp",
-      "bytes": 39714,
-      "sha256": "22be42b42c059b86e3366264947177219487110f39229966fc0203af9d850783",
+      "bytes": 39832,
+      "sha256": "4cde6ac6577b2d50663a6e10795a63fdbbfcdfb67a6d6e3dbcd9a502aea47fb5",
       "parts": [
         "01-overview.part-001.b64",
         "01-overview.part-002.b64"
@@ -16,8 +16,8 @@
     },
     {
       "file": "02-angle-left.webp",
-      "bytes": 36996,
-      "sha256": "e74c3bc4bfb4ed947a70246bd0bde9b95669c135ec059e786dd6d4663759a991",
+      "bytes": 37092,
+      "sha256": "23ae6022e2e16c345e26f801d64b0c4c4daebb862552540fd1fa1cbdaa7a7844",
       "parts": [
         "02-angle-left.part-001.b64",
         "02-angle-left.part-002.b64"
@@ -25,8 +25,8 @@
     },
     {
       "file": "03-angle-right.webp",
-      "bytes": 38886,
-      "sha256": "7d5152f79c00a05f9016b04cf6c9e9b190cf9d6004ffb9e38092cc8ec1809cf9",
+      "bytes": 38794,
+      "sha256": "df7041b9a0f2e242d2e2f81dd19b8d804b57a149cee0627a46b82167f36f09a3",
       "parts": [
         "03-angle-right.part-001.b64",
         "03-angle-right.part-002.b64"
@@ -34,16 +34,16 @@
     },
     {
       "file": "04-overhead.webp",
-      "bytes": 34646,
-      "sha256": "cab9fea8d2ad989b91887b505d57d91d31dda90407664216b440b8ec03c1ddbd",
+      "bytes": 34624,
+      "sha256": "089c54909008720bb94851ba774b09e28cb8cb946549b50753751b351eb27167",
       "parts": [
         "04-overhead.part-001.b64"
       ]
     },
     {
       "file": "05-close-overview.webp",
-      "bytes": 53648,
-      "sha256": "2b0d5988406352d5cc936dc044fdb766648382bcaaa1b203b8322b0240746172",
+      "bytes": 53920,
+      "sha256": "8c600fbe145c56778c5e72afbd7c1925415552da9401f028f4e9991fc89f1b3a",
       "parts": [
         "05-close-overview.part-001.b64",
         "05-close-overview.part-002.b64"
@@ -51,8 +51,8 @@
     },
     {
       "file": "06-tree-canopy.webp",
-      "bytes": 63954,
-      "sha256": "6441847f1c3b4bd329997c7bbc10cb880567e918ccf3c2ec341b13bfcf632004",
+      "bytes": 64564,
+      "sha256": "b8053641720b30c65076f8a2d2e3515a780e2a32284a9f43444e2ac3263d8eba",
       "parts": [
         "06-tree-canopy.part-001.b64",
         "06-tree-canopy.part-002.b64"
@@ -60,8 +60,8 @@
     },
     {
       "file": "07-tree-profile.webp",
-      "bytes": 59600,
-      "sha256": "c9cef2abe9dbe113c0f861e9f8b9c8f1e13188a7680df59333926d3abe785d3d",
+      "bytes": 59650,
+      "sha256": "ea054857b11036b5f843f3fdfb7bced24e9270209d47194abfef602b51b903ba",
       "parts": [
         "07-tree-profile.part-001.b64",
         "07-tree-profile.part-002.b64"
@@ -69,8 +69,8 @@
     },
     {
       "file": "08-conifer.webp",
-      "bytes": 59092,
-      "sha256": "10a406c84f5afbe8b16e6787e7a9f15a65c4efad6aa1524a1610d12cbf0f3015",
+      "bytes": 59618,
+      "sha256": "e8c387a5786a85420a593e4ba06f7ee8faa783ac091097a6517875844bbf2ee2",
       "parts": [
         "08-conifer.part-001.b64",
         "08-conifer.part-002.b64"
@@ -78,8 +78,8 @@
     },
     {
       "file": "09-shrubs.webp",
-      "bytes": 55006,
-      "sha256": "2b0055ef017732c749457fd82e6f307c1c687cdebaf7cdc1471276b5bd600f20",
+      "bytes": 55198,
+      "sha256": "bee1b1fdb3c2fb1d75d34cd6436aaf7a91250e5ca57b31dbe5ad6f9b90f611a5",
       "parts": [
         "09-shrubs.part-001.b64",
         "09-shrubs.part-002.b64"
@@ -87,8 +87,8 @@
     },
     {
       "file": "10-wildflowers.webp",
-      "bytes": 54666,
-      "sha256": "c89a999dc04153e530b16573ca7700fd6bbbe9f6c8abc666cb0ef3852321cd3e",
+      "bytes": 55006,
+      "sha256": "6e9feb89aa0e406b8182eea21caebb2fc5eb06b368fdda5d8f02a24ea8086fda",
       "parts": [
         "10-wildflowers.part-001.b64",
         "10-wildflowers.part-002.b64"
@@ -96,8 +96,8 @@
     },
     {
       "file": "11-water.webp",
-      "bytes": 54720,
-      "sha256": "c2bd78d55c775788c35c2cb7980f1bb2d130be6c22c857f93df35958c6419930",
+      "bytes": 54948,
+      "sha256": "4bfa10f1a5458c45b73ccfa51d37c2cc6972bd920b2b47d27603176d82d4f39e",
       "parts": [
         "11-water.part-001.b64",
         "11-water.part-002.b64"
@@ -105,8 +105,8 @@
     },
     {
       "file": "12-path.webp",
-      "bytes": 50580,
-      "sha256": "00c099a0d4612c6de67fd90a531b5d913a0f2e0dc4861ce20fc04d63e6f4e287",
+      "bytes": 51006,
+      "sha256": "620554e9958b65fa2ea6736241a5ef1d152d71eb5e13b2274b86bfea41156f87",
       "parts": [
         "12-path.part-001.b64",
         "12-path.part-002.b64"
@@ -114,8 +114,8 @@
     },
     {
       "file": "13-dense-overview.webp",
-      "bytes": 39280,
-      "sha256": "33e774bd7b5e68ca0c7f50b637fdfb285436d34534ccb34f4a70ef2a0092dc2e",
+      "bytes": 42392,
+      "sha256": "1186a8e8b6f5324338cd4d21b0e90fc57e6bb827624e4accc9657b2d3010ea6d",
       "parts": [
         "13-dense-overview.part-001.b64",
         "13-dense-overview.part-002.b64"
@@ -123,16 +123,17 @@
     },
     {
       "file": "14-dense-angle.webp",
-      "bytes": 35968,
-      "sha256": "edb706520260ad81e20acd03a0e34ea0a11153364ce0b92a2cf8e3982e540d03",
+      "bytes": 38786,
+      "sha256": "85d211e3140311cc9767db801a9915ea14c50f6c7827a868941220438f4c9714",
       "parts": [
-        "14-dense-angle.part-001.b64"
+        "14-dense-angle.part-001.b64",
+        "14-dense-angle.part-002.b64"
       ]
     },
     {
       "file": "15-dense-close.webp",
-      "bytes": 59524,
-      "sha256": "25bb8883b2cf164e768a31a0a48eaedaf2191f6b0124c4a2779dead7bf7a4423",
+      "bytes": 63942,
+      "sha256": "caf68f43136226304f755de6ae072b9e56228c721227edeb0019195090038cac",
       "parts": [
         "15-dense-close.part-001.b64",
         "15-dense-close.part-002.b64"
