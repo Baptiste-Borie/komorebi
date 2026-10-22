@@ -14,7 +14,7 @@ export function createFern(seed: number): THREE.Group {
     return v - Math.floor(v);
   };
   const rachisGeo = new THREE.CylinderGeometry(.004, .009, 1, 4);
-  const count = 7 + Math.floor(rand(1) * 3);
+  const count = 9 + Math.floor(rand(1) * 4);
   for (let frond = 0; frond < count; frond++) {
     const angle = (frond / count) * Math.PI * 2 + (rand(frond + 3) - .5) * .26;
     const spread = .62 + rand(frond + 16) * .30;
@@ -26,7 +26,7 @@ export function createFern(seed: number): THREE.Group {
       tall * Math.sin(t * Math.PI * .88),
       direction.z * spread * Math.pow(Math.sin(t * Math.PI / 2), 1.25)
     );
-    const segments = 12;
+    const segments = 15;
     for (let j = 0; j < segments; j++) {
       const t0 = j / segments, t1 = (j + 1) / segments;
       const start = point(t0), end = point(t1);
@@ -41,7 +41,7 @@ export function createFern(seed: number): THREE.Group {
       const midT = (t0 + t1) * .5;
       const stem = point(midT);
       const profile = Math.pow(Math.sin(Math.PI * midT), .85);
-      const length = (.16 + .075 * rand(frond * 31 + j)) * profile;
+      const length = (.18 + .11 * rand(frond * 31 + j)) * profile;
       for (const side of [-1, 1]) {
         // Small, tapered leaflets reach sideways and angle toward the tip.
         const leafTip = stem.clone().addScaledVector(sideways, side * length)

@@ -24,90 +24,91 @@
   "images": [
     {
       "file": "01-overview.webp",
-      "bytes": 65502,
-      "sha256": "6bd37d6b5f5a35241ff48a1ee368d4f7699ef66b06e5139142c46e1b7dc8ba61",
+      "bytes": 69280,
+      "sha256": "435fcbb391172ed93daa6d39f23b7e92ff172d3f60cb25aefe46a8739ade7f3a",
       "parts": [
         "01-overview.part-001.b64",
         "01-overview.part-002.b64"
       ],
       "metrics": {
-        "calls": 71,
-        "triangles": 73464,
-        "geometries": 71,
+        "calls": 85,
+        "triangles": 108270,
+        "geometries": 85,
         "textures": 5,
-        "programs": 22,
+        "programs": 24,
         "contours": true,
         "contoursEnabled": false,
-        "plants": 23,
+        "plants": 21,
         "waterTime": 4
       }
     },
     {
       "file": "04-overhead.webp",
-      "bytes": 63582,
-      "sha256": "e4001a87361df855160e22eae116d2a6e0e55e2757377623ee6780f3eee99355",
+      "bytes": 69074,
+      "sha256": "f22aa0c6f6249201d40b76460fda3625c56d228c4f985849842ad131c06698c6",
       "parts": [
         "04-overhead.part-001.b64",
         "04-overhead.part-002.b64"
       ],
       "metrics": {
-        "calls": 71,
-        "triangles": 73464,
-        "geometries": 71,
+        "calls": 85,
+        "triangles": 108270,
+        "geometries": 85,
         "textures": 5,
-        "programs": 22,
+        "programs": 24,
         "contours": true,
         "contoursEnabled": false,
-        "plants": 23,
+        "plants": 21,
         "waterTime": 4
       }
     },
     {
       "file": "07-water-close.webp",
-      "bytes": 97394,
-      "sha256": "8ee22ee12070231e84a34b81184fe2a3c43d4a060307c35d6dc9b9945010510b",
+      "bytes": 110704,
+      "sha256": "ce082700c6288ed06a4d996765ada0112fbe504d2dd39f56adad305276f4f885",
       "parts": [
         "07-water-close.part-001.b64",
         "07-water-close.part-002.b64",
-        "07-water-close.part-003.b64"
+        "07-water-close.part-003.b64",
+        "07-water-close.part-004.b64"
       ],
       "metrics": {
-        "calls": 69,
-        "triangles": 73426,
-        "geometries": 71,
+        "calls": 85,
+        "triangles": 108270,
+        "geometries": 85,
         "textures": 5,
-        "programs": 22,
+        "programs": 24,
         "contours": true,
         "contoursEnabled": false,
-        "plants": 23,
+        "plants": 21,
         "waterTime": 4
       }
     },
     {
       "file": "13-dense-overview.webp",
-      "bytes": 79210,
-      "sha256": "496b9ee08605ad7f2a943b3169e38c071016040cd3147f2d893977a5122e743a",
+      "bytes": 86538,
+      "sha256": "b1c211c642b6fe69bc9221e4e1b47c24ae5fbf452add35e60cbff9931bc0057b",
       "parts": [
         "13-dense-overview.part-001.b64",
         "13-dense-overview.part-002.b64",
         "13-dense-overview.part-003.b64"
       ],
       "metrics": {
-        "calls": 298,
-        "triangles": 203820,
-        "geometries": 298,
+        "calls": 338,
+        "triangles": 246556,
+        "geometries": 338,
         "textures": 5,
-        "programs": 22,
+        "programs": 24,
         "contours": true,
         "contoursEnabled": false,
-        "plants": 133,
+        "plants": 131,
         "waterTime": 4
       }
     },
     {
       "file": "15-dense-close.webp",
-      "bytes": 114318,
-      "sha256": "9e6cf30e88855c5096154ccdeafef02e0058a05a59a2faecab8ee571df698d91",
+      "bytes": 128868,
+      "sha256": "929882d04e03aac4bf50663ae2d997c5c8f397cadd0800f5ab5babbc19a9a3c8",
       "parts": [
         "15-dense-close.part-001.b64",
         "15-dense-close.part-002.b64",
@@ -115,21 +116,21 @@
         "15-dense-close.part-004.b64"
       ],
       "metrics": {
-        "calls": 298,
-        "triangles": 203820,
-        "geometries": 298,
+        "calls": 338,
+        "triangles": 246556,
+        "geometries": 338,
         "textures": 5,
-        "programs": 22,
+        "programs": 24,
         "contours": true,
         "contoursEnabled": false,
-        "plants": 133,
+        "plants": 131,
         "waterTime": 4
       }
     },
     {
       "file": "botany-oak.webp",
-      "bytes": 45258,
-      "sha256": "c9e8af1a2712a4b53b505ec565b2309069c83d1cbe95a28562e61c20cb03a23b",
+      "bytes": 44834,
+      "sha256": "55542764d0a84b7538d97a16f84e1e9629ccadd119b2c7aa59241882f4f92da2",
       "parts": [
         "botany-oak.part-001.b64",
         "botany-oak.part-002.b64"
@@ -146,8 +147,8 @@
     },
     {
       "file": "botany-fern.webp",
-      "bytes": 49800,
-      "sha256": "19c9cbe7ed6d747019a7f8ec3a842eed46ca106a29d5520275e8467ff43e1dc2",
+      "bytes": 55070,
+      "sha256": "83b45b8a91de4c61165019d5d23d08e6ee15857fd944296bf8c14c4827752cc9",
       "parts": [
         "botany-fern.part-001.b64",
         "botany-fern.part-002.b64"
@@ -155,8 +156,8 @@
     },
     {
       "file": "botany-pond.webp",
-      "bytes": 43332,
-      "sha256": "0b32b9e50fd872cc505bc0d7e91eeb031f0d7e102b77e4de2d7d62b42babd5e9",
+      "bytes": 43364,
+      "sha256": "792aa4cbf3d304f006529e21c47cc76598403aac8fba7f57e22bbd813b2999cd",
       "parts": [
         "botany-pond.part-001.b64",
         "botany-pond.part-002.b64"

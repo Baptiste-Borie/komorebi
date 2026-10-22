@@ -17,29 +17,27 @@ const storageKey = 'komorebi-lab-v1';
 // Distinct planting zones: northern grove, woodland edge, pond margin,
 // flower meadow, and an open foreground. Coordinates remain editable.
 const seedGarden: Plant[] = [
-  {id:1,kind:'tree',x:-3.7,z:-3.5,seed:4}, // mature broadleaf, grove
-  {id:2,kind:'tree',x:-1.6,z:-4.2,seed:5}, // light birch
-  {id:3,kind:'tree',x:3.55,z:-3.45,seed:6}, // evergreen backdrop
-  {id:4,kind:'sapling',x:4.35,z:-1.45,seed:7},
-  {id:5,kind:'sapling',x:-4.15,z:-.65,seed:9},
-  {id:6,kind:'bush',x:-3.45,z:-1.6,seed:25},
-  {id:7,kind:'bush',x:-2.35,z:-2.15,seed:26},
-  {id:8,kind:'bush',x:-4.25,z:1.35,seed:27},
-  {id:9,kind:'bush',x:2.45,z:-3.9,seed:28},
-  {id:10,kind:'bush',x:3.75,z:.75,seed:29},
-  {id:11,kind:'bush',x:3.15,z:1.6,seed:30},
-  {id:12,kind:'bush',x:1.85,z:3.55,seed:31},
-  {id:13,kind:'flower',x:-3.8,z:2.35,seed:40},
-  {id:14,kind:'flower',x:-3.05,z:2.75,seed:41},
-  {id:15,kind:'flower',x:-2.3,z:3.15,seed:42},
-  {id:16,kind:'flower',x:-1.85,z:3.95,seed:43},
-  {id:17,kind:'flower',x:3.15,z:2.6,seed:44},
-  {id:18,kind:'flower',x:3.9,z:2.3,seed:45},
-  {id:19,kind:'flower',x:2.9,z:3.85,seed:46},
-  {id:20,kind:'rock',x:-3.25,z:-4.75,seed:50},
-  {id:21,kind:'rock',x:4.45,z:-3.15,seed:51},
-  {id:22,kind:'rock',x:1.85,z:.95,seed:52},
-  {id:23,kind:'pond',x:.65,z:-.45,seed:60},
+  {id:1,kind:'tree',x:-3.7,z:-3.45,seed:8}, // chêne haut au nord
+  {id:2,kind:'tree',x:2.9,z:-3.8,seed:5},  // bouleau en lisière
+  {id:3,kind:'tree',x:4.15,z:.65,seed:6}, // conifère en contrepoint
+  {id:4,kind:'tree',x:-1.5,z:-4.35,seed:11}, // cyprès plus dense
+  {id:5,kind:'bush',x:-4.0,z:-1.8,seed:26},
+  {id:6,kind:'bush',x:-2.95,z:-2.0,seed:31},
+  {id:7,kind:'bush',x:3.55,z:-2.0,seed:39},
+  {id:8,kind:'bush',x:2.85,z:2.8,seed:41},
+  {id:9,kind:'fern',x:-3.85,z:-.5,seed:57},
+  {id:10,kind:'fern',x:-3.1,z:.05,seed:58},
+  {id:11,kind:'fern',x:3.65,z:1.85,seed:65},
+  {id:12,kind:'fern',x:2.65,z:3.25,seed:66},
+  {id:13,kind:'flower',x:-3.55,z:2.15,seed:40},
+  {id:14,kind:'flower',x:-2.7,z:2.35,seed:42},
+  {id:15,kind:'flower',x:-2.1,z:3.4,seed:43},
+  {id:16,kind:'flower',x:.5,z:4.0,seed:46},
+  {id:17,kind:'flower',x:1.2,z:3.85,seed:47},
+  {id:18,kind:'rock',x:-4.25,z:-4.2,seed:50},
+  {id:19,kind:'rock',x:3.65,z:4.1,seed:51},
+  {id:20,kind:'rock',x:1.8,z:1.15,seed:52},
+  {id:21,kind:'pond',x:.0,z:-.40,seed:60},
 ];
 let plants:Plant[] = load();
 let style:Style='lowpoly';
@@ -176,41 +174,45 @@ function buildPlant(p:Plant){
   const trunk=species===1?0xc9c2ac:species===2?0x6f624c:0x796448;
   const v=(x:number,y:number,z:number)=>new THREE.Vector3(x,y,z);
   if(species===0){ // An open broadleaf canopy: irregular lobes, visible branching and a coherent crown.
-   const crown=[0x368248,0x519c43,0x70ab42,0x92bc4b,0xabc952,0x478c41];
-   const canopyY=2.15+r(2)*.15;
+   const crown=[0x518d43,0x609849,0x72a34f,0x82ad59,0x92b562,0x5c9647];
+   const canopyY=2.28+r(2)*.35;
    tapered(g,v(0,0,0),v(lean,1.63,0),.25,.13,trunk,7);
    for(let i=0;i<9;i++){
     const a=i*2.399963+(r(i+7)-.5)*.32;
-    const radius=.76+.46*r(i+11), x=lean+Math.cos(a)*radius,z=Math.sin(a)*radius*.83;
-    const y=canopyY+(r(i+19)-.5)*.55;
+    const radius=.66+.58*r(i+11), x=lean+Math.cos(a)*radius,z=Math.sin(a)*radius*.85;
+    const y=canopyY+(r(i+19)-.5)*(.55+.5*r(101));
     const branchTip=v(x*.83,y-.14,z*.83);
     tapered(g,v(lean,1.29,0),branchTip,.088,.028,trunk,5);
     const lobe=shape(g,new THREE.IcosahedronGeometry(.55+.18*r(i+28),1),crown[(i+Math.floor(r(i+30)*3))%crown.length],x,y,z);
-    lobe.scale.set(1.03+.24*r(i+32),.58+.19*r(i+36),.87+.20*r(i+40));
+    lobe.scale.set(.96+.32*r(i+32),.74+.29*r(i+36),.86+.24*r(i+40));
     lobe.rotation.y=a;lobe.castShadow=true;
    }
    for(let i=0;i<3;i++){
     const a=i*2.1+1.4;
-    const lobe=shape(g,new THREE.IcosahedronGeometry(.60+.08*r(i+54),1),crown[(i+3)%crown.length],lean+Math.cos(a)*.38,2.48+r(i+57)*.22,Math.sin(a)*.33);
+    const lobe=shape(g,new THREE.IcosahedronGeometry(.60+.08*r(i+54),1),crown[(i+3)%crown.length],lean+Math.cos(a)*.38,2.55+r(i+57)*.32,Math.sin(a)*.33);
     lobe.scale.set(1.02,.68,.93);lobe.castShadow=true;
    }
-  }else if(species===1){ // Birch: visible light trunk and separate airy sprays.
-   tapered(g,v(0,0,0),v(lean,2.7,0),.16,.065,trunk,7);
-   for(let i=0;i<4;i++){
-    const a=i*2.4,reach=.50+r(50+i)*.33;
-    const x=lean+Math.cos(a)*reach,z=Math.sin(a)*reach*.85;
-    const h=1.62+i*.28;
-    tapered(g,v(lean,h-.53,0),v(x,h+.27,z),.055,.012,0x9e9682,5);
-    const crown=shape(g,new THREE.IcosahedronGeometry(.49+r(i+60)*.14,1),
-      [0x80a649,0xa2bc57,0x729745,0xb0c86a][i],x,h+.32,z);
-    crown.scale.set(.72,1.28,.75);
+   }else if(species===1){ // Birch: slender white bark, dark lenticels and hanging sprays.
+   const crown=[0x75a44f,0x8bb75a,0x9bc368,0x70a258];
+   tapered(g,v(0,0,0),v(lean,3.0,0),.145,.042,0xd9d6c3,8);
+   for(let i=0;i<11;i++){
+    const yy=.45+i*.215,side=i%2?1:-1;
+    const mark=shape(g,new THREE.BoxGeometry(.11+.045*r(i+115),.026,.023),0x4a4a42,lean+side*.025,yy,.115);
+    mark.rotation.z=(r(i+116)-.5)*.30;mark.castShadow=false;
    }
-   const top=shape(g,new THREE.IcosahedronGeometry(.53,1),0x93b555,lean,2.75,0);
-   top.scale.set(.70,1.25,.72);
-   for(let i=0;i<4;i++){
-    const bark=shape(g,new THREE.BoxGeometry(.15,.035,.025),0x827e71,
-      lean+(i%2?-.025:.03),.44+i*.45,.12);
-    bark.castShadow=false;
+   const branches=7+Math.floor(r(100)*3);
+   for(let i=0;i<branches;i++){
+    const a=i*2.399963+r(i+60)*.3,reach=.42+r(i+61)*.53;
+    const height=1.65+(i%5)*.24+r(i+62)*.24;
+    const x=lean+Math.cos(a)*reach,z=Math.sin(a)*reach;
+    tapered(g,v(lean,height-.38,0),v(x,height+.26,z),.044,.011,0xa8a598,5);
+    for(let j=0;j<3;j++){
+     const tx=x+Math.cos(a+j*.7)*(.11+j*.11),tz=z+Math.sin(a+j*.7)*(.10+j*.12);
+     const drop=.15+j*.09+r(i+j+140)*.10;
+     tapered(g,v(x,height+.23,z),v(tx,height+.16-drop,tz),.012,.003,0xa7a18b,4);
+     const leaves=shape(g,new THREE.IcosahedronGeometry(.19+.07*r(i*3+j+170),0),crown[(i+j)%crown.length],tx,height+.13-drop,tz);
+     leaves.scale.set(.69,1.45,.65);leaves.castShadow=false;
+    }
    }
   }else if(species===2){ // Pine: staggered conical whorls with the trunk below.
    tapered(g,v(0,0,0),v(lean,3.12,0),.22,.045,trunk,7);
@@ -223,16 +225,20 @@ function buildPlant(p:Plant){
    }
    const tip=shape(g,new THREE.ConeGeometry(.30,.65,7),0x6b9c65,lean,3.04,0);
    tip.rotation.y=.3;
-  }else{ // Cypress: slender, tall and clustered but not a green column.
-   tapered(g,v(0,0,0),v(lean,3.04,0),.14,.038,trunk,6);
-   for(let i=0;i<5;i++){
-    const y=.94+i*.46;
-    const crown=shape(g,new THREE.IcosahedronGeometry(.38-i*.024,1),
-      [0x2f6044,0x3b7047,0x457a49,0x4e8250,0x628b55][i],lean,y,0);
-    crown.scale.set(.83,1.30,.78);
+   }else{ // Cypress: compact bushy column tapering into a soft rounded crown.
+   const height=2.65+r(107)*.75;
+   tapered(g,v(0,0,0),v(lean,height,0),.14,.025,trunk,6);
+   for(let i=0;i<8;i++){
+    const t=i/7,y=.65+t*height*.83;
+    const width=(.42-.19*t)*(.90+.24*r(i+160));
+    const a=i*2.39996,off=(r(i+161)-.5)*.12;
+    const crown=shape(g,new THREE.IcosahedronGeometry(width,1),
+     [0x336947,0x3c774b,0x468151,0x508b54,0x5b9255][i%5],
+     lean+Math.cos(a)*off,y,Math.sin(a)*off);
+    crown.scale.set(1.0,1.25,.9);crown.castShadow=false;
    }
-   const tip=shape(g,new THREE.ConeGeometry(.20,.57,7),0x53864f,lean,3.14,0);
-   tip.rotation.y=.33;
+   const cap=shape(g,new THREE.IcosahedronGeometry(.23,1),0x538b50,lean,height*.93,0);
+   cap.scale.set(.86,1.06,.86);cap.castShadow=false;
   }
  }
  if(p.kind==='fern'){
@@ -240,14 +246,15 @@ function buildPlant(p:Plant){
   for(const child of [...fern.children])g.add(child);
  }
  if(p.kind==='bush'){
-  const num=6+Math.floor(r(3)*3);
+  const num=7+Math.floor(r(3)*4);
   const greens=[0x3c8545,0x609d42,0x7fae48,0x4c8e45,0xa2bf57];
   for(let i=0;i<num;i++){
-   const a=i*2.399+ r(i+31)*.18,rad=.21+.19*r(i);
+   const a=i*2.399+ r(i+31)*.18,rad=.17+.24*r(i);
    const x=Math.cos(a)*rad,z=Math.sin(a)*rad;
    const radius=.23+r(i+6)*.15;
-   const ball=shape(g,new THREE.IcosahedronGeometry(radius,1),greens[(i+p.seed)%greens.length],x,.26+r(i+9)*.18,z);
-   ball.scale.set(1.15,.65+r(i+10)*.26,.95);ball.castShadow=true;
+   tapered(g,new THREE.Vector3(0,.015,0),new THREE.Vector3(x,.22+r(i+9)*.15,z),.045,.014,0x59764a,5);
+   const ball=shape(g,new THREE.IcosahedronGeometry(radius,1),greens[(i+p.seed)%greens.length],x,.19+r(i+9)*.16,z);
+   ball.scale.set(1.15,.82+r(i+10)*.22,.95);ball.castShadow=true;
   }
   // Basal leaves ground the shrub and break up the spherical silhouette.
   for(let i=0;i<12;i++){
@@ -447,12 +454,32 @@ function init3d(){
  renderer.domElement.addEventListener('pointerup',pointerUp);
  renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();
 }
+let previousPlants:Plant[]=[];
 function refreshPlants3d(){
  if(!objects||!scene)return;
+ const old=previousPlants;
+ const oldById=new Map(old.map(p=>[p.id,p]));
+ const newById=new Map(plants.map(p=>[p.id,p]));
+ const changedPond=old.some(p=>p.kind==='pond'&&!newById.has(p.id))||plants.some(p=>p.kind==='pond'&&!oldById.has(p.id));
+ if(!changedPond && landscape && old.length){
+  for(const child of [...objects.children]){
+   const original=oldById.get(Number(child.userData.id));
+   const current=newById.get(Number(child.userData.id));
+   if(!current || !original || original.kind!==current.kind || original.seed!==current.seed || original.x!==current.x || original.z!==current.z){
+    objects.remove(child);disposeGeometry(child);
+   }
+  }
+  const present=new Set(objects.children.map(c=>Number(c.userData.id)));
+  for(const plant of plants)if(!present.has(plant.id))objects.add(buildPlant(plant));
+  previousPlants=plants.map(p=>({...p}));
+  if(renderer)renderer.shadowMap.needsUpdate=true;
+  return;
+ }
  disposeGeometry(objects);objects.clear();
  if(landscape){scene.remove(landscape);disposeGeometry(landscape);}
  landscape=new THREE.Group();scene.add(landscape);addLandscape(landscape);
  plants.forEach(p=>objects!.add(buildPlant(p)));
+ previousPlants=plants.map(p=>({...p}));
  if(renderer)renderer.shadowMap.needsUpdate=true;
 }
 function updateCamera(){if(!camera)return;camera.position.set(Math.sin(yaw)*Math.cos(pitch)*distance,Math.sin(pitch)*distance,Math.cos(yaw)*Math.cos(pitch)*distance);camera.lookAt(0,0,0);camera.updateProjectionMatrix();}
