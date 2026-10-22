@@ -1,5 +1,7 @@
 # Komorebi — Project Context
 
+> **Document historique.** Depuis V0.22, le périmètre courant est le diorama botanique 3D low-poly sans progression décrit dans `../README.md` et `V022_GOLD_OVERHAUL.md`. Les décisions Phaser/pixel-art et progression ci-dessous ne sont plus la référence de la V1.
+
 > Document de référence actuel du projet.
 >
 > Ce fichier décrit les décisions prises à ce jour et doit servir de contexte commun aux développeurs et aux assistants IA travaillant sur Komorebi.

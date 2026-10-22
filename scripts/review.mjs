@@ -1,3 +1,4 @@
+import { checkInteractions } from './review-checks.mjs';
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { spawn } from 'node:child_process';
@@ -6,6 +7,7 @@ import { mkdir, rm, rename, writeFile, readFile } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 
 const mode = process.argv.includes('--quick') ? 'quick' : process.argv.includes('--full') ? 'full' : 'standard';
+const baseline=process.argv.includes('--baseline');
 const limits = {quick:5, standard:7, full:25};
 const staging = resolve('review-staging');
 const output = resolve('reviews');
@@ -18,7 +20,7 @@ await rm(staging, {recursive:true,force:true});
 await mkdir(staging,{recursive:true});
 let browser;
 let success = false;
-const server = spawn('npm',['run','dev','--','--host','127.0.0.1','--port',String(port),'--strictPort'], {
+const server = spawn('npm',['run','preview','--','--host','127.0.0.1','--port',String(port),'--strictPort'], {
   stdio:'ignore', detached:process.platform!=='win32',
 });
 const sleep = ms => new Promise(r=>setTimeout(r,ms));
@@ -30,20 +32,26 @@ try {
     await sleep(250);
   }
   if(!ready)throw Error(`Serveur Vite inaccessible sur ${url}`);
-  browser=await chromium.launch({headless:true});
+  browser=await chromium.launch({headless:true,
+    ...(process.env.PLAYWRIGHT_EXECUTABLE_PATH?{executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH}:{}),
+    ...(process.env.KOMOREBI_SOFTWARE_GL==='1'?{args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']}:{}),
+  });
   const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
   const errors=[];
+  await page.route('https://fonts.googleapis.com/**',route=>route.fulfill({contentType:'text/css',body:''}));
   page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(url,{waitUntil:'networkidle'});
+  page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+  await page.goto(`${url}/?review=1&time=4`,{waitUntil:'networkidle'});
   const canvas=page.locator('#scene canvas');
   await canvas.waitFor({state:'visible'});
   await page.locator('#menu-toggle').click();
   await page.locator('#reset').click();
   await page.locator('#menu-toggle').click();
   await page.waitForTimeout(600);
-  const manifest={version:2,mode,format:'WebP lossy, encoded as Base64',quality,chunkChars,images:[]};
-  async function capture(name) {
-    const shot=await page.locator('#viewport').screenshot({type:'png',animations:'disabled'});
+  const checks=baseline?[]:await checkInteractions(page);
+  const manifest={version:3,release:baseline?'0.21':'0.22',checks,mode,environment:{browser:browser.version(),softwareGL:process.env.KOMOREBI_SOFTWARE_GL==='1'},format:'WebP lossy, encoded as Base64',quality,chunkChars,images:[]};
+  async function capture(name,wholePage=false) {
+    const shot=await (wholePage?page:page.locator('#viewport')).screenshot({type:'png',animations:'disabled'});
     const bytes=await sharp(shot).webp({quality,effort:5}).toBuffer();
     const file=`${name}.webp`;
     const sha256=createHash('sha256').update(bytes).digest('hex');
@@ -58,7 +66,8 @@ try {
     const reconstructed=Buffer.from((await Promise.all(parts.map(p=>readFile(join(staging,p),'ascii')))).join(''),'base64');
     if(!bytes.equals(reconstructed))throw Error(`Reconstruction Base64 incorrecte : ${file}`);
     await writeFile(join(staging,file),bytes);
-    manifest.images.push({file,bytes:bytes.length,sha256,parts});
+    const metrics=wholePage?undefined:baseline?{hud:await page.locator('#fps').textContent()}:await page.evaluate(()=>window.__komorebiReview.metrics());
+    manifest.images.push({file,bytes:bytes.length,sha256,parts,metrics});
     console.log(`✓ ${file}: ${(bytes.length/1024).toFixed(0)} Kio, ${parts.length} fragments`);
   }
   async function orbit(dx,dy){
@@ -104,26 +113,23 @@ try {
     ['24-light-high-alt',async()=>{await home();await orbit(160,115)}],
     ['25-light-final',async()=>home()],
   ];
-  for(const [name,setup] of shots.slice(0,limits[mode])){
+  const selection=baseline?[shots[0],shots[6],shots[13]]:mode==='full'?shots.slice(0,limits.full):mode==='quick'?[shots[0],shots[6],shots[13]]:[shots[0],shots[3],shots[6],shots[13],shots[15]];
+  for(const [name,setup] of selection){
     await setup();await page.waitForTimeout(160);await capture(name);
   }
   // Botanical workshop snapshots: capture the whole application, not only the garden viewport.
   await page.locator('#botany-open').click();
   await page.waitForTimeout(400);
-  for(const [id,name] of [['oak','botany-oak'],['pine','botany-conifer'],['flower','botany-flowers'],['shrub','botany-shrub'],['fern','botany-fern']]){
+  const specimens=baseline?[['oak','botany-oak']]:mode==='quick'?[['oak','botany-oak'],['pond','botany-pond']]:[
+    ['oak','botany-oak'],['pine','botany-conifer'],['fern','botany-fern'],['pond','botany-pond']
+  ];
+  for(const [id,name] of specimens){
     await page.locator(`[data-species="${id}"]`).click();
     await page.waitForTimeout(240);
-    const raw=await page.screenshot({type:'png',animations:'disabled'});
-    const bytes=await sharp(raw).webp({quality,effort:5}).toBuffer();
-    const base64=bytes.toString('base64'),parts=[];
-    for(let at=0,i=1;at<base64.length;at+=chunkChars,i++){
-      const part=`${name}.part-${String(i).padStart(3,'0')}.b64`;
-      await writeFile(join(staging,part),base64.slice(at,at+chunkChars),'ascii');parts.push(part);
-    }
-    await writeFile(join(staging,`${name}.webp`),bytes);
-    manifest.images.push({file:`${name}.webp`,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),parts});
+    await capture(name,true);
   }
   await page.locator('#botany-close').click();
+  console.log(`✓ ${checks.length} contrôles fonctionnels`);
   if(errors.length)throw Error(`Erreurs JavaScript : ${errors.join(' ; ')}`);
   await writeFile(join(staging,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   // Previous review is only replaced if all captures completed.
