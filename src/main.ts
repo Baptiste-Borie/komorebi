@@ -38,6 +38,7 @@ const seedGarden: Plant[] = [
 let plants:Plant[] = load();
 let style:Style='lowpoly';
 let selected:Kind='tree';
+let selectedSpeciesFamily:number|undefined;
 let deleting=false;
 let dense=false;
 let nextId=Math.max(0,...plants.map(p=>p.id))+1;
@@ -54,7 +55,7 @@ app.querySelector<HTMLButtonElement>('#menu-toggle')!.onclick=()=>{
 };
 app.querySelector<HTMLButtonElement>('#focus')!.onclick=()=>app.classList.toggle('contemplation');
 app.querySelector<HTMLButtonElement>('#build-toggle')!.onclick=()=>app.classList.toggle('tools-open');
-(Object.keys(labels) as Kind[]).forEach(k=>{const btn=document.createElement('button');btn.dataset.kind=k;btn.innerHTML=`<span class="tool-icon">${ico[k]}</span><span>${labels[k]}</span>`;btn.onclick=()=>{selected=k;deleting=false;refreshUI();};tools.append(btn);});
+(Object.keys(labels) as Kind[]).forEach(k=>{const btn=document.createElement('button');btn.dataset.kind=k;btn.innerHTML=`<span class="tool-icon">${ico[k]}</span><span>${labels[k]}</span>`;btn.onclick=()=>{selected=k;selectedSpeciesFamily=undefined;deleting=false;refreshUI();};tools.append(btn);});
 let renderer:THREE.WebGLRenderer|undefined;
 let scene:THREE.Scene|undefined;
 let camera:THREE.OrthographicCamera|undefined;
@@ -64,23 +65,11 @@ let request=0;
 let yaw=Math.PI/4, pitch=.99, distance=16;
 let dragging=false, moved=false, downX=0,downY=0;
 let lastFrame=performance.now(),frames=0;
-const green=[0x3e6644,0x57834d,0x739d59,0x476e4b,0x92ac69];
 const mCache=new Map<string, THREE.MeshStandardMaterial>();
 function mat(color:number,roughness=1){const key=`${color}-${roughness}`;let m=mCache.get(key);if(!m){m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});mCache.set(key,m);}return m;}
 function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){const mesh=new THREE.Mesh(geometry,mat(color));mesh.position.set(x,y,z);mesh.rotation.set(rx,0,rz);mesh.castShadow=geometry.type === 'CylinderGeometry' || geometry.type === 'IcosahedronGeometry';mesh.receiveShadow=true;group.add(mesh);return mesh;}
 function rand(seed:number,n:number){const v=Math.sin(seed*127.1+n*311.7)*43758.5453;return v-Math.floor(v);}
 function tapered(group:THREE.Group,a:THREE.Vector3,b:THREE.Vector3,r0:number,r1:number,color:number,segments=6){const d=new THREE.Vector3().subVectors(b,a);const mesh=shape(group,new THREE.CylinderGeometry(r1,r0,d.length(),segments),color,0,0,0);mesh.position.copy(a).addScaledVector(d,.5);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return mesh;}
-function foliage(group:THREE.Group,x:number,y:number,z:number,r:number,seed:number,shapeKind:'round'|'cone'='round'){
- const col=green[Math.floor(rand(seed,2)*green.length)];
- const geo=shapeKind==='cone'?new THREE.ConeGeometry(r,r*2.2,7,2):new THREE.IcosahedronGeometry(r,1);
- const crown=shape(group,geo,col,x,y,z);
- crown.scale.set(1.05+rand(seed,3)*.25,.78+rand(seed,4)*.25,.94+rand(seed,5)*.23);
- crown.rotation.y=rand(seed,6)*Math.PI;
- if(shapeKind==='round'){
-  // Groups of facets keep the canopy readable at a distance, without spherical candy trees.
-  for(let j=0;j<4;j++){const a=j*Math.PI*.5+rand(seed,j+10); const small=shape(group,new THREE.IcosahedronGeometry(r*.4,0),green[(j+Math.floor(seed))%green.length],x+Math.cos(a)*r*.72,y-r*.12+rand(seed,j+14)*r*.38,z+Math.sin(a)*r*.72);small.scale.y=.78;}
- }
-}
 /**
  * A procedural flower can contain 40+ meshes; the GPU should not receive
  * a separate draw call for every petal or branch. Merge same-material
@@ -201,11 +190,28 @@ function buildPlant(p:Plant){
   for(const child of [...fern.children])g.add(child);
  }
  if(p.kind==='bush'){
-  const num=5+Math.floor(r(3)*3);
-  for(let i=0;i<num;i++){const a=i*2.4,rad=.25+.17*r(i);foliage(g,Math.cos(a)*rad,.32+r(i+9)*.21,Math.sin(a)*rad,.25+r(i+6)*.13,p.seed+i);}
+  const num=6+Math.floor(r(3)*3);
+  const greens=[0x477940,0x619250,0x7da560,0x527e45,0x8eac68];
+  for(let i=0;i<num;i++){
+   const a=i*2.399+ r(i+31)*.18,rad=.21+.19*r(i);
+   const x=Math.cos(a)*rad,z=Math.sin(a)*rad;
+   const radius=.23+r(i+6)*.15;
+   const ball=shape(g,new THREE.IcosahedronGeometry(radius,1),greens[(i+p.seed)%greens.length],x,.26+r(i+9)*.18,z);
+   ball.scale.set(1.15,.65+r(i+10)*.26,.95);ball.castShadow=true;
+  }
+  // Basal leaves ground the shrub and break up the spherical silhouette.
+  for(let i=0;i<12;i++){
+   const a=i*2.399+ r(i+60)*.15,rad=.3+r(i+61)*.28;
+   const leaf=shape(g,new THREE.IcosahedronGeometry(.13+r(i+63)*.06,0),greens[i%greens.length],Math.cos(a)*rad,.09,Math.sin(a)*rad);
+   leaf.scale.set(.82,.24,1.38);leaf.rotation.y=a;leaf.castShadow=false;
+  }
  }
  if(p.kind==='flower'){
   const count=8;for(let i=0;i<count;i++){const a=i*2.399,rad=.13+.37*r(i),x=Math.cos(a)*rad,z=Math.sin(a)*rad,h=.25+.23*r(i+12);tapered(g,new THREE.Vector3(x,0,z),new THREE.Vector3(x+.04,h,z),.016,.008,0x527d49,5);
+   for(let side of [-1,1]){
+    const leaf=shape(g,new THREE.IcosahedronGeometry(.10+r(i+71)*.03,0),side===1?0x5b944a:0x75a35d,x+side*.085,.12+r(i+72)*.08,z+side*.07);
+    leaf.scale.set(.65,.25,1.45);leaf.rotation.y=side*.45+i*.35;leaf.castShadow=false;
+   }
    const color=[0xeedba8,0xe8b1a1,0xc7bbdf,0xf2eee0][(i+p.seed)%4];for(let j=0;j<5;j++){const angle=j*Math.PI*2/5;const petal=shape(g,new THREE.IcosahedronGeometry(.078,0),color,x+.04+Math.cos(angle)*.067,h,z+Math.sin(angle)*.067);petal.scale.set(.8,.48,1.2);}shape(g,new THREE.IcosahedronGeometry(.035,0),0xd7ab53,x+.04,h,z);
   }
  }
@@ -394,7 +400,7 @@ function loop(){request=requestAnimationFrame(loop);if(renderer && (Math.abs(ren
 function pointerDown(e:PointerEvent){dragging=true;moved=false;downX=e.clientX;downY=e.clientY;(e.currentTarget as HTMLCanvasElement).setPointerCapture(e.pointerId);}
 function pointerMove(e:PointerEvent){if(!dragging)return;const dx=e.clientX-downX,dy=e.clientY-downY;if(Math.abs(dx)+Math.abs(dy)>3)moved=true;if(moved){yaw-=dx*.008;pitch=Math.max(.35,Math.min(1.5,pitch+dy*.006));updateCamera();}downX=e.clientX;downY=e.clientY;}
 const raycaster=new THREE.Raycaster();const mouse=new THREE.Vector2();
-function pointerUp(e:PointerEvent){if(!dragging)return;dragging=false;if(moved||!camera||!scene||!land||!renderer)return;const rect=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(objects!.children,true);if(deleting){const id=hits[0]?.object.userData.id as number|undefined;if(id!==undefined){plants=plants.filter(p=>p.id!==id);changed();}return;}const h=raycaster.intersectObject(land)[0];if(h && Math.abs(h.point.x)<5.25 && Math.abs(h.point.z)<5.25){plants.push({id:nextId++,kind:selected,x:Math.round(h.point.x*4)/4,z:Math.round(h.point.z*4)/4,seed:nextId});changed();}}
+function pointerUp(e:PointerEvent){if(!dragging)return;dragging=false;if(moved||!camera||!scene||!land||!renderer)return;const rect=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(objects!.children,true);if(deleting){const id=hits[0]?.object.userData.id as number|undefined;if(id!==undefined){plants=plants.filter(p=>p.id!==id);changed();}return;}const h=raycaster.intersectObject(land)[0];if(h && Math.abs(h.point.x)<5.25 && Math.abs(h.point.z)<5.25){const seed=selectedSpeciesFamily!==undefined&&(selected==='tree'||selected==='sapling')?nextId*4+selectedSpeciesFamily:nextId;plants.push({id:nextId++,kind:selected,x:Math.round(h.point.x*4)/4,z:Math.round(h.point.z*4)/4,seed});changed();}}
 function wheel(e:WheelEvent){e.preventDefault();if(!camera)return;camera.zoom=Math.max(.65,Math.min(2.5,camera.zoom*(e.deltaY>0?.9:1.1)));camera.updateProjectionMatrix();}
 function project(x:number,z:number){return {x:400+(x-z)*25,y:233+(x+z)*18};}
 function svgPlant(p:Plant){const q=project(p.x,p.z),x=q.x,y=q.y;const ss=Math.sin(p.seed*4)*.17;const wrap=(s:string)=>`<g data-id="${p.id}" transform="translate(${x} ${y})">${s}</g>`;
@@ -408,7 +414,7 @@ function initVector(){const root=document.createElement('div');root.className='v
 function refreshVector(){const group=viewport.querySelector('#plants-svg');if(group)group.innerHTML=[...plants].sort((a,b)=>(a.x+a.z)-(b.x+b.z)).map(svgPlant).join('');}
 function dispose(){cancelAnimationFrame(request);renderer?.domElement.removeEventListener('pointerdown',pointerDown);renderer?.domElement.removeEventListener('pointermove',pointerMove);renderer?.domElement.removeEventListener('pointerup',pointerUp);renderer?.domElement.removeEventListener('wheel',wheel);renderer?.dispose();renderer=undefined;camera=undefined;scene=undefined;objects=undefined;land=undefined;viewport.replaceChildren();app.querySelector('#fps')!.textContent='— FPS';}
 function changed(){save();if(style==='vector')refreshVector();else refreshPlants3d();refreshUI();}
-function refreshUI(){app.querySelectorAll<HTMLButtonElement>('[data-style]').forEach(b=>b.classList.toggle('active',b.dataset.style===style));app.querySelectorAll<HTMLButtonElement>('[data-kind]').forEach(b=>b.classList.toggle('active',!deleting&&b.dataset.kind===selected));app.querySelector('#erase')!.classList.toggle('active',deleting);app.querySelector('#counter')!.textContent=`${plants.length} éléments · sauvegarde locale`;app.querySelector('#scene-title')!.textContent=style==='lowpoly'?'01 — Low-poly':style==='organic'?'02 — Organique':'03 — Vectoriel';app.querySelector('#scene-description')!.textContent=style==='lowpoly'?'Des volumes francs, une nature simple et lumineuse.':style==='organic'?'Des volumes adoucis, une végétation plus généreuse.':'Des formes illustrées et des couleurs en aplats.';app.querySelector('#hint')!.textContent=style==='vector'?'Clic pour planter · Cliquez sur un élément pour le supprimer':'Glisser pour tourner · Molette pour zoomer · Clic pour planter';app.querySelector('#density')!.textContent=dense?'− Jardin épuré':'＋ Jardin dense';}
+function refreshUI(){app.querySelectorAll<HTMLButtonElement>('[data-style]').forEach(b=>b.classList.toggle('active',b.dataset.style===style));app.querySelectorAll<HTMLButtonElement>('[data-kind]').forEach(b=>{b.classList.toggle('active',!deleting&&b.dataset.kind===selected);b.title=b.dataset.kind===selected&&selectedSpeciesFamily!==undefined&&selected==='tree'?['Chêne','Bouleau','Conifère','Cyprès'][selectedSpeciesFamily]:'Sélectionner';});app.querySelector('#erase')!.classList.toggle('active',deleting);app.querySelector('#counter')!.textContent=`${plants.length} éléments · sauvegarde locale`;app.querySelector('#scene-title')!.textContent=style==='lowpoly'?'01 — Low-poly':style==='organic'?'02 — Organique':'03 — Vectoriel';app.querySelector('#scene-description')!.textContent=style==='lowpoly'?'Des volumes francs, une nature simple et lumineuse.':style==='organic'?'Des volumes adoucis, une végétation plus généreuse.':'Des formes illustrées et des couleurs en aplats.';app.querySelector('#hint')!.textContent=style==='vector'?'Clic pour planter · Cliquez sur un élément pour le supprimer':'Glisser pour tourner · Molette pour zoomer · Clic pour planter';app.querySelector('#density')!.textContent=dense?'− Jardin épuré':'＋ Jardin dense';}
 function changeStyle(s:Style){if(style===s)return;dispose();style=s;if(s==='vector')initVector();else init3d();refreshUI();}
 app.querySelectorAll<HTMLButtonElement>('[data-style]').forEach(b=>b.onclick=()=>changeStyle(b.dataset.style as Style));
 app.querySelector<HTMLButtonElement>('#erase')!.onclick=()=>{deleting=!deleting;refreshUI();};
@@ -502,7 +508,7 @@ function openBotanical(){
 function closeBotanical(){botanyPanel.hidden=true;document.body.classList.remove('botany-open');cancelAnimationFrame(botanicalFrame);}
 app.querySelector<HTMLButtonElement>('#botany-open')!.onclick=openBotanical;
 app.querySelector<HTMLButtonElement>('#botany-close')!.onclick=closeBotanical;
-app.querySelector<HTMLButtonElement>('#botany-plant')!.onclick=()=>{selected=botanicalSpecies.kind;deleting=false;closeBotanical();refreshUI();};
+app.querySelector<HTMLButtonElement>('#botany-plant')!.onclick=()=>{selected=botanicalSpecies.kind;selectedSpeciesFamily=botanicalSpecies.kind==='tree'||botanicalSpecies.kind==='sapling'?botanicalSpecies.family:undefined;deleting=false;closeBotanical();refreshUI();};
 window.addEventListener('resize',()=>{if(!botanyPanel.hidden)resizeBotanical();});
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!botanyPanel.hidden)closeBotanical();});
 

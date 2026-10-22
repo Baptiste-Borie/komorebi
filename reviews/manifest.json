@@ -7,8 +7,8 @@
   "images": [
     {
       "file": "01-overview.webp",
-      "bytes": 46224,
-      "sha256": "d50aab54d3e9214c9047fe5d352cc23287d3bc74ff4ab34721c8acb3eb3ef7d4",
+      "bytes": 46612,
+      "sha256": "581f8937c6375d69c645ae875e595a7900a052eed016ac430273488ab8c879e2",
       "parts": [
         "01-overview.part-001.b64",
         "01-overview.part-002.b64"
@@ -16,8 +16,8 @@
     },
     {
       "file": "02-angle-left.webp",
-      "bytes": 43674,
-      "sha256": "043db2eb69e68a95927b0c990a024dc6ec205d7349c367a6d64a880bbacff0ff",
+      "bytes": 44576,
+      "sha256": "7cd2d511c9d76541f9e970be48a38682464d138811b6af8101cc063cbcf0dbfc",
       "parts": [
         "02-angle-left.part-001.b64",
         "02-angle-left.part-002.b64"
@@ -25,8 +25,8 @@
     },
     {
       "file": "03-angle-right.webp",
-      "bytes": 45792,
-      "sha256": "be9da533cd4f812913f5918ea285b7c7c8e3cd2deca6e61da412f20e53015b5a",
+      "bytes": 47274,
+      "sha256": "8813e5b26eaab5467e0c0353d5d9f18fb9d3ee0f40821d30f634e8ce3b917610",
       "parts": [
         "03-angle-right.part-001.b64",
         "03-angle-right.part-002.b64"
@@ -34,8 +34,8 @@
     },
     {
       "file": "04-overhead.webp",
-      "bytes": 40214,
-      "sha256": "64291b0a5637d07203a3655d6e610648fa35ff78ae1f4c1ee2f1b93591765aff",
+      "bytes": 41328,
+      "sha256": "632b66be548d190bded9eedcf49c0ef086a312fc9a5de6ee766b903c76699d5b",
       "parts": [
         "04-overhead.part-001.b64",
         "04-overhead.part-002.b64"
@@ -43,8 +43,8 @@
     },
     {
       "file": "05-close-overview.webp",
-      "bytes": 55222,
-      "sha256": "119128ea03d68e2fe002676efaf220831803549946ecefac86b92e5fe590af2c",
+      "bytes": 56258,
+      "sha256": "9d3215c2c987f9c4deed0c0920b88a023219995a047fd7027f5d8b76baac381f",
       "parts": [
         "05-close-overview.part-001.b64",
         "05-close-overview.part-002.b64"
@@ -52,8 +52,8 @@
     },
     {
       "file": "06-tree-canopy.webp",
-      "bytes": 65362,
-      "sha256": "232c8923cca7eafed1a98d0d5bdd28b0b554ec7adbc32d89ac344c6555d7b65e",
+      "bytes": 65598,
+      "sha256": "a7977a7ac089b0abca319ade8d0cec8983f4ad37b169f5627a8a47d660e9d48a",
       "parts": [
         "06-tree-canopy.part-001.b64",
         "06-tree-canopy.part-002.b64"
@@ -61,8 +61,8 @@
     },
     {
       "file": "07-tree-profile.webp",
-      "bytes": 64814,
-      "sha256": "7ab4a78ae019649be8906956c01f87d6080f77f02a2e7957ff2fb9a6b15f8069",
+      "bytes": 67136,
+      "sha256": "63b05150f8cd634a7339f6db91b6c9e0e726344abf65f7b6d97b3f9d346f9eaf",
       "parts": [
         "07-tree-profile.part-001.b64",
         "07-tree-profile.part-002.b64"
@@ -70,8 +70,8 @@
     },
     {
       "file": "08-conifer.webp",
-      "bytes": 64434,
-      "sha256": "b1386b26cc8bbc4d78268f4fd2f6254e81ce330974344b8bb6d21d68ccc794a4",
+      "bytes": 66810,
+      "sha256": "16a0910d89c79da63f7d36cc5ce7ab9400e9fc200da3ede39a347be0b83e0387",
       "parts": [
         "08-conifer.part-001.b64",
         "08-conifer.part-002.b64"
@@ -79,8 +79,8 @@
     },
     {
       "file": "09-shrubs.webp",
-      "bytes": 58292,
-      "sha256": "be17d9121a4baf8db35e8a877d1077b0e1023dfcaa51586ae76aa5e796e51627",
+      "bytes": 59688,
+      "sha256": "1faf28c4d80ceda078cb4e218aae49f8db5a2d9a40eeb7bae258e51253c26e73",
       "parts": [
         "09-shrubs.part-001.b64",
         "09-shrubs.part-002.b64"
@@ -88,8 +88,8 @@
     },
     {
       "file": "10-wildflowers.webp",
-      "bytes": 60080,
-      "sha256": "d091402ce01fc969fef00f5576e4021ed05b5ce5ff54faa76bdbc9f7139f3f64",
+      "bytes": 61228,
+      "sha256": "0032a251759db5eee42cb3d49ca44a058e7ee28eeab896a2110d188974fc53fb",
       "parts": [
         "10-wildflowers.part-001.b64",
         "10-wildflowers.part-002.b64"
@@ -97,8 +97,8 @@
     },
     {
       "file": "11-water.webp",
-      "bytes": 60432,
-      "sha256": "242578439ead0dda3c2edc128d4fc93692a7331e62bc4283f7ee12e338fa33ba",
+      "bytes": 61282,
+      "sha256": "037d4ca38d9fe90d8a48b413027ed39cd6b7e2bea15c228ad737bf97c0aa2e05",
       "parts": [
         "11-water.part-001.b64",
         "11-water.part-002.b64"
@@ -106,8 +106,8 @@
     },
     {
       "file": "12-path.webp",
-      "bytes": 53002,
-      "sha256": "19cb6305d728353fffa556433c4e678b8eeebef8477345d4a6a6012a1819ba66",
+      "bytes": 54172,
+      "sha256": "c171a3918c892bb480417a7bfd1386bb09e52b1cb7b73c51668f6f5b336a2608",
       "parts": [
         "12-path.part-001.b64",
         "12-path.part-002.b64"
@@ -115,8 +115,8 @@
     },
     {
       "file": "13-dense-overview.webp",
-      "bytes": 53734,
-      "sha256": "3c6dc8d3f5f69c2cf9b7afcc84853cd81b463a92ed542d67b4dd565ab7466fee",
+      "bytes": 55434,
+      "sha256": "6c61d2101ebbfb85a92091d7f73d5069cbe5d9777134a154bec63c71041ece45",
       "parts": [
         "13-dense-overview.part-001.b64",
         "13-dense-overview.part-002.b64"
@@ -124,8 +124,8 @@
     },
     {
       "file": "14-dense-angle.webp",
-      "bytes": 50666,
-      "sha256": "4e05e91ac63f8bd24ac67954d2f97e3f3f0ee3c01f1d3d1b8d28aa43bad3e7fe",
+      "bytes": 51892,
+      "sha256": "74a06865e32283742d4d23d86f4bebf1763cce5887d7e0e98b0b3e7c062f2868",
       "parts": [
         "14-dense-angle.part-001.b64",
         "14-dense-angle.part-002.b64"
@@ -133,11 +133,12 @@
     },
     {
       "file": "15-dense-close.webp",
-      "bytes": 71498,
-      "sha256": "e5276fefbe965c97bcf0310034e66e0ce3b44d1927bb28d905fb9e9ed2752b35",
+      "bytes": 72858,
+      "sha256": "e8243f1063536fd41c6b844625cb34e600a426a0ee84c0b8f19f9a0907a4d7bf",
       "parts": [
         "15-dense-close.part-001.b64",
-        "15-dense-close.part-002.b64"
+        "15-dense-close.part-002.b64",
+        "15-dense-close.part-003.b64"
       ]
     },
     {
@@ -158,8 +159,8 @@
     },
     {
       "file": "botany-flowers.webp",
-      "bytes": 37862,
-      "sha256": "cfe34839888d4600bffb7dfa6616a3164d714b319c466c9e0d8bc8564cf08a94",
+      "bytes": 41650,
+      "sha256": "f53b2aaafec8b0401c80230d25c05b8e2afbd67af9016c03d88e402bdad92197",
       "parts": [
         "botany-flowers.part-001.b64",
         "botany-flowers.part-002.b64"
@@ -167,8 +168,8 @@
     },
     {
       "file": "botany-shrub.webp",
-      "bytes": 33596,
-      "sha256": "fb5608857fb7a309a933ea214269230e547122f3d0dce553015d339be6972ab0",
+      "bytes": 34806,
+      "sha256": "f93c35d88166f621a6be358eff1cd7b364fa62082a16fd6e0802ed9efc771e60",
       "parts": [
         "botany-shrub.part-001.b64"
       ]
