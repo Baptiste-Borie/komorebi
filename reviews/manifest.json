@@ -7,8 +7,8 @@
   "images": [
     {
       "file": "01-overview.webp",
-      "bytes": 47802,
-      "sha256": "bdd44fbee2b6ab9f10a0213dc57292159c8381d3587a7f881935dbdd7b3e05a0",
+      "bytes": 47548,
+      "sha256": "6d1aa745a25d5820e72c48290e37bb58e0432bedad630cc32b1e12746be24f5f",
       "parts": [
         "01-overview.part-001.b64",
         "01-overview.part-002.b64"
@@ -16,8 +16,8 @@
     },
     {
       "file": "02-angle-left.webp",
-      "bytes": 45568,
-      "sha256": "322867e0a5d10a5d30ecfd0909ecd7af48217831e5bae4c7ad083c34ef1c4bae",
+      "bytes": 45612,
+      "sha256": "439fc7b5b56f687af5bbd50a5f10088d494d1aa8b974d94bfa1cfb94837bb1dd",
       "parts": [
         "02-angle-left.part-001.b64",
         "02-angle-left.part-002.b64"
@@ -25,8 +25,8 @@
     },
     {
       "file": "03-angle-right.webp",
-      "bytes": 47166,
-      "sha256": "69599b10fa1dd1b2db573225778e46f0b8438db278a7215c90b769bd2d995e71",
+      "bytes": 47170,
+      "sha256": "f358282e62750a216274eaa2ebbc34415d0ad4ea02fff887dfa51763c9a6bb03",
       "parts": [
         "03-angle-right.part-001.b64",
         "03-angle-right.part-002.b64"
@@ -34,8 +34,8 @@
     },
     {
       "file": "04-overhead.webp",
-      "bytes": 45176,
-      "sha256": "c35ca068342d5345d9c422d9bf0f4f9897210633a04c93e4c0aa8f786c367150",
+      "bytes": 45144,
+      "sha256": "afa64b1f9440219a12a60f41c842172fa0b5f326e8ae342e84aca0180164dbd1",
       "parts": [
         "04-overhead.part-001.b64",
         "04-overhead.part-002.b64"
@@ -43,8 +43,8 @@
     },
     {
       "file": "05-close-overview.webp",
-      "bytes": 59880,
-      "sha256": "79b32ab5b9c325ed455564eebd81a2595e6bada2d3f3dc71ccf03d568571db8d",
+      "bytes": 59354,
+      "sha256": "8d7c6963ff986d7cc2359f8997c29791ccc8e2000d84af055807293aeb15369e",
       "parts": [
         "05-close-overview.part-001.b64",
         "05-close-overview.part-002.b64"
@@ -52,11 +52,20 @@
     },
     {
       "file": "06-tree-canopy.webp",
-      "bytes": 68818,
-      "sha256": "2f41a7a2cc0812184837a2dd0bc02b6fbdfd85ce78a4a6df7882883ca03ef805",
+      "bytes": 68398,
+      "sha256": "972d05c7bff67467d3edd8bc1eb444d2ba6ef1a55844edd8efab32fa81d0d6fe",
       "parts": [
         "06-tree-canopy.part-001.b64",
         "06-tree-canopy.part-002.b64"
+      ]
+    },
+    {
+      "file": "07-water-close.webp",
+      "bytes": 61128,
+      "sha256": "54cf590badc504e52c71d8cbadf973d7ae05dbc9aca7c996c9abba63405d60e5",
+      "parts": [
+        "07-water-close.part-001.b64",
+        "07-water-close.part-002.b64"
       ]
     },
     {

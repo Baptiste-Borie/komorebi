@@ -248,17 +248,17 @@ function buildPlant(p:Plant){
    const mesh=shape(g,geo,color,0,0,0);mesh.castShadow=false;mesh.receiveShadow=false;
   };
   disk(1.30,.055,0x77965d);
-  bank(1.06,1.29,.18,.055,0x86a36a);
-  disk(1.07,.18,0x75b0ac);
-  disk(.98,.185,0x91c4b8);
+  bank(1.06,1.29,.18,.055,0x87a66d);
+  disk(1.07,.18,0x609d9a);
+  disk(.98,.185,0x8bc8b8);
   // Subtle surface glaze: avoid a featureless solid disk.
   const glazeGeometry=new THREE.CircleGeometry(.76,40);
   glazeGeometry.rotateX(-Math.PI/2);
-  const glaze=new THREE.Mesh(glazeGeometry,new THREE.MeshBasicMaterial({color:0xb7d9be,transparent:true,opacity:.11,depthWrite:false,side:THREE.DoubleSide}));
+  const glaze=new THREE.Mesh(glazeGeometry,new THREE.MeshBasicMaterial({color:0xd4e9c8,transparent:true,opacity:.18,depthWrite:false,side:THREE.DoubleSide}));
   glaze.scale.set(1.1,1,.78);glaze.position.set(-.08,.188,-.07);
   glaze.castShadow=false;glaze.receiveShadow=false;g.add(glaze);
   for(let k=0;k<2;k++){
-   const ripple=new THREE.Mesh(new THREE.RingGeometry(.20+k*.13,.211+k*.13,38,1,0,Math.PI*1.45),new THREE.MeshBasicMaterial({color:0xdcefe0,transparent:true,opacity:.42-k*.10,side:THREE.DoubleSide,depthWrite:false}));
+   const ripple=new THREE.Mesh(new THREE.RingGeometry(.20+k*.13,.211+k*.13,38,1,0,Math.PI*1.45),new THREE.MeshBasicMaterial({color:0xdcefe0,transparent:true,opacity:.65-k*.13,side:THREE.DoubleSide,depthWrite:false}));
    ripple.rotation.x=-Math.PI/2;ripple.rotation.z=k*.9;
    ripple.position.set(-.20+k*.44,.193+k*.001,.08-k*.24);
    ripple.scale.y=.82;ripple.castShadow=false;g.add(ripple);
@@ -314,7 +314,7 @@ function addLandscape(world:THREE.Scene){
  // An informal footpath: small, irregular stones in a gently meandering strip.
  // Two instanced materials keep it inexpensive even as the garden grows.
  const pathGeo=new THREE.DodecahedronGeometry(1,0);
- const pathPalette=[0xbeb7a5,0x9e9d94];
+ const pathPalette=[0xc4bdb0,0xa5a39b];
  for(let tone=0;tone<2;tone++){
   const count=21;
   const pathMesh=new THREE.InstancedMesh(pathGeo,mat(pathPalette[tone]),count);
@@ -392,7 +392,7 @@ function addLandscape(world:THREE.Scene){
   stone.scale.set(1,.45,1.2);stone.rotation.y=rand(i,34)*6.28;stone.castShadow=false;
  }world.add(pebbles);
 }
-function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.34;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#e9e9d8');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xfff7df,0x99917c,2.22));const sun=new THREE.DirectionalLight(0xffeccb,1.18);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=4;sun.shadow.blurSamples=12;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
+function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.34;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#e9e9d8');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xfff7df,0x99917c,2.22));const sun=new THREE.DirectionalLight(0xffeccb,1.18);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=4;sun.shadow.blurSamples=12;sun.shadow.intensity=.48;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
 function refreshPlants3d(){if(!objects)return;while(objects.children.length){const child=objects.children[0];objects.remove(child);child.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh){obj.geometry.dispose();/* shared materials are cached; only geometry is per object */}});}if(land){const geo=land.geometry;const position=geo.getAttribute('position');
  for(let i=0;i<position.count;i++)position.setY(i,groundHeight(position.getX(i),position.getZ(i)));
  position.needsUpdate=true;geo.computeVertexNormals();}

@@ -6,7 +6,7 @@ import { mkdir, rm, rename, writeFile, readFile } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 
 const mode = process.argv.includes('--quick') ? 'quick' : process.argv.includes('--full') ? 'full' : 'standard';
-const limits = {quick:5, standard:6, full:25};
+const limits = {quick:5, standard:7, full:25};
 const staging = resolve('review-staging');
 const output = resolve('reviews');
 const port = 4178;
@@ -83,6 +83,7 @@ try {
     ['04-overhead',async()=>{await home();await orbit(0,110)}],
     ['05-close-overview',async()=>{await home();await zoom(3)}],
     ['06-tree-canopy',async()=>{await home();await orbit(-80,-15);await zoom(5)}],
+    ['07-water-close',async()=>{await home();await orbit(60,65);await zoom(5)}],
     ['07-tree-profile',async()=>{await home();await orbit(250,-60);await zoom(5)}],
     ['08-conifer',async()=>{await home();await orbit(-160,-35);await zoom(4)}],
     ['09-shrubs',async()=>{await home();await orbit(110,20);await zoom(4)}],
