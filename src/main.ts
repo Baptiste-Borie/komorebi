@@ -67,7 +67,7 @@ let dragging=false, moved=false, downX=0,downY=0;
 let lastFrame=performance.now(),frames=0;
 const mCache=new Map<string, THREE.MeshStandardMaterial>();
 function mat(color:number,roughness=1){const key=`${color}-${roughness}`;let m=mCache.get(key);if(!m){m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});mCache.set(key,m);}return m;}
-function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){const mesh=new THREE.Mesh(geometry,mat(color));mesh.position.set(x,y,z);mesh.rotation.set(rx,0,rz);mesh.castShadow=geometry.type === 'CylinderGeometry' || geometry.type === 'IcosahedronGeometry';mesh.receiveShadow=true;group.add(mesh);return mesh;}
+function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){const mesh=new THREE.Mesh(geometry,mat(color));mesh.position.set(x,y,z);mesh.rotation.set(rx,0,rz);mesh.castShadow=geometry.type === 'CylinderGeometry';mesh.receiveShadow=true;group.add(mesh);return mesh;}
 function rand(seed:number,n:number){const v=Math.sin(seed*127.1+n*311.7)*43758.5453;return v-Math.floor(v);}
 function tapered(group:THREE.Group,a:THREE.Vector3,b:THREE.Vector3,r0:number,r1:number,color:number,segments=6){const d=new THREE.Vector3().subVectors(b,a);const mesh=shape(group,new THREE.CylinderGeometry(r1,r0,d.length(),segments),color,0,0,0);mesh.position.copy(a).addScaledVector(d,.5);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return mesh;}
 /**
@@ -123,6 +123,20 @@ function batchPlant(group:THREE.Group):THREE.Group {
 
 function buildPlant(p:Plant){
  const g=new THREE.Group();g.position.set(p.x,groundHeight(p.x,p.z),p.z);g.userData.id=p.id;
+ // Soft local grounding without opaque canopy silhouettes painted across grass.
+ // Exclude water: its surface must remain bright, not receive a shadow disc.
+ if(p.kind==='tree'||p.kind==='sapling'||p.kind==='bush'||p.kind==='rock'){
+  const radius=p.kind==='tree'? .82 : p.kind==='sapling'? .47 : p.kind==='bush'? .42 : .40;
+  const contact=new THREE.Mesh(
+   new THREE.CircleGeometry(radius,24),
+   new THREE.MeshBasicMaterial({color:0x435632,transparent:true,opacity:.105,depthWrite:false,side:THREE.DoubleSide})
+  );
+  contact.rotation.x=-Math.PI/2;
+  contact.scale.y=.82;
+  contact.position.y=.018;
+  contact.castShadow=false;contact.receiveShadow=false;
+  g.add(contact);
+ }
  const r=(n:number)=>rand(p.seed,n);
  if(p.kind==='tree'||p.kind==='sapling'){
   const young=p.kind==='sapling';
