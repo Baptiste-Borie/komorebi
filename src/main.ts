@@ -221,7 +221,7 @@ function buildPlant(p:Plant){
    const color=[0xeedba8,0xe8b1a1,0xc7bbdf,0xf2eee0][(i+p.seed)%4];for(let j=0;j<5;j++){const angle=j*Math.PI*2/5;const petal=shape(g,new THREE.IcosahedronGeometry(.078,0),color,x+.04+Math.cos(angle)*.067,h,z+Math.sin(angle)*.067);petal.scale.set(.8,.48,1.2);}shape(g,new THREE.IcosahedronGeometry(.035,0),0xd7ab53,x+.04,h,z);
   }
  }
- if(p.kind==='rock'){const rock=shape(g,new THREE.DodecahedronGeometry(.45+r(2)*.19,0),0x959e91,0,.3,0);rock.scale.set(1.3,.65,.85);rock.rotation.y=r(4)*6.28;}
+ if(p.kind==='rock'){const rock=shape(g,new THREE.DodecahedronGeometry(.45+r(2)*.19,0),0x969590,0,.3,0);rock.scale.set(1.3,.65,.85);rock.rotation.y=r(4)*6.28;}
  if(p.kind==='pond'){
   // Irregular, gently stepped shoreline. The water is framed by vegetation and a
   // low earth transition instead of a raised circular stone rim.
@@ -249,8 +249,20 @@ function buildPlant(p:Plant){
   };
   disk(1.30,.055,0x77965d);
   bank(1.06,1.29,.18,.055,0x86a36a);
-  disk(1.07,.18,0x75b4b7);
-  disk(.98,.185,0x83c4c7);
+  disk(1.07,.18,0x75b0ac);
+  disk(.98,.185,0x91c4b8);
+  // Subtle surface glaze: avoid a featureless solid disk.
+  const glazeGeometry=new THREE.CircleGeometry(.76,40);
+  glazeGeometry.rotateX(-Math.PI/2);
+  const glaze=new THREE.Mesh(glazeGeometry,new THREE.MeshBasicMaterial({color:0xb7d9be,transparent:true,opacity:.11,depthWrite:false,side:THREE.DoubleSide}));
+  glaze.scale.set(1.1,1,.78);glaze.position.set(-.08,.188,-.07);
+  glaze.castShadow=false;glaze.receiveShadow=false;g.add(glaze);
+  for(let k=0;k<2;k++){
+   const ripple=new THREE.Mesh(new THREE.RingGeometry(.20+k*.13,.211+k*.13,38,1,0,Math.PI*1.45),new THREE.MeshBasicMaterial({color:0xdcefe0,transparent:true,opacity:.42-k*.10,side:THREE.DoubleSide,depthWrite:false}));
+   ripple.rotation.x=-Math.PI/2;ripple.rotation.z=k*.9;
+   ripple.position.set(-.20+k*.44,.193+k*.001,.08-k*.24);
+   ripple.scale.y=.82;ripple.castShadow=false;g.add(ripple);
+  }
   // Small natural bankside clusters, leaving most shoreline open.
   for(let i=0;i<12;i++){
    const a=i*2.399,rad=1.20+.13*r(i+10),x=Math.cos(a)*rad,z=Math.sin(a)*rad*.8;
@@ -302,7 +314,7 @@ function addLandscape(world:THREE.Scene){
  // An informal footpath: small, irregular stones in a gently meandering strip.
  // Two instanced materials keep it inexpensive even as the garden grows.
  const pathGeo=new THREE.DodecahedronGeometry(1,0);
- const pathPalette=[0xb8ad91,0x969a82];
+ const pathPalette=[0xbeb7a5,0x9e9d94];
  for(let tone=0;tone<2;tone++){
   const count=21;
   const pathMesh=new THREE.InstancedMesh(pathGeo,mat(pathPalette[tone]),count);
@@ -380,7 +392,7 @@ function addLandscape(world:THREE.Scene){
   stone.scale.set(1,.45,1.2);stone.rotation.y=rand(i,34)*6.28;stone.castShadow=false;
  }world.add(pebbles);
 }
-function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.34;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#e9e9d8');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xfff4d5,0x8d8866,2.02));const sun=new THREE.DirectionalLight(0xffedbf,1.65);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=5;sun.shadow.blurSamples=8;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
+function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.34;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#e9e9d8');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xfff7df,0x99917c,2.22));const sun=new THREE.DirectionalLight(0xffeccb,1.18);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=4;sun.shadow.blurSamples=12;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
 function refreshPlants3d(){if(!objects)return;while(objects.children.length){const child=objects.children[0];objects.remove(child);child.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh){obj.geometry.dispose();/* shared materials are cached; only geometry is per object */}});}if(land){const geo=land.geometry;const position=geo.getAttribute('position');
  for(let i=0;i<position.count;i++)position.setY(i,groundHeight(position.getX(i),position.getZ(i)));
  position.needsUpdate=true;geo.computeVertexNormals();}

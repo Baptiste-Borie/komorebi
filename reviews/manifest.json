@@ -7,8 +7,8 @@
   "images": [
     {
       "file": "01-overview.webp",
-      "bytes": 49226,
-      "sha256": "ffe314546650128351e01b5f7ccee8954588c6e34cf58d3e93ff4a5388e6b25c",
+      "bytes": 47802,
+      "sha256": "bdd44fbee2b6ab9f10a0213dc57292159c8381d3587a7f881935dbdd7b3e05a0",
       "parts": [
         "01-overview.part-001.b64",
         "01-overview.part-002.b64"
@@ -16,8 +16,8 @@
     },
     {
       "file": "02-angle-left.webp",
-      "bytes": 46336,
-      "sha256": "e08f5ef1d1e2011783dc736f5bf913c0553270d40088206b789a61bf1eca6375",
+      "bytes": 45568,
+      "sha256": "322867e0a5d10a5d30ecfd0909ecd7af48217831e5bae4c7ad083c34ef1c4bae",
       "parts": [
         "02-angle-left.part-001.b64",
         "02-angle-left.part-002.b64"
@@ -25,8 +25,8 @@
     },
     {
       "file": "03-angle-right.webp",
-      "bytes": 49922,
-      "sha256": "a343ace21fbce4b5bc78adc5f6fdb90f841a26eac890ee37aa6e0a48043f5caa",
+      "bytes": 47166,
+      "sha256": "69599b10fa1dd1b2db573225778e46f0b8438db278a7215c90b769bd2d995e71",
       "parts": [
         "03-angle-right.part-001.b64",
         "03-angle-right.part-002.b64"
@@ -34,8 +34,8 @@
     },
     {
       "file": "04-overhead.webp",
-      "bytes": 45850,
-      "sha256": "2f19cedfc36626029b642f2d276f95fdc3c8d3ee92990168d6f41e1ab0f7d88c",
+      "bytes": 45176,
+      "sha256": "c35ca068342d5345d9c422d9bf0f4f9897210633a04c93e4c0aa8f786c367150",
       "parts": [
         "04-overhead.part-001.b64",
         "04-overhead.part-002.b64"
@@ -43,8 +43,8 @@
     },
     {
       "file": "05-close-overview.webp",
-      "bytes": 61040,
-      "sha256": "2de680a52aed37f2520fc9265286a346cdb49e255d45ddd522d954b4f45a4809",
+      "bytes": 59880,
+      "sha256": "79b32ab5b9c325ed455564eebd81a2595e6bada2d3f3dc71ccf03d568571db8d",
       "parts": [
         "05-close-overview.part-001.b64",
         "05-close-overview.part-002.b64"
@@ -52,12 +52,11 @@
     },
     {
       "file": "06-tree-canopy.webp",
-      "bytes": 72018,
-      "sha256": "2e118ac70655591b1fdbbc336fe862e7687f071f73ef554c9a7d5d2bd4d71146",
+      "bytes": 68818,
+      "sha256": "2f41a7a2cc0812184837a2dd0bc02b6fbdfd85ce78a4a6df7882883ca03ef805",
       "parts": [
         "06-tree-canopy.part-001.b64",
-        "06-tree-canopy.part-002.b64",
-        "06-tree-canopy.part-003.b64"
+        "06-tree-canopy.part-002.b64"
       ]
     },
     {
