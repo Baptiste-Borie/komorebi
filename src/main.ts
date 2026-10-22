@@ -195,12 +195,26 @@ function buildPlant(p:Plant){
    }else if(species===1){ // Birch: slender white bark, dark lenticels and hanging sprays.
    const crown=[0x75a44f,0x8bb75a,0x9bc368,0x70a258];
    tapered(g,v(0,0,0),v(lean,3.0,0),.145,.042,0xd9d6c3,8);
-   for(let i=0;i<11;i++){
-    const yy=.45+i*.215,side=i%2?1:-1;
-    const mark=shape(g,new THREE.BoxGeometry(.11+.045*r(i+115),.026,.023),0x4a4a42,lean+side*.025,yy,.115);
-    mark.rotation.z=(r(i+116)-.5)*.30;mark.castShadow=false;
+   // Bark marks adhere to the tapered trunk and wrap around all sides.
+   for(let i=0;i<18;i++){
+    const y=.38+i*.13,angle=i*2.399963,width=.24+.24*r(i+115);
+    const radius=.145+(.042-.145)*y/3+.003;
+    const verts:number[]=[];
+    for(let j=0;j<4;j++){
+     const a=angle+(j%2)*width,yy=y+(j>=2?.028+.013*r(i+120):0);
+     const rr=radius+(.042-.145)*(yy-y)/3;
+     verts.push(lean+Math.cos(a)*rr,yy,Math.sin(a)*rr);
+    }
+    const geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.Float32BufferAttribute([
+     ...verts.slice(0,3),...verts.slice(3,6),...verts.slice(6,9),
+     ...verts.slice(3,6),...verts.slice(9,12),...verts.slice(6,9)
+    ],3));geo.computeVertexNormals();
+    const mark=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({
+     color:i%5===0?0x55564b:0x373d33,roughness:1,side:THREE.DoubleSide
+    }));mark.castShadow=false;g.add(mark);
    }
-   const branches=7+Math.floor(r(100)*3);
+   const branches=8+Math.floor(r(100)*5);
    for(let i=0;i<branches;i++){
     const a=i*2.399963+r(i+60)*.3,reach=.42+r(i+61)*.53;
     const height=1.65+(i%5)*.24+r(i+62)*.24;
@@ -208,10 +222,10 @@ function buildPlant(p:Plant){
     tapered(g,v(lean,height-.38,0),v(x,height+.26,z),.044,.011,0xa8a598,5);
     for(let j=0;j<3;j++){
      const tx=x+Math.cos(a+j*.7)*(.11+j*.11),tz=z+Math.sin(a+j*.7)*(.10+j*.12);
-     const drop=.15+j*.09+r(i+j+140)*.10;
+     const drop=.16+j*.12+r(i+j+140)*.14;
      tapered(g,v(x,height+.23,z),v(tx,height+.16-drop,tz),.012,.003,0xa7a18b,4);
-     const leaves=shape(g,new THREE.IcosahedronGeometry(.19+.07*r(i*3+j+170),0),crown[(i+j)%crown.length],tx,height+.13-drop,tz);
-     leaves.scale.set(.69,1.45,.65);leaves.castShadow=false;
+     const leaves=shape(g,new THREE.IcosahedronGeometry(.14+.06*r(i*3+j+170),1),crown[(i+j)%crown.length],tx,height+.13-drop,tz);
+     leaves.scale.set(.66,1.85,.72);leaves.castShadow=false;
     }
    }
   }else if(species===2){ // Pine: staggered conical whorls with the trunk below.
@@ -228,17 +242,22 @@ function buildPlant(p:Plant){
    }else{ // Cypress: compact bushy column tapering into a soft rounded crown.
    const height=2.65+r(107)*.75;
    tapered(g,v(0,0,0),v(lean,height,0),.14,.025,trunk,6);
-   for(let i=0;i<8;i++){
-    const t=i/7,y=.65+t*height*.83;
-    const width=(.42-.19*t)*(.90+.24*r(i+160));
-    const a=i*2.39996,off=(r(i+161)-.5)*.12;
-    const crown=shape(g,new THREE.IcosahedronGeometry(width,1),
-     [0x336947,0x3c774b,0x468151,0x508b54,0x5b9255][i%5],
-     lean+Math.cos(a)*off,y,Math.sin(a)*off);
-    crown.scale.set(1.0,1.25,.9);crown.castShadow=false;
+   const columns=5+Math.floor(r(108)*3);
+   for(let i=0;i<columns;i++){
+    const a=i*2.399963,outer=i===0?0:.08+.10*r(i+163);
+    const y=i===0?height*.56:.79+(i/(columns-1))*height*.42;
+    const radius=i===0?.31:.19+.105*r(i+170);
+    const sizeY=i===0?height*.63:.73+.40*r(i+171);
+    const crown=shape(g,new THREE.IcosahedronGeometry(1,1),
+     [0x326b43,0x3d7a49,0x4c8853,0x558f57,0x61965c][i%5],
+     lean+Math.cos(a)*outer,y,Math.sin(a)*outer);
+    crown.scale.set(radius,sizeY,radius*(.85+.18*r(i+174)));
+    crown.rotation.y=a;crown.castShadow=false;
    }
-   const cap=shape(g,new THREE.IcosahedronGeometry(.23,1),0x538b50,lean,height*.93,0);
-   cap.scale.set(.86,1.06,.86);cap.castShadow=false;
+   // The tip grows out of the last volume, not as an isolated finial.
+   const peak=shape(g,new THREE.ConeGeometry(.18,.75,7,1),0x578e55,
+    lean,height-.31,0);
+   peak.castShadow=false;
   }
  }
  if(p.kind==='fern'){
@@ -259,8 +278,8 @@ function buildPlant(p:Plant){
   // Basal leaves ground the shrub and break up the spherical silhouette.
   for(let i=0;i<12;i++){
    const a=i*2.399+ r(i+60)*.15,rad=.3+r(i+61)*.28;
-   const leaf=shape(g,new THREE.IcosahedronGeometry(.13+r(i+63)*.06,0),greens[i%greens.length],Math.cos(a)*rad,.09,Math.sin(a)*rad);
-   leaf.scale.set(.82,.24,1.38);leaf.rotation.y=a;leaf.castShadow=false;
+   const leaf=shape(g,new THREE.IcosahedronGeometry(.13+r(i+63)*.06,0),greens[i%greens.length],Math.cos(a)*rad,.045,Math.sin(a)*rad);
+   leaf.scale.set(.92,.18,1.30);leaf.rotation.y=a;leaf.castShadow=false;
   }
  }
  if(p.kind==='flower'){
@@ -554,7 +573,7 @@ const speciesCatalog:SpeciesRecord[]=[
  {id:'birch',name:'Bouleau',group:'Arbres',kind:'tree',family:1,description:'Tronc clair, feuillage léger et couronne plus aérée.',habitat:'Lisière · soleil'},
  {id:'pine',name:'Conifère',group:'Arbres',kind:'tree',family:2,description:'Une silhouette verticale et persistante, plus graphique que les feuillus.',habitat:'Sol drainé · soleil'},
  {id:'cypress',name:'Cyprès',group:'Arbres',kind:'tree',family:3,description:'Une ponctuation étroite et élancée pour rythmer la composition.',habitat:'Sol drainé · soleil'},
- {id:'young',name:'Jeune arbre',group:'Arbres',kind:'sapling',family:1,description:'Une déclinaison plus petite des arbres, parfaite en bordure de bosquet.',habitat:'Lisière'},
+ {id:'young',name:'Jeune arbre',group:'Arbres',kind:'sapling',family:1,description:'Jeunes chênes, bouleaux, conifères et cyprès selon la variante.',habitat:'Lisière'},
  {id:'shrub',name:'Arbuste',group:'Sous-bois',kind:'bush',family:0,description:'Masses arrondies et feuillage dense pour relier arbres et prairie.',habitat:'Lisière · sous-bois'},
  {id:'fern',name:'Fougère',group:'Sous-bois',kind:'fern',family:0,description:'Frondes arquées et folioles étagées. La silhouette du sous-bois.',habitat:'Sol frais · mi-ombre'},
  {id:'flower',name:'Fleurs sauvages',group:'Prairie',kind:'flower',family:0,description:'Petites floraisons claires rassemblées en touffes naturelles.',habitat:'Prairie · soleil'},
@@ -569,7 +588,10 @@ let botanicalRenderer:THREE.WebGLRenderer|undefined,botanicalScene:THREE.Scene|u
 let botanicalContours:ContourRenderer|undefined;
 let botanicalAzimuth=.66, botanicalElevation=.36, botanicalAimY=1, botanicalDistance=6.8,botanicalFrame=0,botanicalDrag=false,botanicalX=0,botanicalY=0;
 const botanicalTarget=app.querySelector<HTMLElement>('#botany-canvas')!;
-function botanicalSeed(species:SpeciesRecord,variant:number){return (variant*16+4+species.family)%256;}
+function botanicalSeed(species:SpeciesRecord,variant:number){
+ if(species.kind==='sapling')return variant*4+(variant%4);
+ return (variant*16+4+species.family)%256;
+}
 function updateBotanicalCamera(){if(!botanicalCamera)return;botanicalCamera.position.set(Math.sin(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance,Math.sin(botanicalElevation)*botanicalDistance+botanicalAimY,Math.cos(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance);botanicalCamera.lookAt(0,botanicalAimY,0);}
 function resizeBotanical(){if(!botanicalRenderer||!botanicalCamera)return;const w=botanicalTarget.clientWidth,h=botanicalTarget.clientHeight;if(w<2||h<2)return;botanicalRenderer.setSize(w,h,false);botanicalCamera.aspect=w/h;botanicalCamera.updateProjectionMatrix();}
 function renderBotanical(){if(!botanicalRenderer||!botanicalScene||!botanicalCamera)return;updateWater();botanicalContours?.render(botanicalScene,botanicalCamera);botanicalFrame=requestAnimationFrame(renderBotanical);}

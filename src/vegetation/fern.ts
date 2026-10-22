@@ -14,11 +14,11 @@ export function createFern(seed: number): THREE.Group {
     return v - Math.floor(v);
   };
   const rachisGeo = new THREE.CylinderGeometry(.004, .009, 1, 4);
-  const count = 9 + Math.floor(rand(1) * 4);
+  const count = 11 + Math.floor(rand(1) * 4);
   for (let frond = 0; frond < count; frond++) {
     const angle = (frond / count) * Math.PI * 2 + (rand(frond + 3) - .5) * .26;
     const spread = .62 + rand(frond + 16) * .30;
-    const tall = .40 + rand(frond + 27) * .28;
+    const tall = .46 + rand(frond + 27) * .32;
     const direction = new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle));
     const sideways = new THREE.Vector3(-Math.sin(angle), 0, Math.cos(angle));
     const point = (t: number) => new THREE.Vector3(
@@ -41,14 +41,14 @@ export function createFern(seed: number): THREE.Group {
       const midT = (t0 + t1) * .5;
       const stem = point(midT);
       const profile = Math.pow(Math.sin(Math.PI * midT), .85);
-      const length = (.18 + .11 * rand(frond * 31 + j)) * profile;
+      const length = (.24 + .11 * rand(frond * 31 + j)) * profile;
       for (const side of [-1, 1]) {
         // Small, tapered leaflets reach sideways and angle toward the tip.
         const leafTip = stem.clone().addScaledVector(sideways, side * length)
           .addScaledVector(direction, .055 + midT * .04);
         leafTip.y -= .025 * midT;
-        const leading = stem.clone().lerp(leafTip, .35).addScaledVector(direction, .035);
-        const trailing = stem.clone().lerp(leafTip, .62).addScaledVector(direction, -.025);
+        const leading = stem.clone().lerp(leafTip, .35).addScaledVector(direction, .067);
+        const trailing = stem.clone().lerp(leafTip, .62).addScaledVector(direction, -.059);
         leading.y += .015;
         const verts = [
           stem.x, stem.y, stem.z,
