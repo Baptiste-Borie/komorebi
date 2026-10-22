@@ -67,7 +67,37 @@ let dragging=false, moved=false, downX=0,downY=0;
 let lastFrame=performance.now(),frames=0;
 const mCache=new Map<string, THREE.MeshStandardMaterial>();
 function mat(color:number,roughness=1){const key=`${color}-${roughness}`;let m=mCache.get(key);if(!m){m=new THREE.MeshStandardMaterial({color,roughness,flatShading:true});mCache.set(key,m);}return m;}
-function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){const mesh=new THREE.Mesh(geometry,mat(color));mesh.position.set(x,y,z);mesh.rotation.set(rx,0,rz);mesh.castShadow=geometry.type === 'CylinderGeometry';mesh.receiveShadow=true;group.add(mesh);return mesh;}
+const facetMaterials=new Map<number,THREE.MeshStandardMaterial>();
+function facetSurface(geometry:THREE.BufferGeometry,color:number):{geometry:THREE.BufferGeometry,material:THREE.MeshStandardMaterial}{
+ const geo=geometry.index?geometry.toNonIndexed():geometry.clone();
+ const pos=geo.getAttribute('position');
+ const colors=new Float32Array(pos.count*3);
+ const base=new THREE.Color(color);
+ // A warm, graphic palette with visible facets: unlike flat pastel spheres,
+ // neighboring faces deliberately have subtly different values.
+ for(let face=0;face<Math.ceil(pos.count/3);face++){
+  const a=.91+.15*(.5+.5*Math.sin(face*2.39996+color*.0002));
+  const tone=base.clone().multiplyScalar(a);
+  if(face%7===0)tone.lerp(new THREE.Color(0xffe7a1),.075);
+  for(let v=face*3;v<Math.min(face*3+3,pos.count);v++){
+   colors[v*3]=tone.r;colors[v*3+1]=tone.g;colors[v*3+2]=tone.b;
+  }
+ }
+ geo.setAttribute('color',new THREE.BufferAttribute(colors,3));
+ geo.computeVertexNormals();
+ let material=facetMaterials.get(color);
+ if(!material){material=new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:.93,metalness:0});facetMaterials.set(color,material);}
+ return {geometry:geo,material};
+}
+function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){
+ const faceted=['IcosahedronGeometry','DodecahedronGeometry','ConeGeometry'].includes(geometry.type);
+ const surface=faceted?facetSurface(geometry,color):null;
+ if(surface)geometry.dispose();
+ const mesh=new THREE.Mesh(surface?.geometry??geometry,surface?.material??mat(color));
+ mesh.position.set(x,y,z);mesh.rotation.set(rx,0,rz);
+ mesh.castShadow=geometry.type==='CylinderGeometry';mesh.receiveShadow=true;
+ group.add(mesh);return mesh;
+}
 function rand(seed:number,n:number){const v=Math.sin(seed*127.1+n*311.7)*43758.5453;return v-Math.floor(v);}
 function tapered(group:THREE.Group,a:THREE.Vector3,b:THREE.Vector3,r0:number,r1:number,color:number,segments=6){const d=new THREE.Vector3().subVectors(b,a);const mesh=shape(group,new THREE.CylinderGeometry(r1,r0,d.length(),segments),color,0,0,0);mesh.position.copy(a).addScaledVector(d,.5);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return mesh;}
 /**
@@ -146,7 +176,7 @@ function buildPlant(p:Plant){
   const trunk=species===1?0xc9c2ac:species===2?0x6f624c:0x796448;
   const v=(x:number,y:number,z:number)=>new THREE.Vector3(x,y,z);
   if(species===0){ // An open broadleaf canopy: irregular lobes, visible branching and a coherent crown.
-   const crown=[0x426d3d,0x5a8645,0x739851,0x88a656,0x9bb25d,0x658c49];
+   const crown=[0x2f7543,0x478d47,0x67a84c,0x89bc55,0xb0cc64,0x4d9850];
    const canopyY=2.15+r(2)*.15;
    tapered(g,v(0,0,0),v(lean,1.63,0),.25,.13,trunk,7);
    for(let i=0;i<9;i++){
@@ -157,12 +187,12 @@ function buildPlant(p:Plant){
     tapered(g,v(lean,1.29,0),branchTip,.088,.028,trunk,5);
     const lobe=shape(g,new THREE.IcosahedronGeometry(.55+.18*r(i+28),1),crown[(i+Math.floor(r(i+30)*3))%crown.length],x,y,z);
     lobe.scale.set(1.03+.24*r(i+32),.58+.19*r(i+36),.87+.20*r(i+40));
-    lobe.rotation.y=a;lobe.castShadow=true;
+    lobe.rotation.y=a;lobe.castShadow=false;
    }
    for(let i=0;i<3;i++){
     const a=i*2.1+1.4;
     const lobe=shape(g,new THREE.IcosahedronGeometry(.60+.08*r(i+54),1),crown[(i+3)%crown.length],lean+Math.cos(a)*.38,2.48+r(i+57)*.22,Math.sin(a)*.33);
-    lobe.scale.set(1.02,.68,.93);lobe.castShadow=true;
+    lobe.scale.set(1.02,.68,.93);lobe.castShadow=false;
    }
   }else if(species===1){ // Birch: visible light trunk and separate airy sprays.
    tapered(g,v(0,0,0),v(lean,2.7,0),.16,.065,trunk,7);
@@ -211,13 +241,13 @@ function buildPlant(p:Plant){
  }
  if(p.kind==='bush'){
   const num=6+Math.floor(r(3)*3);
-  const greens=[0x477940,0x619250,0x7da560,0x527e45,0x8eac68];
+  const greens=[0x367e42,0x54a14b,0x75b653,0x44894a,0x9ac265];
   for(let i=0;i<num;i++){
    const a=i*2.399+ r(i+31)*.18,rad=.21+.19*r(i);
    const x=Math.cos(a)*rad,z=Math.sin(a)*rad;
    const radius=.23+r(i+6)*.15;
    const ball=shape(g,new THREE.IcosahedronGeometry(radius,1),greens[(i+p.seed)%greens.length],x,.26+r(i+9)*.18,z);
-   ball.scale.set(1.15,.65+r(i+10)*.26,.95);ball.castShadow=true;
+   ball.scale.set(1.15,.65+r(i+10)*.26,.95);ball.castShadow=false;
   }
   // Basal leaves ground the shrub and break up the spherical silhouette.
   for(let i=0;i<12;i++){
@@ -232,7 +262,7 @@ function buildPlant(p:Plant){
     const leaf=shape(g,new THREE.IcosahedronGeometry(.10+r(i+71)*.03,0),side===1?0x5b944a:0x75a35d,x+side*.085,.12+r(i+72)*.08,z+side*.07);
     leaf.scale.set(.65,.25,1.45);leaf.rotation.y=side*.45+i*.35;leaf.castShadow=false;
    }
-   const color=[0xeedba8,0xe8b1a1,0xc7bbdf,0xf2eee0][(i+p.seed)%4];for(let j=0;j<5;j++){const angle=j*Math.PI*2/5;const petal=shape(g,new THREE.IcosahedronGeometry(.078,0),color,x+.04+Math.cos(angle)*.067,h,z+Math.sin(angle)*.067);petal.scale.set(.8,.48,1.2);}shape(g,new THREE.IcosahedronGeometry(.035,0),0xd7ab53,x+.04,h,z);
+   const color=[0xffd45e,0xff9d88,0xb5a2ed,0xfff6da][(i+p.seed)%4];for(let j=0;j<5;j++){const angle=j*Math.PI*2/5;const petal=shape(g,new THREE.IcosahedronGeometry(.078,0),color,x+.04+Math.cos(angle)*.067,h,z+Math.sin(angle)*.067);petal.scale.set(.8,.48,1.2);}shape(g,new THREE.IcosahedronGeometry(.035,0),0xd7ab53,x+.04,h,z);
   }
  }
  if(p.kind==='rock'){const rock=shape(g,new THREE.DodecahedronGeometry(.45+r(2)*.19,0),0x969590,0,.3,0);rock.scale.set(1.3,.65,.85);rock.rotation.y=r(4)*6.28;}
@@ -263,8 +293,8 @@ function buildPlant(p:Plant){
   };
   disk(1.30,.055,0x77965d);
   bank(1.06,1.29,.18,.055,0x87a66d);
-  disk(1.07,.18,0x609d9a);
-  disk(.98,.185,0x8bc8b8);
+  disk(1.07,.18,0x348b9a);
+  disk(.98,.185,0x5ac4bd);
   // Subtle surface glaze: avoid a featureless solid disk.
   const glazeGeometry=new THREE.CircleGeometry(.76,40);
   glazeGeometry.rotateX(-Math.PI/2);
@@ -272,7 +302,7 @@ function buildPlant(p:Plant){
   glaze.scale.set(1.1,1,.78);glaze.position.set(-.08,.188,-.07);
   glaze.castShadow=false;glaze.receiveShadow=false;g.add(glaze);
   for(let k=0;k<2;k++){
-   const ripple=new THREE.Mesh(new THREE.RingGeometry(.20+k*.13,.211+k*.13,38,1,0,Math.PI*1.45),new THREE.MeshBasicMaterial({color:0xdcefe0,transparent:true,opacity:.65-k*.13,side:THREE.DoubleSide,depthWrite:false}));
+   const ripple=new THREE.Mesh(new THREE.RingGeometry(.20+k*.13,.211+k*.13,38,1,0,Math.PI*1.45),new THREE.MeshBasicMaterial({color:0xf0fff1,transparent:true,opacity:.78-k*.12,side:THREE.DoubleSide,depthWrite:false}));
    ripple.rotation.x=-Math.PI/2;ripple.rotation.z=k*.9;
    ripple.position.set(-.20+k*.44,.193+k*.001,.08-k*.24);
    ripple.scale.y=.82;ripple.castShadow=false;g.add(ripple);
@@ -312,12 +342,12 @@ function groundHeight(x:number,z:number){
 function addLandscape(world:THREE.Scene){
  const groundGeo=new THREE.PlaneGeometry(11,11,64,64);groundGeo.rotateX(-Math.PI/2);
  const pos=groundGeo.getAttribute('position');const colors:number[]=[];
- const moss=new THREE.Color(0x628e43),meadow=new THREE.Color(0x91b96a),warm=new THREE.Color(0xaecb76);
+ const moss=new THREE.Color(0x568b45),meadow=new THREE.Color(0x9cc85b),warm=new THREE.Color(0xc5d873);
  for(let i=0;i<pos.count;i++){
   const x=pos.getX(i),z=pos.getZ(i);pos.setY(i,groundHeight(x,z));
   const t=.5+.20*Math.sin(x*1.05+z*.75)+.13*Math.cos(z*1.63-x*.48)+.08*Math.sin(x*2.8-z*3.1);
   const color=moss.clone().lerp(meadow,THREE.MathUtils.clamp(t,0,1));
-  color.lerp(warm,.14*Math.max(0,Math.sin(z*1.9+x*.7)));
+  color.lerp(warm,.28*Math.max(0,Math.sin(z*1.9+x*.7)));
   colors.push(color.r,color.g,color.b);
  }
  groundGeo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));groundGeo.computeVertexNormals();
@@ -328,7 +358,7 @@ function addLandscape(world:THREE.Scene){
  // An informal footpath: small, irregular stones in a gently meandering strip.
  // Two instanced materials keep it inexpensive even as the garden grows.
  const pathGeo=new THREE.DodecahedronGeometry(1,0);
- const pathPalette=[0xc4bdb0,0xa5a39b];
+ const pathPalette=[0xc6bdb0,0x999c9d];
  for(let tone=0;tone<2;tone++){
   const count=21;
   const pathMesh=new THREE.InstancedMesh(pathGeo,mat(pathPalette[tone]),count);
@@ -406,7 +436,7 @@ function addLandscape(world:THREE.Scene){
   stone.scale.set(1,.45,1.2);stone.rotation.y=rand(i,34)*6.28;stone.castShadow=false;
  }world.add(pebbles);
 }
-function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.34;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#e9e9d8');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xfff7df,0x99917c,2.22));const sun=new THREE.DirectionalLight(0xffeccb,1.18);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=4;sun.shadow.blurSamples=12;sun.shadow.intensity=.48;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
+function init3d(){renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;viewport.append(renderer.domElement);scene=new THREE.Scene();scene.background=new THREE.Color('#dae8d5');camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);scene.add(new THREE.HemisphereLight(0xfff8e5,0x777a68,1.55));const sun=new THREE.DirectionalLight(0xffebbb,2.15);sun.position.set(-4,11,7);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;sun.shadow.normalBias=.025;sun.shadow.radius=4;sun.shadow.blurSamples=12;sun.shadow.intensity=.24;scene.add(sun);addLandscape(scene);objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();}
 function refreshPlants3d(){if(!objects)return;while(objects.children.length){const child=objects.children[0];objects.remove(child);child.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh){obj.geometry.dispose();/* shared materials are cached; only geometry is per object */}});}if(land){const geo=land.geometry;const position=geo.getAttribute('position');
  for(let i=0;i<position.count;i++)position.setY(i,groundHeight(position.getX(i),position.getZ(i)));
  position.needsUpdate=true;geo.computeVertexNormals();}
