@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "release": "0.22",
+  "release": "0.23",
   "checks": [
     "Placement et rechargement de la sauvegarde",
     "Suppression par raycasting",
@@ -9,7 +9,9 @@
     "Mode contemplation",
     "Stabilité des ressources GPU après six reconstructions",
     "Ajout d’une mare hors de sa position initiale",
-    "Animation de l’eau et respect du mouvement réduit"
+    "Animation de l’eau et respect du mouvement réduit",
+    "Surfaces actives, rendu direct et contour limité à une passe",
+    "Redimensionnement et stabilité des cibles de rendu"
   ],
   "mode": "standard",
   "environment": {
@@ -22,8 +24,8 @@
   "images": [
     {
       "file": "01-overview.webp",
-      "bytes": 63164,
-      "sha256": "5ff27981497c809b7e41f26d4d9aaaafb961a5dc8d255ea94a012c1987bdc308",
+      "bytes": 63448,
+      "sha256": "7ec69c3b29dac0456acb114c7299371f24bf54e2e14791a20308e1d0426c970f",
       "parts": [
         "01-overview.part-001.b64",
         "01-overview.part-002.b64"
@@ -31,17 +33,19 @@
       "metrics": {
         "calls": 71,
         "triangles": 73464,
-        "geometries": 70,
-        "textures": 2,
-        "programs": 8,
+        "geometries": 71,
+        "textures": 5,
+        "programs": 22,
+        "contours": true,
+        "contoursEnabled": false,
         "plants": 23,
         "waterTime": 4
       }
     },
     {
       "file": "04-overhead.webp",
-      "bytes": 60540,
-      "sha256": "db5cf9a392b60f606dcb658c63e43f697981c225bf7d85f9a161c92e9cae38df",
+      "bytes": 61146,
+      "sha256": "e17c018a3b63d371c9a71df1df484f86973f935131c8694a22fc0f5212a8179d",
       "parts": [
         "04-overhead.part-001.b64",
         "04-overhead.part-002.b64"
@@ -49,17 +53,19 @@
       "metrics": {
         "calls": 71,
         "triangles": 73464,
-        "geometries": 70,
-        "textures": 2,
-        "programs": 8,
+        "geometries": 71,
+        "textures": 5,
+        "programs": 22,
+        "contours": true,
+        "contoursEnabled": false,
         "plants": 23,
         "waterTime": 4
       }
     },
     {
       "file": "07-water-close.webp",
-      "bytes": 90462,
-      "sha256": "0e031b6a14a8edf0f28bc7048f28effdd3ff9fdf46a337be2fabedb6a27c625d",
+      "bytes": 92072,
+      "sha256": "f9a7764f0b9af421d9c8dfdf22e244a356659e98687576041d69039d0402addb",
       "parts": [
         "07-water-close.part-001.b64",
         "07-water-close.part-002.b64",
@@ -68,17 +74,19 @@
       "metrics": {
         "calls": 69,
         "triangles": 73426,
-        "geometries": 70,
-        "textures": 2,
-        "programs": 8,
+        "geometries": 71,
+        "textures": 5,
+        "programs": 22,
+        "contours": true,
+        "contoursEnabled": false,
         "plants": 23,
         "waterTime": 4
       }
     },
     {
       "file": "13-dense-overview.webp",
-      "bytes": 76454,
-      "sha256": "4cb124a2aa9de9268c1717f95a078938015d6d2421067f6ded6c9bcfa1d87141",
+      "bytes": 76724,
+      "sha256": "4ccbe667974e33e4d2a9e5355cfb2c27be5292403811b93058052d5239375168",
       "parts": [
         "13-dense-overview.part-001.b64",
         "13-dense-overview.part-002.b64",
@@ -87,17 +95,19 @@
       "metrics": {
         "calls": 298,
         "triangles": 203820,
-        "geometries": 297,
-        "textures": 2,
-        "programs": 8,
+        "geometries": 298,
+        "textures": 5,
+        "programs": 22,
+        "contours": true,
+        "contoursEnabled": false,
         "plants": 133,
         "waterTime": 4
       }
     },
     {
       "file": "15-dense-close.webp",
-      "bytes": 108704,
-      "sha256": "ce77363db8e95a7bcd90ab3b8c5504aa8f82e77b93e35cb2192c34f5a0f79168",
+      "bytes": 110354,
+      "sha256": "042b8a50cfd3faea601c6fd40adb0bdc67a1eb535eb4b9a0c3ad13127887bfcb",
       "parts": [
         "15-dense-close.part-001.b64",
         "15-dense-close.part-002.b64",
@@ -107,17 +117,19 @@
       "metrics": {
         "calls": 298,
         "triangles": 203820,
-        "geometries": 297,
-        "textures": 2,
-        "programs": 8,
+        "geometries": 298,
+        "textures": 5,
+        "programs": 22,
+        "contours": true,
+        "contoursEnabled": false,
         "plants": 133,
         "waterTime": 4
       }
     },
     {
       "file": "botany-oak.webp",
-      "bytes": 37732,
-      "sha256": "537a72c77744fb2455d0319d319454187b47cda23f2aed22ce8df3fdd409d78f",
+      "bytes": 38938,
+      "sha256": "34ed1cf9eb892c5de632c61c5b09d663bff6d0ea75268e6131f8fd6440cc4500",
       "parts": [
         "botany-oak.part-001.b64",
         "botany-oak.part-002.b64"
@@ -125,16 +137,16 @@
     },
     {
       "file": "botany-conifer.webp",
-      "bytes": 34342,
-      "sha256": "f27575cf255cd13291c73b0ab9f4573c7f9e4261fdbf4a13ea715702d6977f63",
+      "bytes": 35146,
+      "sha256": "c63503e0b2c173e5abd69742eae25782f57c93f8e3319b65fe36215ddefaf4d4",
       "parts": [
         "botany-conifer.part-001.b64"
       ]
     },
     {
       "file": "botany-fern.webp",
-      "bytes": 44276,
-      "sha256": "70985f6432d48f34ea0329c25a193b8cd42e93e89ea13a7b23e7454a046bc415",
+      "bytes": 44202,
+      "sha256": "4d36f1100d929b237d86999d2965a46c2fb32078c440bf03146783d2aabf1b61",
       "parts": [
         "botany-fern.part-001.b64",
         "botany-fern.part-002.b64"
@@ -142,8 +154,8 @@
     },
     {
       "file": "botany-pond.webp",
-      "bytes": 38432,
-      "sha256": "b50d61e41b835854d628280c54e4efa522ceda272c99a95682f7c5427ade61f6",
+      "bytes": 37888,
+      "sha256": "5bf8db29a5592eadb1c6ab609e4a5fe73c88d39c524201cb8257f6b15b10acd5",
       "parts": [
         "botany-pond.part-001.b64",
         "botany-pond.part-002.b64"

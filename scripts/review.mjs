@@ -1,3 +1,4 @@
+import { checkRendering } from './review-rendering.mjs';
 import { checkInteractions } from './review-checks.mjs';
 import { chromium } from 'playwright';
 import sharp from 'sharp';
@@ -49,7 +50,8 @@ try {
   await page.locator('#menu-toggle').click();
   await page.waitForTimeout(600);
   const checks=baseline?[]:await checkInteractions(page);
-  const manifest={version:3,release:baseline?'0.21':'0.22',checks,mode,environment:{browser:browser.version(),softwareGL:process.env.KOMOREBI_SOFTWARE_GL==='1'},format:'WebP lossy, encoded as Base64',quality,chunkChars,images:[]};
+  if(!baseline)checks.push(...await checkRendering(page));
+  const manifest={version:3,release:baseline?'0.22':'0.23',checks,mode,environment:{browser:browser.version(),softwareGL:process.env.KOMOREBI_SOFTWARE_GL==='1'},format:'WebP lossy, encoded as Base64',quality,chunkChars,images:[]};
   async function capture(name,wholePage=false) {
     const shot=await (wholePage?page:page.locator('#viewport')).screenshot({type:'png',animations:'disabled'});
     const bytes=await sharp(shot).webp({quality,effort:5}).toBuffer();

@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "release": "0.21",
+  "release": "0.22",
   "checks": [],
   "mode": "standard",
   "environment": {
@@ -13,45 +13,46 @@
   "images": [
     {
       "file": "01-overview.webp",
-      "bytes": 57838,
-      "sha256": "b8a6a5717b569b02b89bbed71a962641346f155b1675a968f1cd5b85c3efc6e4",
+      "bytes": 63164,
+      "sha256": "5ff27981497c809b7e41f26d4d9aaaafb961a5dc8d255ea94a012c1987bdc308",
       "parts": [
         "01-overview.part-001.b64",
         "01-overview.part-002.b64"
       ],
       "metrics": {
-        "hud": "5 FPS · 208 appels GPU"
+        "hud": "4 FPS · 71 appels GPU"
       }
     },
     {
       "file": "07-water-close.webp",
-      "bytes": 75492,
-      "sha256": "de39d53261f1c1605c180e3314e1ff675f62fa5bccadb5a287a21467572833ca",
+      "bytes": 90462,
+      "sha256": "0e031b6a14a8edf0f28bc7048f28effdd3ff9fdf46a337be2fabedb6a27c625d",
       "parts": [
         "07-water-close.part-001.b64",
         "07-water-close.part-002.b64",
         "07-water-close.part-003.b64"
       ],
       "metrics": {
-        "hud": "3 FPS · 203 appels GPU"
+        "hud": "3 FPS · 69 appels GPU"
       }
     },
     {
       "file": "13-dense-overview.webp",
-      "bytes": 69728,
-      "sha256": "a69a1ad02dad7f2dc46f1d4bf5b41a07f77232ed03e769bf373a46f2de7a35df",
+      "bytes": 76454,
+      "sha256": "4cb124a2aa9de9268c1717f95a078938015d6d2421067f6ded6c9bcfa1d87141",
       "parts": [
         "13-dense-overview.part-001.b64",
-        "13-dense-overview.part-002.b64"
+        "13-dense-overview.part-002.b64",
+        "13-dense-overview.part-003.b64"
       ],
       "metrics": {
-        "hud": "2 FPS · 1038 appels GPU"
+        "hud": "2 FPS · 298 appels GPU"
       }
     },
     {
       "file": "botany-oak.webp",
-      "bytes": 39478,
-      "sha256": "d1c8e841891feef2028c4c9765a3b9a0ab1861caa1c41b9c227fef1cffb82a2c",
+      "bytes": 37732,
+      "sha256": "537a72c77744fb2455d0319d319454187b47cda23f2aed22ce8df3fdd409d78f",
       "parts": [
         "botany-oak.part-001.b64",
         "botany-oak.part-002.b64"

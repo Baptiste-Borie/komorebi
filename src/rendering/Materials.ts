@@ -1,11 +1,13 @@
 import * as THREE from 'three';
+import { styleSurface, type SurfaceStyle } from './SurfaceShader';
 
 const materials = new Map<string, THREE.MeshStandardMaterial>();
-export function mat(color: number, roughness = 1) {
-  const key = `${color}-${roughness}`;
+export function mat(color: number, roughness = 1, surface: SurfaceStyle | 'plain' = 'botanical') {
+  const key = `${color}-${roughness}-${surface}`;
   let material = materials.get(key);
   if (!material) {
     material = new THREE.MeshStandardMaterial({ color, roughness, flatShading: true });
+    if(surface!=='plain')styleSurface(material,surface);
     materials.set(key, material);
   }
   return material;
@@ -13,9 +15,9 @@ export function mat(color: number, roughness = 1) {
 
 // All faceted colors share a single material, so batching can merge whole
 // crowns and flower heads rather than producing one draw call per pigment.
-const facetMaterial = new THREE.MeshStandardMaterial({
+const facetMaterial = styleSurface(new THREE.MeshStandardMaterial({
   vertexColors: true, flatShading: true, roughness: .92,
-});
+}), 'botanical');
 const sunTint = new THREE.Color(0xe9ee9c);
 export function facetSurface(geometry: THREE.BufferGeometry, color: number) {
   const geo = geometry.index ? geometry.toNonIndexed() : geometry.clone();
@@ -33,7 +35,7 @@ export function facetSurface(geometry: THREE.BufferGeometry, color: number) {
   const foliage = base.g > base.r * 1.12 && base.g > base.b * 1.15;
   for (let i = 0; i < pos.count; i++) {
     const face = Math.floor(i / 3);
-    const variation = .96 + .07 * Math.sin(face * 2.39996 + color * .0002);
+    const variation = .985 + .035 * Math.sin(face * 2.39996 + color * .0002);
     const vertical = (pos.getY(i) - bounds.min.y) / height;
     tone.copy(base).multiplyScalar(variation * (foliage ? .76 + .28 * vertical : .95 + .08 * vertical));
     if (foliage) tone.lerp(sunTint, .055 * Math.max(0, normals.getY(i)) * vertical);
@@ -57,3 +59,29 @@ export const contactMaterial = new THREE.MeshBasicMaterial({
   color: 0x30432a, map: contactMap, transparent: true, opacity: .32,
   depthWrite: false, polygonOffset: true, polygonOffsetFactor: -1,
 });
+
+/** Bake broad canopy shelter once per rebuild. Ellipsoid proxies only, not
+ * ray tracing: pigment gets darker near neighboring lobes, rather than by a
+ * random triangle index. Attributes survive the existing geometry merge. */
+export function bakeCanopyShelter(group:THREE.Group) {
+  const lobes=group.children.filter((o):o is THREE.Mesh=>o instanceof THREE.Mesh&&o.userData.canopy);
+  const inverse=new Map<THREE.Mesh,THREE.Matrix4>();
+  for(const lobe of lobes){lobe.updateMatrix();inverse.set(lobe,lobe.matrix.clone().invert());lobe.geometry.computeBoundingSphere();}
+  const point=new THREE.Vector3(),local=new THREE.Vector3();
+  for(const lobe of lobes){
+    const positions=lobe.geometry.getAttribute('position'),colors=lobe.geometry.getAttribute('color');
+    if(!colors)continue;
+    for(let i=0;i<positions.count;i++){
+      point.fromBufferAttribute(positions,i).applyMatrix4(lobe.matrix);
+      let shelter=0;
+      for(const other of lobes){if(other===lobe)continue;
+        local.copy(point).applyMatrix4(inverse.get(other)!);
+        const sphere=other.geometry.boundingSphere!;
+        const distance=local.distanceTo(sphere.center)/Math.max(.001,sphere.radius);
+        shelter=Math.max(shelter,1-THREE.MathUtils.smoothstep(distance,.88,1.35));
+      }
+      const shade=1-.18*shelter;
+      colors.setXYZ(i,colors.getX(i)*shade,colors.getY(i)*shade,colors.getZ(i)*shade);
+    }
+  }
+}

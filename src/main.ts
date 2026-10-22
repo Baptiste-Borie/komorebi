@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import './style.css';
+import { styleSurface, surfaceStudy } from './rendering/SurfaceShader';
+import { ContourRenderer } from './rendering/Contours';
 import { icon } from './rendering/Icons';
 import { createFern } from './vegetation/fern';
 import { configureRenderer, addDaylight, studioBackground } from './rendering/Lighting';
-import { mat, facetSurface, contactMaterial } from './rendering/Materials';
+import { mat, facetSurface, contactMaterial, bakeCanopyShelter } from './rendering/Materials';
 import { createWater, waterTime, waterLevel, shorePoint, shoreDistance } from './rendering/Water';
 
 type Style = 'lowpoly'|'organic'|'vector';
@@ -60,6 +62,7 @@ app.querySelector<HTMLButtonElement>('#focus')!.onclick=()=>app.classList.toggle
 app.querySelector<HTMLButtonElement>('#build-toggle')!.onclick=()=>app.classList.toggle('tools-open');
 (Object.keys(labels) as Kind[]).forEach(k=>{const btn=document.createElement('button');btn.dataset.kind=k;btn.innerHTML=`<span class="tool-icon">${icon(k)}</span><span>${labels[k]}</span>`;btn.onclick=()=>{selected=k;selectedSpeciesFamily=undefined;deleting=false;refreshUI();};tools.append(btn);});
 let renderer:THREE.WebGLRenderer|undefined;
+let gardenContours:ContourRenderer|undefined;
 let scene:THREE.Scene|undefined;
 let camera:THREE.OrthographicCamera|undefined;
 let land:THREE.Mesh|undefined;
@@ -74,8 +77,10 @@ function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:nu
  const faceted=['IcosahedronGeometry','DodecahedronGeometry','ConeGeometry'].includes(geometry.type);
  const surface=faceted?facetSurface(geometry,color):null;
  if(surface)geometry.dispose();
- const mesh=new THREE.Mesh(surface?.geometry??geometry,surface?.material??mat(color));
+ const mesh=new THREE.Mesh(surface?.geometry??geometry,surface?.material??mat(color,1,geometry.type==='CylinderGeometry'?'bark':'botanical'));
  mesh.position.set(x,y,z);mesh.rotation.set(rx,0,rz);
+ const pigment=new THREE.Color(color);
+ mesh.userData.canopy=faceted&&pigment.g>pigment.r*1.12&&pigment.g>pigment.b*1.15&&(geometry.type==='ConeGeometry'||geometry.type==='IcosahedronGeometry');
  mesh.castShadow=geometry.type==='CylinderGeometry'||faceted;mesh.receiveShadow=true;
  group.add(mesh);return mesh;
 }
@@ -252,7 +257,7 @@ function buildPlant(p:Plant){
   // A conforming bank instead of stacked discs. The outer vertices follow
   // the real terrain, including the hollows of any neighboring ponds.
   const steps=64, vertices:number[]=[], colors:number[]=[], indices:number[]=[];
-  const sand=new THREE.Color(0x9b9b6a), grass=new THREE.Color(0x7eaa4d);
+  const sand=new THREE.Color(0xb7ac80), grass=new THREE.Color(0x8eac58);
   for(let i=0;i<=steps;i++){
    const angle=i*Math.PI*2/steps, inner=shorePoint(angle,.98), outer=shorePoint(angle,1.22);
    vertices.push(inner.x,waterLevel-.015,inner.z,
@@ -285,9 +290,10 @@ function buildPlant(p:Plant){
    leaf.scale.z=.78;leaf.rotation.y=a;leaf.castShadow=false;
   }
  }
+ if(p.kind==='tree'||p.kind==='sapling'||p.kind==='bush')bakeCanopyShelter(g);
  g.traverse((obj:THREE.Object3D)=>{if(obj instanceof THREE.Mesh)obj.userData.id=p.id;});return batchPlant(g);
 }
-const terrainMaterial=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
+const terrainMaterial=styleSurface(new THREE.MeshStandardMaterial({vertexColors:true,roughness:1}),'ground');
 function baseHeight(x:number,z:number){
  return .13*Math.sin(x*.6+.5)*Math.cos(z*.7)+.075*Math.sin(x*1.4+z*.9)+.035*Math.cos(z*2.1-x*.5);
 }
@@ -311,12 +317,27 @@ function disposeGeometry(group:THREE.Object3D){
 function addLandscape(world:THREE.Group){
  const groundGeo=new THREE.PlaneGeometry(11,11,64,64);groundGeo.rotateX(-Math.PI/2);
  const pos=groundGeo.getAttribute('position');const colors:number[]=[];
- const moss=new THREE.Color(0x709344),meadow=new THREE.Color(0xa2bc59),warm=new THREE.Color(0xc1cb75);
+ const moss=new THREE.Color(0x65945b),meadow=new THREE.Color(0xa7c665),warm=new THREE.Color(0xc3d57c);
  for(let i=0;i<pos.count;i++){
   const x=pos.getX(i),z=pos.getZ(i);pos.setY(i,groundHeight(x,z));
   const t=.5+.12*Math.sin(x*1.05+z*.75)+.07*Math.cos(z*1.63-x*.48)+.025*Math.sin(x*2.8-z*3.1);
   const color=moss.clone().lerp(meadow,THREE.MathUtils.clamp(t,0,1));
   color.lerp(warm,.28*Math.max(0,Math.sin(z*1.9+x*.7)));
+  // Broad plant footprints tint the ground without adding grass meshes.
+  let cover=0,wet=0;
+  for(const plant of plants){
+   if(plant.kind==='pond'){
+    const d=shoreDistance(x-plant.x,z-plant.z);
+    wet=Math.max(wet,1-THREE.MathUtils.smoothstep(d,1.15,1.65));continue;
+   }
+   const radius=plant.kind==='tree'?1.55:plant.kind==='sapling'?1:plant.kind==='bush'?.85:.6;
+   const influence=1-THREE.MathUtils.smoothstep(Math.hypot(x-plant.x,z-plant.z),.08,radius);
+   cover=Math.max(cover,influence*(plant.kind==='flower'?.18:.40));
+  }
+  const step=(z+4.9)/.24,pathX=-1.30+.29*Math.sin(step*.23)+.13*Math.sin(step*.72);
+  const worn=(1-THREE.MathUtils.smoothstep(Math.abs(x-pathX),.10,.52))*.17;
+  color.lerp(new THREE.Color(0xc7c28b),worn*(1-wet));
+  color.lerp(new THREE.Color(0x63874b),cover).lerp(new THREE.Color(0x689650),wet*.22);
   colors.push(color.r,color.g,color.b);
  }
  groundGeo.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));groundGeo.computeVertexNormals();
@@ -345,7 +366,7 @@ function addLandscape(world:THREE.Group){
  skirtGeometry.setAttribute('color',new THREE.Float32BufferAttribute(skirtColors,3));
  skirtGeometry.setIndex(skirtIndices);skirtGeometry.computeVertexNormals();
  const skirt=new THREE.Mesh(skirtGeometry,terrainMaterial);skirt.castShadow=true;world.add(skirt);
- const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),mat(studioBackground));
+ const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),mat(studioBackground,1,'plain'));
  floor.rotation.x=-Math.PI/2;floor.position.y=-.90;floor.receiveShadow=true;world.add(floor);
  // An informal footpath: small, irregular stones in a gently meandering strip.
  // Two instanced materials keep it inexpensive even as the garden grows.
@@ -403,7 +424,7 @@ function addLandscape(world:THREE.Group){
  }world.add(batchPlant(pebbles));
 }
 function init3d(){
- renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});configureRenderer(renderer);
+ renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});configureRenderer(renderer);gardenContours=new ContourRenderer(renderer);
  viewport.append(renderer.domElement);scene=new THREE.Scene();addDaylight(scene);
  camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);
  objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();
@@ -445,7 +466,7 @@ function loop(){
  request=requestAnimationFrame(loop);
  if(document.hidden||document.body.classList.contains('botany-open'))return;
  if(renderer&&(Math.abs(renderer.domElement.clientWidth-viewport.clientWidth)>2||Math.abs(renderer.domElement.clientHeight-viewport.clientHeight)>2))resize();
- updateWater();renderer?.render(scene!,camera!);frames++;const now=performance.now();
+ updateWater();if(scene&&camera)gardenContours?.render(scene,camera);frames++;const now=performance.now();
  if(now-lastFrame>1000){app.querySelector('#fps')!.textContent=`${Math.round(frames*1000/(now-lastFrame))} FPS · ${renderer?.info.render.calls??0} appels GPU`;frames=0;lastFrame=now;}
 }
 function pointerDown(e:PointerEvent){dragging=true;moved=false;downX=e.clientX;downY=e.clientY;(e.currentTarget as HTMLCanvasElement).setPointerCapture(e.pointerId);}
@@ -463,7 +484,7 @@ function svgPlant(p:Plant){const q=project(p.x,p.z),x=q.x,y=q.y;const ss=Math.si
 }
 function initVector(){const root=document.createElement('div');root.className='vector-stage';root.innerHTML='<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Jardin vectoriel interactif"><defs><filter id="shadow"><feGaussianBlur stdDeviation="5"/></filter></defs><rect width="800" height="600" fill="#e1e9d9"/><path d="M400 35 L675 235 L400 440 L125 235Z" fill="#849d7a" opacity=".35" transform="translate(4 12)"/><path d="M400 35 L675 235 L400 440 L125 235Z" fill="#b8cda3"/><g id="plants-svg"></g></svg>';viewport.append(root);const svg=root.querySelector('svg')!;let dx=0,dy=0,drag=false;svg.addEventListener('pointerdown',e=>{dx=e.clientX;dy=e.clientY;drag=false;svg.setPointerCapture(e.pointerId);});svg.addEventListener('pointermove',e=>{if(Math.abs(e.clientX-dx)+Math.abs(e.clientY-dy)>5)drag=true;});svg.addEventListener('pointerup',e=>{if(drag)return;const t=e.target as Element;const node=t.closest('[data-id]');if(deleting){if(node){plants=plants.filter(p=>p.id!==Number(node.getAttribute('data-id')));changed();}return;}const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const m=svg.getScreenCTM();if(!m)return;const at=pt.matrixTransform(m.inverse());const a=(at.x-400)/25,b=(at.y-233)/18;const x=(a+b)/2,z=(b-a)/2;if(Math.abs(x)<4.9&&Math.abs(z)<4.9){plants.push({id:nextId++,kind:selected,x:Math.round(x*4)/4,z:Math.round(z*4)/4,seed:nextId});changed();}});refreshVector();}
 function refreshVector(){const group=viewport.querySelector('#plants-svg');if(group)group.innerHTML=[...plants].sort((a,b)=>(a.x+a.z)-(b.x+b.z)).map(svgPlant).join('');}
-function dispose(){cancelAnimationFrame(request);renderer?.domElement.removeEventListener('pointerdown',pointerDown);renderer?.domElement.removeEventListener('pointermove',pointerMove);renderer?.domElement.removeEventListener('pointerup',pointerUp);renderer?.domElement.removeEventListener('wheel',wheel);if(scene)disposeGeometry(scene);renderer?.dispose();renderer=undefined;landscape=undefined;camera=undefined;scene=undefined;objects=undefined;land=undefined;viewport.replaceChildren();app.querySelector('#fps')!.textContent='— FPS';}
+function dispose(){cancelAnimationFrame(request);renderer?.domElement.removeEventListener('pointerdown',pointerDown);renderer?.domElement.removeEventListener('pointermove',pointerMove);renderer?.domElement.removeEventListener('pointerup',pointerUp);renderer?.domElement.removeEventListener('wheel',wheel);if(scene)disposeGeometry(scene);gardenContours?.dispose();gardenContours=undefined;renderer?.dispose();renderer=undefined;landscape=undefined;camera=undefined;scene=undefined;objects=undefined;land=undefined;viewport.replaceChildren();app.querySelector('#fps')!.textContent='— FPS';}
 function changed(){save();if(style==='vector')refreshVector();else refreshPlants3d();refreshUI();}
 function refreshUI(){app.querySelectorAll<HTMLButtonElement>('[data-style]').forEach(b=>b.classList.toggle('active',b.dataset.style===style));app.querySelectorAll<HTMLButtonElement>('[data-kind]').forEach(b=>{b.classList.toggle('active',!deleting&&b.dataset.kind===selected);b.title=b.dataset.kind===selected&&selectedSpeciesFamily!==undefined&&selected==='tree'?['Chêne','Bouleau','Conifère','Cyprès'][selectedSpeciesFamily]:'Sélectionner';});app.querySelector('#erase')!.classList.toggle('active',deleting);app.querySelector('#counter')!.textContent=`${plants.length} éléments · sauvegarde locale`;app.querySelector('#scene-title')!.textContent=style==='lowpoly'?'01 — Low-poly':style==='organic'?'02 — Organique':'03 — Vectoriel';app.querySelector('#scene-description')!.textContent=style==='lowpoly'?'Des volumes francs, une nature simple et lumineuse.':style==='organic'?'Des volumes adoucis, une végétation plus généreuse.':'Des formes illustrées et des couleurs en aplats.';app.querySelector('#hint')!.textContent=style==='vector'?'Clic pour planter · Cliquez sur un élément pour le supprimer':'Glisser pour tourner · Molette pour zoomer · Clic pour planter';app.querySelector('#density')!.setAttribute('aria-pressed',String(dense));app.querySelector('#density')!.setAttribute('title',dense?'Retirer les ajouts de densité':'Densifier le jardin');}
 function changeStyle(s:Style){if(style===s)return;dispose();style=s;if(s==='vector')initVector();else init3d();refreshUI();}
@@ -504,12 +525,13 @@ const botanicalList=app.querySelector<HTMLElement>('#botany-list')!;
 const variantBar=app.querySelector<HTMLElement>('#botany-variants')!;
 let botanicalSpecies=speciesCatalog[0],botanicalVariant=0;
 let botanicalRenderer:THREE.WebGLRenderer|undefined,botanicalScene:THREE.Scene|undefined,botanicalCamera:THREE.PerspectiveCamera|undefined,botanicalGroup:THREE.Group|undefined;
+let botanicalContours:ContourRenderer|undefined;
 let botanicalAzimuth=.66, botanicalElevation=.36, botanicalAimY=1, botanicalDistance=6.8,botanicalFrame=0,botanicalDrag=false,botanicalX=0,botanicalY=0;
 const botanicalTarget=app.querySelector<HTMLElement>('#botany-canvas')!;
 function botanicalSeed(species:SpeciesRecord,variant:number){return (variant*16+4+species.family)%256;}
 function updateBotanicalCamera(){if(!botanicalCamera)return;botanicalCamera.position.set(Math.sin(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance,Math.sin(botanicalElevation)*botanicalDistance+botanicalAimY,Math.cos(botanicalAzimuth)*Math.cos(botanicalElevation)*botanicalDistance);botanicalCamera.lookAt(0,botanicalAimY,0);}
 function resizeBotanical(){if(!botanicalRenderer||!botanicalCamera)return;const w=botanicalTarget.clientWidth,h=botanicalTarget.clientHeight;if(w<2||h<2)return;botanicalRenderer.setSize(w,h,false);botanicalCamera.aspect=w/h;botanicalCamera.updateProjectionMatrix();}
-function renderBotanical(){if(!botanicalRenderer||!botanicalScene||!botanicalCamera)return;updateWater();botanicalRenderer.render(botanicalScene,botanicalCamera);botanicalFrame=requestAnimationFrame(renderBotanical);}
+function renderBotanical(){if(!botanicalRenderer||!botanicalScene||!botanicalCamera)return;updateWater();botanicalContours?.render(botanicalScene,botanicalCamera);botanicalFrame=requestAnimationFrame(renderBotanical);}
 function selectBotanical(species:SpeciesRecord,variant=0){
  botanicalSpecies=species;botanicalVariant=variant;
  app.querySelector('#botany-name')!.textContent=species.name;
@@ -543,7 +565,7 @@ function openBotanical(){
  botanyPanel.hidden=false;
  document.body.classList.add('botany-open');
  if(!botanicalRenderer){
-  botanicalRenderer=new THREE.WebGLRenderer({antialias:true,alpha:true});configureRenderer(botanicalRenderer);botanicalTarget.append(botanicalRenderer.domElement);
+  botanicalRenderer=new THREE.WebGLRenderer({antialias:true,alpha:true});configureRenderer(botanicalRenderer);botanicalContours=new ContourRenderer(botanicalRenderer);botanicalTarget.append(botanicalRenderer.domElement);
   botanicalScene=new THREE.Scene();addDaylight(botanicalScene,true);
   botanicalCamera=new THREE.PerspectiveCamera(36,1,.1,100);
   const plinth=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.57,.18,48),new THREE.MeshStandardMaterial({color:0xc9c5ad,roughness:1}));plinth.position.y=-.14;botanicalScene.add(plinth);
@@ -567,9 +589,10 @@ window.addEventListener('resize',resize);init3d();refreshUI();
 
 if(reviewParams.has('review'))Object.assign(window,{
  __komorebiReview:{
+  study:(detail:boolean,contours:boolean)=>{surfaceStudy.value=detail?1:0;if(gardenContours)gardenContours.strength=contours?.20:0;if(botanicalContours)botanicalContours.strength=contours?.20:0;},
   metrics:()=>({calls:renderer?.info.render.calls,triangles:renderer?.info.render.triangles,
    geometries:renderer?.info.memory.geometries,textures:renderer?.info.memory.textures,
-   programs:renderer?.info.programs?.length,plants:plants.length,waterTime:waterTime.value}),
+   programs:renderer?.info.programs?.length,contours: gardenContours?.supported,contoursEnabled:!!gardenContours?.strength,plants:plants.length,waterTime:waterTime.value}),
   project:(x:number,z:number,y=groundHeight(x,z))=>{
    if(!camera||!renderer)throw Error('Garden camera unavailable');
    const point=new THREE.Vector3(x,y,z).project(camera),rect=renderer.domElement.getBoundingClientRect();

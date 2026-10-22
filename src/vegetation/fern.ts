@@ -1,7 +1,8 @@
 import * as THREE from 'three';
+import { styleSurface } from '../rendering/SurfaceShader';
 
 const colors = [0x467b40, 0x538947, 0x60974e, 0x73a45d, 0x86b368];
-const materials = colors.map(color => new THREE.MeshStandardMaterial({color, roughness: 1, flatShading: true, side: THREE.DoubleSide}));
+const materials = colors.map(color => styleSurface(new THREE.MeshStandardMaterial({color, roughness: 1, flatShading: true, side: THREE.DoubleSide}),'botanical'));
 const rachisMaterial = new THREE.MeshStandardMaterial({color: 0x47723b, roughness: 1, flatShading: true});
 
 /** Low-poly fern with paired pinnules along curved, tapering fronds.

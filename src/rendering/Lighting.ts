@@ -18,8 +18,8 @@ export function configureRenderer(renderer: THREE.WebGLRenderer) {
 
 export function addDaylight(scene: THREE.Scene, studio = false) {
   scene.background = new THREE.Color(studioBackground);
-  scene.add(new THREE.HemisphereLight(0xf1f6ff, 0x74805b, 1.25));
-  const sun = new THREE.DirectionalLight(0xfff4dc, 2.65);
+  scene.add(new THREE.HemisphereLight(0xf1f6ff, 0x74805b, 1.45));
+  const sun = new THREE.DirectionalLight(0xfff5e4, 2.35);
   sun.position.set(-3.5, 9, 5);
   sun.castShadow = true;
   const extent = studio ? 4 : 9;
@@ -31,6 +31,6 @@ export function addDaylight(scene: THREE.Scene, studio = false) {
   sun.shadow.radius = 2.5;
   sun.shadow.normalBias = .035;
   sun.shadow.bias = -.00015;
-  sun.shadow.intensity = .62;
+  sun.shadow.intensity = .52;
   scene.add(sun);
 }
