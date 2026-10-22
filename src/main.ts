@@ -131,19 +131,25 @@ function buildPlant(p:Plant){
   const lean=(r(1)-.5)*.16;
   const trunk=species===1?0xc9c2ac:species===2?0x6f624c:0x796448;
   const v=(x:number,y:number,z:number)=>new THREE.Vector3(x,y,z);
-  if(species===0){ // Oak-like spreading crown: broad, layered, asymmetrical.
-   tapered(g,v(0,0,0),v(lean,1.65,0),.26,.13,trunk,7);
-   for(let i=0;i<7;i++){
-    const a=i*2.399,reach=.75+r(10+i)*.45;
-    const x=lean+Math.cos(a)*reach,z=Math.sin(a)*reach*.87;
-    const top=2.05+r(20+i)*.32;
-    tapered(g,v(lean,1.15,0),v(x,top-.20,z),.095,.025,trunk,5);
-    const c=shape(g,new THREE.IcosahedronGeometry(.64+r(30+i)*.21,1),
-      [0x426e43,0x59834a,0x779b55,0x90a963][i%4],x,top,z);
-    c.scale.set(1.16,.67+r(i+36)*.13,1.01);c.rotation.y=a;
+  if(species===0){ // An open broadleaf canopy: irregular lobes, visible branching and a coherent crown.
+   const crown=[0x426d3d,0x5a8645,0x739851,0x88a656,0x9bb25d,0x658c49];
+   const canopyY=2.15+r(2)*.15;
+   tapered(g,v(0,0,0),v(lean,1.63,0),.25,.13,trunk,7);
+   for(let i=0;i<9;i++){
+    const a=i*2.399963+(r(i+7)-.5)*.32;
+    const radius=.76+.46*r(i+11), x=lean+Math.cos(a)*radius,z=Math.sin(a)*radius*.83;
+    const y=canopyY+(r(i+19)-.5)*.55;
+    const branchTip=v(x*.83,y-.14,z*.83);
+    tapered(g,v(lean,1.29,0),branchTip,.088,.028,trunk,5);
+    const lobe=shape(g,new THREE.IcosahedronGeometry(.55+.18*r(i+28),1),crown[(i+Math.floor(r(i+30)*3))%crown.length],x,y,z);
+    lobe.scale.set(1.03+.24*r(i+32),.58+.19*r(i+36),.87+.20*r(i+40));
+    lobe.rotation.y=a;lobe.castShadow=true;
    }
-   const cap=shape(g,new THREE.IcosahedronGeometry(.89,1),0x608a4c,lean,2.43,0);
-   cap.scale.set(1.3,.58,1.17);
+   for(let i=0;i<3;i++){
+    const a=i*2.1+1.4;
+    const lobe=shape(g,new THREE.IcosahedronGeometry(.60+.08*r(i+54),1),crown[(i+3)%crown.length],lean+Math.cos(a)*.38,2.48+r(i+57)*.22,Math.sin(a)*.33);
+    lobe.scale.set(1.02,.68,.93);lobe.castShadow=true;
+   }
   }else if(species===1){ // Birch: visible light trunk and separate airy sprays.
    tapered(g,v(0,0,0),v(lean,2.7,0),.16,.065,trunk,7);
    for(let i=0;i<4;i++){
@@ -152,7 +158,7 @@ function buildPlant(p:Plant){
     const h=1.62+i*.28;
     tapered(g,v(lean,h-.53,0),v(x,h+.27,z),.055,.012,0x9e9682,5);
     const crown=shape(g,new THREE.IcosahedronGeometry(.49+r(i+60)*.14,1),
-      [0x86a968,0x9bb875,0x719954,0xacc18a][i],x,h+.32,z);
+      [0x7b9c59,0x9eb873,0x739c55,0xa9bd7b][i],x,h+.32,z);
     crown.scale.set(.72,1.28,.75);
    }
    const top=shape(g,new THREE.IcosahedronGeometry(.53,1),0x91b06e,lean,2.75,0);
@@ -482,7 +488,7 @@ function selectBotanical(species:SpeciesRecord,variant=0){
   const size=bounds.getSize(new THREE.Vector3());
   const center=bounds.getCenter(new THREE.Vector3());
   botanicalAimY=species.kind==='pond' ? 0.2 : Math.max(.45,center.y*.80);
-  botanicalDistance=THREE.MathUtils.clamp(Math.max(size.y*1.75,size.x*2.15,4.6),4.6,13);
+  botanicalDistance=THREE.MathUtils.clamp(Math.max(size.y*1.85,size.x*2.28,4.6),4.6,13);
   botanicalElevation=.33;updateBotanicalCamera();
  }
 }

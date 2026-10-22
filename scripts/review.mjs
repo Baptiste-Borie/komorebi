@@ -6,7 +6,7 @@ import { mkdir, rm, rename, writeFile, readFile } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 
 const mode = process.argv.includes('--quick') ? 'quick' : process.argv.includes('--full') ? 'full' : 'standard';
-const limits = {quick:5, standard:15, full:25};
+const limits = {quick:5, standard:6, full:25};
 const staging = resolve('review-staging');
 const output = resolve('reviews');
 const port = 4178;
