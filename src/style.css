@@ -17,3 +17,17 @@
 .wordmark{display:flex;align-items:center;gap:7px}
 .wordmark strong{margin-left:0}
 .hud-actions button{display:grid;place-items:center}
+
+/* Developer-only visual review controls. Hidden with the existing menu. */
+.sun-settings{padding:12px 0;border-bottom:1px solid #dce1d3;margin-bottom:8px}
+.sun-settings strong{display:block;margin-bottom:10px;font-size:12px}
+.sun-presets{display:flex;flex-wrap:wrap;gap:5px}
+.sun-presets button{font-size:11px;padding:7px 9px;margin:0;box-shadow:none}
+.sun-presets button.active{background:#dce8b8;border-color:#89a568;color:#284a2b}
+.species-navigation{position:absolute;z-index:3;left:50%;bottom:82px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;white-space:nowrap}
+.species-navigation button{background:#fffef5;border:1px solid #c9d6bc;border-radius:9px;padding:7px 11px;color:#314936}
+.species-navigation span{font-size:12px;color:#4b6150}
+.review-note{border-top:1px solid #d5dfd0;padding-top:12px;margin-top:15px}
+.review-note label{display:block;font-size:12px;font-weight:600;margin-bottom:7px}
+.review-note textarea{width:100%;min-height:95px;padding:10px;font:inherit;font-size:12px;line-height:1.5;border:1px solid #cbd8c2;background:#fffdf5;border-radius:9px;resize:vertical}
+.review-note button{width:100%;font-size:11px;padding:9px;margin-top:7px;border:1px solid #b8cdb1;background:#edf4e8;border-radius:8px;color:#2b4b30}

@@ -5,7 +5,7 @@ import { styleSurface, surfaceStudy } from './rendering/SurfaceShader';
 import { ContourRenderer } from './rendering/Contours';
 import { icon } from './rendering/Icons';
 import { createFern } from './vegetation/fern';
-import { configureRenderer, addDaylight, studioBackground } from './rendering/Lighting';
+import { configureRenderer, addDaylight, applySunPreset, SUN_PRESETS, type SunPreset, studioBackground } from './rendering/Lighting';
 import { mat, facetSurface, contactMaterial, bakeCanopyShelter } from './rendering/Materials';
 import { createWater, waterTime, waterLevel, shorePoint, shoreDistance } from './rendering/Water';
 
@@ -52,9 +52,23 @@ const labels:Record<Kind,string>={tree:'Arbre',sapling:'Jeune arbre',bush:'Buiss
 function load(){try{const v=JSON.parse(localStorage.getItem(storageKey)||'null'); if(Array.isArray(v)&&v.every(p=>typeof p.id==='number'&&typeof p.kind==='string'&&typeof p.x==='number'&&typeof p.z==='number'))return v as Plant[];}catch{}return seedGarden.map(p=>({...p}));}
 function save(){localStorage.setItem(storageKey,JSON.stringify(plants));}
 const app=document.querySelector<HTMLDivElement>('#app')!;
-app.innerHTML=`<main class="garden-shell"><div id="viewport" class="viewport"><div id="scene"></div></div><nav class="hud hud-top"><div class="wordmark">${icon('sapling')}<strong>Komorebi</strong></div><div class="hud-actions"><button id="home" title="Recentrer" aria-label="Recentrer">${icon('home')}</button><button id="botany-open" title="Atelier botanique" aria-label="Ouvrir l’atelier botanique">${icon('flower')}</button><button id="density" title="Basculer la densité" aria-label="Basculer la densité">${icon('density')}</button><button id="focus" title="Masquer les commandes" aria-label="Mode contemplation">${icon('focus')}</button><button id="menu-toggle" title="Ouvrir le menu" aria-label="Ouvrir le menu">${icon('menu')}</button></div></nav><section id="build-panel" class="build-panel" aria-label="Outils du jardin"><div class="panel-top"><span>Construire</span><button id="erase" title="Supprimer un élément">✕ Effacer</button></div><div id="tools" class="tools"></div></section><aside id="menu-panel" class="menu-panel" hidden><h2>Komorebi</h2><p>Un jardin à composer librement.</p><button id="reset">↺ Restaurer le jardin</button><div id="counter"></div><div id="fps"></div><small id="scene-title">01 — Low-poly</small><p id="scene-description">Jardin miniature</p><small id="hint">Glisser : rotation · Molette : zoom · Clic : planter</small></aside><section id="botany" class="botany" hidden aria-label="Atelier botanique"><div class="botany-shell"><header class="botany-top"><div><small>ATELIER BOTANIQUE · ÉTUDE 01</small><h2>Les espèces du jardin</h2><p>Observer les formes, comparer les variantes, puis retourner composer.</p></div><button id="botany-close" title="Retourner au jardin">✕ &nbsp; Retour au jardin</button></header><div class="botany-body"><aside class="botany-list" id="botany-list"></aside><div class="botany-view"><div id="botany-canvas" class="botany-canvas"></div><div class="botany-variants" id="botany-variants"></div><div class="botany-help">Glisser pour tourner · Molette pour zoomer</div></div><aside class="botany-card"><small>FICHE D’ESPÈCE</small><h3 id="botany-name"></h3><p id="botany-desc"></p><div id="botany-facts"></div><button id="botany-plant">Choisir pour le jardin ↗</button><small>Étude visuelle · aucune progression ni ressource</small></aside></div></div></section><button id="build-toggle" class="build-toggle" title="Afficher les outils">✿</button></main>`;
+app.innerHTML=`<main class="garden-shell"><div id="viewport" class="viewport"><div id="scene"></div></div><nav class="hud hud-top"><div class="wordmark">${icon('sapling')}<strong>Komorebi</strong></div><div class="hud-actions"><button id="home" title="Recentrer" aria-label="Recentrer">${icon('home')}</button><button id="botany-open" title="Atelier botanique" aria-label="Ouvrir l’atelier botanique">${icon('flower')}</button><button id="density" title="Basculer la densité" aria-label="Basculer la densité">${icon('density')}</button><button id="focus" title="Masquer les commandes" aria-label="Mode contemplation">${icon('focus')}</button><button id="menu-toggle" title="Ouvrir le menu" aria-label="Ouvrir le menu">${icon('menu')}</button></div></nav><section id="build-panel" class="build-panel" aria-label="Outils du jardin"><div class="panel-top"><span>Construire</span><button id="erase" title="Supprimer un élément">✕ Effacer</button></div><div id="tools" class="tools"></div></section><aside id="menu-panel" class="menu-panel" hidden><h2>Komorebi</h2><p>Un jardin à composer librement.</p><div class="sun-settings"><strong>Étude de lumière</strong><div id="sun-presets" class="sun-presets"></div><small id="sun-label">Soleil franc</small></div><button id="reset">↺ Restaurer le jardin</button><div id="counter"></div><div id="fps"></div><small id="scene-title">01 — Low-poly</small><p id="scene-description">Jardin miniature</p><small id="hint">Glisser : rotation · Molette : zoom · Clic : planter</small></aside><section id="botany" class="botany" hidden aria-label="Atelier botanique"><div class="botany-shell"><header class="botany-top"><div><small>ATELIER BOTANIQUE · ÉTUDE 01</small><h2>Les espèces du jardin</h2><p>Observer les formes, comparer les variantes, puis retourner composer.</p></div><button id="botany-close" title="Retourner au jardin">✕ &nbsp; Retour au jardin</button></header><div class="botany-body"><aside class="botany-list" id="botany-list"></aside><div class="botany-view"><div id="botany-canvas" class="botany-canvas"></div><div class="species-navigation"><button id="species-prev" type="button" aria-label="Espèce précédente">← Précédent</button><span id="species-position"></span><button id="species-next" type="button" aria-label="Espèce suivante">Suivant →</button></div><div class="botany-variants" id="botany-variants"></div><div class="botany-help">Glisser pour tourner · Molette pour zoomer</div></div><aside class="botany-card"><small>FICHE D’ESPÈCE</small><h3 id="botany-name"></h3><p id="botany-desc"></p><div id="botany-facts"></div><div class="review-note"><label for="botany-review-note">Mes remarques sur cette espèce</label><textarea id="botany-review-note" rows="4" placeholder="Silhouette, couleurs, détail à changer…"></textarea><button id="botany-copy-note" type="button">Copier la fiche et mon avis</button></div><button id="botany-plant">Choisir pour le jardin ↗</button><small>Étude visuelle · aucune progression ni ressource</small></aside></div></div></section><button id="build-toggle" class="build-toggle" title="Afficher les outils">✿</button></main>`;
 const viewport=app.querySelector<HTMLDivElement>('#scene')!;
 const tools=app.querySelector<HTMLDivElement>('#tools')!;
+let sunPreset:SunPreset='clear';
+const sunButtons=app.querySelector<HTMLElement>('#sun-presets')!;
+function chooseSun(preset:SunPreset){
+ sunPreset=preset;
+ if(scene)applySunPreset(scene,preset,renderer);
+ if(botanicalScene)applySunPreset(botanicalScene,preset,botanicalRenderer);
+ sunButtons.querySelectorAll<HTMLButtonElement>('button').forEach(b=>{b.classList.toggle('active',b.dataset.preset===preset);b.setAttribute('aria-pressed',String(b.dataset.preset===preset));});
+ app.querySelector('#sun-label')!.textContent=SUN_PRESETS[preset].name;
+}
+(Object.keys(SUN_PRESETS) as SunPreset[]).forEach(key=>{
+ const b=document.createElement('button');b.type='button';b.dataset.preset=key;b.textContent=SUN_PRESETS[key].name;
+ b.onclick=()=>chooseSun(key);sunButtons.append(b);
+});
+
 app.querySelector<HTMLButtonElement>('#menu-toggle')!.onclick=()=>{
  const panel=app.querySelector<HTMLElement>('#menu-panel')!;panel.hidden=!panel.hidden;
 };
@@ -425,7 +439,7 @@ function addLandscape(world:THREE.Group){
 }
 function init3d(){
  renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});configureRenderer(renderer);gardenContours=new ContourRenderer(renderer);
- viewport.append(renderer.domElement);scene=new THREE.Scene();addDaylight(scene);
+ viewport.append(renderer.domElement);scene=new THREE.Scene();addDaylight(scene);applySunPreset(scene,sunPreset,renderer);
  camera=new THREE.OrthographicCamera(-8,8,5,-5,.1,100);
  objects=new THREE.Group();scene.add(objects);refreshPlants3d();resize();updateCamera();
  renderer.domElement.addEventListener('pointerdown',pointerDown);
@@ -537,6 +551,10 @@ function selectBotanical(species:SpeciesRecord,variant=0){
  app.querySelector('#botany-name')!.textContent=species.name;
  app.querySelector('#botany-desc')!.textContent=species.description;
  app.querySelector('#botany-facts')!.textContent=`${species.group} · ${species.habitat}`;
+ app.querySelector('#species-position')!.textContent=`${speciesCatalog.indexOf(species)+1} / ${speciesCatalog.length}`;
+ const note=app.querySelector<HTMLTextAreaElement>('#botany-review-note')!;
+ note.value=localStorage.getItem('komorebi-review-'+species.id)??'';
+ note.oninput=()=>localStorage.setItem('komorebi-review-'+species.id,note.value);
  botanicalList.innerHTML=speciesCatalog.map(entry=>`<button data-species="${entry.id}" class="${entry.id===species.id?'active':''}">${entry.name}<span>${entry.group}</span></button>`).join('');
  botanicalList.querySelectorAll<HTMLButtonElement>('[data-species]').forEach(b=>b.onclick=()=>selectBotanical(speciesCatalog.find(entry=>entry.id===b.dataset.species)!,0));
  variantBar.innerHTML=Array.from({length:6},(_,i)=>`<button data-variant="${i}" class="${i===variant?'active':''}">Variante ${String(i+1).padStart(2,'0')}</button>`).join('');
@@ -566,7 +584,7 @@ function openBotanical(){
  document.body.classList.add('botany-open');
  if(!botanicalRenderer){
   botanicalRenderer=new THREE.WebGLRenderer({antialias:true,alpha:true});configureRenderer(botanicalRenderer);botanicalContours=new ContourRenderer(botanicalRenderer);botanicalTarget.append(botanicalRenderer.domElement);
-  botanicalScene=new THREE.Scene();addDaylight(botanicalScene,true);
+  botanicalScene=new THREE.Scene();addDaylight(botanicalScene,true);applySunPreset(botanicalScene,sunPreset,botanicalRenderer);
   botanicalCamera=new THREE.PerspectiveCamera(36,1,.1,100);
   const plinth=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.57,.18,48),new THREE.MeshStandardMaterial({color:0xc9c5ad,roughness:1}));plinth.position.y=-.14;botanicalScene.add(plinth);
   const floor=new THREE.Mesh(new THREE.CircleGeometry(1.55,64),new THREE.MeshStandardMaterial({color:0x96ad61,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=.005;floor.receiveShadow=true;botanicalScene.add(floor);
@@ -581,11 +599,18 @@ function openBotanical(){
 function closeBotanical(){lastFrame=performance.now();frames=0;botanyPanel.hidden=true;document.body.classList.remove('botany-open');cancelAnimationFrame(botanicalFrame);}
 app.querySelector<HTMLButtonElement>('#botany-open')!.onclick=openBotanical;
 app.querySelector<HTMLButtonElement>('#botany-close')!.onclick=closeBotanical;
+function moveSpecies(direction:number){const index=speciesCatalog.indexOf(botanicalSpecies);selectBotanical(speciesCatalog[(index+direction+speciesCatalog.length)%speciesCatalog.length],0);}
+app.querySelector<HTMLButtonElement>('#species-prev')!.onclick=()=>moveSpecies(-1);
+app.querySelector<HTMLButtonElement>('#species-next')!.onclick=()=>moveSpecies(1);
+app.querySelector<HTMLButtonElement>('#botany-copy-note')!.onclick=async()=>{
+ const text=`Komorebi · ${botanicalSpecies.name} · Variante ${botanicalVariant+1} · ${SUN_PRESETS[sunPreset].name}\n${app.querySelector<HTMLTextAreaElement>('#botany-review-note')!.value}`;
+ try{await navigator.clipboard.writeText(text);}catch{window.prompt('Copie cette fiche :',text);}
+};
 app.querySelector<HTMLButtonElement>('#botany-plant')!.onclick=()=>{selected=botanicalSpecies.kind;selectedSpeciesFamily=botanicalSpecies.kind==='tree'||botanicalSpecies.kind==='sapling'?botanicalSpecies.family:undefined;deleting=false;closeBotanical();refreshUI();};
 window.addEventListener('resize',()=>{if(!botanyPanel.hidden)resizeBotanical();});
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!botanyPanel.hidden)closeBotanical();});
 
-window.addEventListener('resize',resize);init3d();refreshUI();
+window.addEventListener('resize',resize);init3d();refreshUI();chooseSun('clear');
 
 if(reviewParams.has('review'))Object.assign(window,{
  __komorebiReview:{
