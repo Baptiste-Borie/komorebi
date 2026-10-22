@@ -192,40 +192,59 @@ function buildPlant(p:Plant){
     const lobe=shape(g,new THREE.IcosahedronGeometry(.60+.08*r(i+54),1),crown[(i+3)%crown.length],lean+Math.cos(a)*.38,2.55+r(i+57)*.32,Math.sin(a)*.33);
     lobe.scale.set(1.02,.68,.93);lobe.castShadow=true;
    }
-   }else if(species===1){ // Birch: slender white bark, dark lenticels and hanging sprays.
-   const crown=[0x75a44f,0x8bb75a,0x9bc368,0x70a258];
-   tapered(g,v(0,0,0),v(lean,3.0,0),.145,.042,0xd9d6c3,8);
-   // Bark marks adhere to the tapered trunk and wrap around all sides.
-   for(let i=0;i<18;i++){
-    const y=.38+i*.13,angle=i*2.399963,width=.24+.24*r(i+115);
-    const radius=.145+(.042-.145)*y/3+.003;
-    const verts:number[]=[];
-    for(let j=0;j<4;j++){
-     const a=angle+(j%2)*width,yy=y+(j>=2?.028+.013*r(i+120):0);
-     const rr=radius+(.042-.145)*(yy-y)/3;
-     verts.push(lean+Math.cos(a)*rr,yy,Math.sin(a)*rr);
+   }else if(species===1){ // Birch: clustered slender trunks, coherent crown and surface-attached bark scars.
+   const greens=[0x6a9b49,0x80aa50,0x91b65a,0x75a64c,0x9ebd68];
+   const multi=r(96)>.53?3:r(97)>.50?2:1;
+   const baseLean=(r(98)-.5)*.12;
+   for(let trunkId=0;trunkId<multi;trunkId++){
+    const baseAngle=trunkId*2.399963+.4;
+    const startX=trunkId===0?0:Math.cos(baseAngle)*(.12+.045*r(trunkId+90));
+    const startZ=trunkId===0?0:Math.sin(baseAngle)*(.12+.045*r(trunkId+91));
+    const height=(trunkId===0?3.05:2.48+.35*r(trunkId+92))*(.91+.19*r(trunkId+93));
+    const topX=startX+baseLean+(trunkId===0?0:Math.cos(baseAngle)*.20);
+    const topZ=startZ+(trunkId===0?0:Math.sin(baseAngle)*.17);
+    const bottom=new THREE.Vector3(startX,0,startZ),top=new THREE.Vector3(topX,height,topZ);
+    const radius=trunkId===0?.14:.092;
+    tapered(g,bottom,top,radius,.032,0xe7e4d0,9);
+    // Wrap short organic dark bark scars around the *real sloping trunk*.
+    // The surface radius decreases with height; each polygon follows it.
+    for(let i=0;i<20;i++){
+     const t=.10+i*.039+r(i+trunkId*40+110)*.016;
+     const angle=i*2.399963+trunkId*.74;
+     const width=.38+.52*r(i+trunkId*30+120);
+     const t2=Math.min(.97,t+.008+.012*r(i+trunkId*30+125));
+     const tangent=new THREE.Vector3().subVectors(top,bottom);
+     const radial=(a:number,tt:number)=>{
+      const center=bottom.clone().addScaledVector(tangent,tt);
+      const rr=radius+( .032-radius)*tt+.0035;
+      return [center.x+Math.cos(a)*rr,center.y,center.z+Math.sin(a)*rr];
+     };
+     const a=radial(angle,t),b=radial(angle+width,t),c=radial(angle,t2),d=radial(angle+width*.86,t2);
+     const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute([
+      ...a,...b,...c,...b,...d,...c
+     ],3));geo.computeVertexNormals();
+     const scar=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:i%7===0?0x64665b:0x363e37,roughness:1,side:THREE.DoubleSide}));
+     scar.castShadow=false;g.add(scar);
     }
-    const geo=new THREE.BufferGeometry();
-    geo.setAttribute('position',new THREE.Float32BufferAttribute([
-     ...verts.slice(0,3),...verts.slice(3,6),...verts.slice(6,9),
-     ...verts.slice(3,6),...verts.slice(9,12),...verts.slice(6,9)
-    ],3));geo.computeVertexNormals();
-    const mark=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({
-     color:i%5===0?0x55564b:0x373d33,roughness:1,side:THREE.DoubleSide
-    }));mark.castShadow=false;g.add(mark);
-   }
-   const branches=8+Math.floor(r(100)*5);
-   for(let i=0;i<branches;i++){
-    const a=i*2.399963+r(i+60)*.3,reach=.42+r(i+61)*.53;
-    const height=1.65+(i%5)*.24+r(i+62)*.24;
-    const x=lean+Math.cos(a)*reach,z=Math.sin(a)*reach;
-    tapered(g,v(lean,height-.38,0),v(x,height+.26,z),.044,.011,0xa8a598,5);
-    for(let j=0;j<3;j++){
-     const tx=x+Math.cos(a+j*.7)*(.11+j*.11),tz=z+Math.sin(a+j*.7)*(.10+j*.12);
-     const drop=.16+j*.12+r(i+j+140)*.14;
-     tapered(g,v(x,height+.23,z),v(tx,height+.16-drop,tz),.012,.003,0xa7a18b,4);
-     const leaves=shape(g,new THREE.IcosahedronGeometry(.14+.06*r(i*3+j+170),1),crown[(i+j)%crown.length],tx,height+.13-drop,tz);
-     leaves.scale.set(.66,1.85,.72);leaves.castShadow=false;
+    const branches=trunkId===0?8:4;
+    for(let i=0;i<branches;i++){
+     const a=i*2.399963+trunkId*.7+r(i+140)*.20;
+     const t=.46+(i%5)*.09+.025*r(i+147);
+     const origin=bottom.clone().lerp(top,t);
+     const reach=.45+.38*r(i+150);
+     const tip=origin.clone().add(v(Math.cos(a)*reach,.20+.18*r(i+155),Math.sin(a)*reach));
+     tapered(g,origin,tip,.035,.012,0xd4cdbb,5);
+     // Foliar clusters originate from branch tips: sparse compared to oak,
+     // but enough nested crowns to avoid a naked hanging-grape silhouette.
+     for(let j=0;j<3;j++){
+      const side=a+j*2.1+.4;
+      const cx=tip.x+Math.cos(side)*(.13+.13*r(j+i*9+160));
+      const cy=tip.y-(j===0?.07:.17+.06*r(j+i*9+164));
+      const cz=tip.z+Math.sin(side)*(.12+.11*r(j+i*9+168));
+      tapered(g,tip,v(cx,cy+.10,cz),.012,.004,0xaba998,4);
+      const leaf=shape(g,new THREE.IcosahedronGeometry(.25+.10*r(i*6+j+172),1),greens[(i+j+trunkId)%greens.length],cx,cy,cz);
+      leaf.scale.set(.84,1.17+.30*r(i+j+180),.83);leaf.castShadow=false;
+     }
     }
    }
   }else if(species===2){ // Pine: staggered conical whorls with the trunk below.

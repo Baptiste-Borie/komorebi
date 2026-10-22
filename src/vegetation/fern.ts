@@ -14,17 +14,22 @@ export function createFern(seed: number): THREE.Group {
     return v - Math.floor(v);
   };
   const rachisGeo = new THREE.CylinderGeometry(.004, .009, 1, 4);
-  const count = 11 + Math.floor(rand(1) * 4);
-  for (let frond = 0; frond < count; frond++) {
-    const angle = (frond / count) * Math.PI * 2 + (rand(frond + 3) - .5) * .26;
-    const spread = .62 + rand(frond + 16) * .30;
-    const tall = .46 + rand(frond + 27) * .32;
+  // Three offset crowns: spreading outer fronds, a filled middle, and an upright heart.
+  const tierCounts = [9, 9, 6];
+  for (let tier = 0; tier < tierCounts.length; tier++) {
+   const count = tierCounts[tier] + Math.floor(rand(1+tier)*3);
+   const dx = tier===0?0:(rand(220+tier)-.5)*.20;
+   const dz = tier===0?0:(rand(230+tier)-.5)*.20;
+   for (let frond = 0; frond < count; frond++) {
+    const angle = (frond / count) * Math.PI * 2 + tier*.77 + (rand(frond + tier*23 + 3) - .5) * .48;
+    const spread = tier===0?.69+rand(frond+16)*.23:tier===1?.42+rand(frond+26)*.22:.20+rand(frond+36)*.16;
+    const tall = tier===0?.40+rand(frond+27)*.19:tier===1?.55+rand(frond+37)*.23:.67+rand(frond+47)*.19;
     const direction = new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle));
     const sideways = new THREE.Vector3(-Math.sin(angle), 0, Math.cos(angle));
     const point = (t: number) => new THREE.Vector3(
-      direction.x * spread * Math.pow(Math.sin(t * Math.PI / 2), 1.25),
+      dx + direction.x * spread * Math.pow(Math.sin(t * Math.PI / 2), 1.25),
       tall * Math.sin(t * Math.PI * .88),
-      direction.z * spread * Math.pow(Math.sin(t * Math.PI / 2), 1.25)
+      dz + direction.z * spread * Math.pow(Math.sin(t * Math.PI / 2), 1.25)
     );
     const segments = 15;
     for (let j = 0; j < segments; j++) {
@@ -41,7 +46,7 @@ export function createFern(seed: number): THREE.Group {
       const midT = (t0 + t1) * .5;
       const stem = point(midT);
       const profile = Math.pow(Math.sin(Math.PI * midT), .85);
-      const length = (.24 + .11 * rand(frond * 31 + j)) * profile;
+      const length = (.21 + .12 * rand(frond * 31 + j + tier*91)) * profile * (tier===2?.72:1);
       for (const side of [-1, 1]) {
         // Small, tapered leaflets reach sideways and angle toward the tip.
         const leafTip = stem.clone().addScaledVector(sideways, side * length)
@@ -61,11 +66,12 @@ export function createFern(seed: number): THREE.Group {
         const geo = new THREE.BufferGeometry();
         geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
         geo.computeVertexNormals();
-        const leaf = new THREE.Mesh(geo, materials[(frond + seed) % materials.length]);
+        const leaf = new THREE.Mesh(geo, materials[(frond + tier * 2 + seed) % materials.length]);
         leaf.castShadow = false;
         group.add(leaf);
       }
     }
+   }
   }
   return group;
 }
