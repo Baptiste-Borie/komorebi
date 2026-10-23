@@ -193,7 +193,7 @@ function buildPlant(p:Plant){
     lobe.scale.set(1.02,.68,.93);lobe.castShadow=true;
    }
    }else if(species===1){ // Birch: clustered slender trunks, coherent crown and surface-attached bark scars.
-   const greens=[0x6a9b49,0x80aa50,0x91b65a,0x75a64c,0x9ebd68];
+   const greens=[0x719d4b,0x80a956,0x92b55e,0x76a454,0x9bb868];
    const multi=r(96)>.53?3:r(97)>.50?2:1;
    const baseLean=(r(98)-.5)*.12;
    for(let trunkId=0;trunkId<multi;trunkId++){
@@ -226,24 +226,24 @@ function buildPlant(p:Plant){
      const scar=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:i%7===0?0x64665b:0x363e37,roughness:1,side:THREE.DoubleSide}));
      scar.castShadow=false;g.add(scar);
     }
-    const branches=trunkId===0?8:4;
+    const branches=trunkId===0?9:5;
     for(let i=0;i<branches;i++){
      const a=i*2.399963+trunkId*.7+r(i+140)*.20;
      const t=.46+(i%5)*.09+.025*r(i+147);
      const origin=bottom.clone().lerp(top,t);
-     const reach=.45+.38*r(i+150);
+     const reach=.42+.43*r(i+150);
      const tip=origin.clone().add(v(Math.cos(a)*reach,.20+.18*r(i+155),Math.sin(a)*reach));
      tapered(g,origin,tip,.035,.012,0xd4cdbb,5);
      // Foliar clusters originate from branch tips: sparse compared to oak,
      // but enough nested crowns to avoid a naked hanging-grape silhouette.
-     for(let j=0;j<3;j++){
-      const side=a+j*2.1+.4;
+     for(let j=0;j<4;j++){
+      const side=a+j*1.618+.4;
       const cx=tip.x+Math.cos(side)*(.13+.13*r(j+i*9+160));
-      const cy=tip.y-(j===0?.07:.17+.06*r(j+i*9+164));
+      const cy=tip.y+(.08-.20*r(j+i*9+164));
       const cz=tip.z+Math.sin(side)*(.12+.11*r(j+i*9+168));
       tapered(g,tip,v(cx,cy+.10,cz),.012,.004,0xaba998,4);
-      const leaf=shape(g,new THREE.IcosahedronGeometry(.25+.10*r(i*6+j+172),1),greens[(i+j+trunkId)%greens.length],cx,cy,cz);
-      leaf.scale.set(.84,1.17+.30*r(i+j+180),.83);leaf.castShadow=false;
+      const leaf=shape(g,new THREE.IcosahedronGeometry(.23+.09*r(i*6+j+172),1),greens[(i+j+trunkId)%greens.length],cx,cy,cz);
+      leaf.scale.set(.88+.17*r(i+j+181),.82+.27*r(i+j+180),.89);leaf.castShadow=false;
      }
     }
    }

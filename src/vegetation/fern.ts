@@ -15,15 +15,15 @@ export function createFern(seed: number): THREE.Group {
   };
   const rachisGeo = new THREE.CylinderGeometry(.004, .009, 1, 4);
   // Three offset crowns: spreading outer fronds, a filled middle, and an upright heart.
-  const tierCounts = [9, 9, 6];
+  const tierCounts = [12, 11, 3];
   for (let tier = 0; tier < tierCounts.length; tier++) {
-   const count = tierCounts[tier] + Math.floor(rand(1+tier)*3);
-   const dx = tier===0?0:(rand(220+tier)-.5)*.20;
-   const dz = tier===0?0:(rand(230+tier)-.5)*.20;
+   const count = tierCounts[tier] + (tier===2?0:Math.floor(rand(1+tier)*2));
+   const dx = tier===0?0:(rand(220+tier)-.5)*.075;
+   const dz = tier===0?0:(rand(230+tier)-.5)*.075;
    for (let frond = 0; frond < count; frond++) {
     const angle = (frond / count) * Math.PI * 2 + tier*.77 + (rand(frond + tier*23 + 3) - .5) * .48;
-    const spread = tier===0?.69+rand(frond+16)*.23:tier===1?.42+rand(frond+26)*.22:.20+rand(frond+36)*.16;
-    const tall = tier===0?.40+rand(frond+27)*.19:tier===1?.55+rand(frond+37)*.23:.67+rand(frond+47)*.19;
+    const spread = tier===0?.57+rand(frond+16)*.21:tier===1?.46+rand(frond+26)*.18:.17+rand(frond+36)*.11;
+    const tall = tier===0?.43+rand(frond+27)*.16:tier===1?.50+rand(frond+37)*.20:.70+rand(frond+47)*.12;
     const direction = new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle));
     const sideways = new THREE.Vector3(-Math.sin(angle), 0, Math.cos(angle));
     const point = (t: number) => new THREE.Vector3(
