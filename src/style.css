@@ -41,3 +41,7 @@
 .earthworks-viewport{flex:1;min-height:0}.earthworks-viewport canvas{width:100%;height:100%;display:block;cursor:crosshair}
 .earthworks-toolbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:20px;padding:14px 22px;background:#f8faf0;border-top:1px solid #d0ddc8;flex-wrap:wrap}.earthworks-actions{display:flex;gap:7px}.earthworks-actions button.active{background:#cfe3c1;border-color:#719b65}.earthworks-help{font-size:11px;color:#71876e}#earthworks-reset{font-size:11px}
 @media(max-width:750px){.earthworks-toolbar{gap:8px;padding:10px}.earthworks-help{width:100%;text-align:center;order:3}.earthworks-head{padding:10px 12px}.earthworks-head h2{font-size:17px}}
+
+/* Earthworks V0.33: no permanent crosshair; tool and temporary footprint communicate the action. */
+.earthworks-viewport canvas{cursor:default}
+.earthworks-viewport canvas:active{cursor:none}
