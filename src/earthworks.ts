@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import {makeShovel,poseShovel,CYCLE_DURATION,EFFECT_AT} from './shovel';
+import {openShovelWorkshop} from './shovelWorkshop';
 import {configureRenderer,addDaylight,studioBackground} from './rendering/Lighting';
 import {styleSurface} from './rendering/SurfaceShader';
 
@@ -117,33 +119,11 @@ export function openEarthworks(app:HTMLElement){
  const updateCamera=()=>{camera.position.set(Math.sin(azimuth)*Math.cos(elevation)*zoom,Math.sin(elevation)*zoom,Math.cos(azimuth)*Math.cos(elevation)*zoom);camera.lookAt(0,0,0);};updateCamera();
  const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
  const hit=(e:PointerEvent)=>{const rect=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);ray.setFromCamera(pointer,camera);return ray.intersectObject(ground)[0]?.point||null;};
- // One procedural low-poly hand tool. Its animation is the source of truth for terrain edits.
- const wood=new THREE.MeshStandardMaterial({color:0x927147,roughness:.96});
- const steel=new THREE.MeshStandardMaterial({color:0x879896,roughness:.72,metalness:.16,flatShading:true});
- const soilMat=new THREE.MeshStandardMaterial({color:0x876344,roughness:1,flatShading:true});
- const shovel=new THREE.Group();
- const handle=new THREE.Mesh(new THREE.CylinderGeometry(.021,.029,.66,7),wood);handle.position.y=.44;
- const neck=new THREE.Mesh(new THREE.CylinderGeometry(.033,.038,.13,7),steel);neck.position.y=.065;
- // Spade-shaped scoop: rounded shoulders, pointed working edge and slight concavity.
- const outline=new THREE.Shape();
- outline.moveTo(-.135,.025);outline.lineTo(.135,.025);outline.lineTo(.128,-.10);
- outline.quadraticCurveTo(.10,-.23,0,-.31);outline.quadraticCurveTo(-.10,-.23,-.128,-.10);outline.closePath();
- const bladeGeo=new THREE.ExtrudeGeometry(outline,{depth:.024,bevelEnabled:true,bevelThickness:.012,bevelSize:.008,bevelSegments:1,curveSegments:3});
- const blade=new THREE.Mesh(bladeGeo,steel);blade.rotation.x=-.30;
- const grip=new THREE.Group();
- const gripLeft=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.17,6),wood);gripLeft.position.set(-.105,.83,0);
- const gripRight=gripLeft.clone();gripRight.position.x=.105;
- const gripTop=new THREE.Mesh(new THREE.CylinderGeometry(.023,.023,.22,7),wood);gripTop.rotation.z=Math.PI/2;gripTop.position.y=.915;
- grip.add(gripLeft,gripRight,gripTop);shovel.add(handle,neck,blade,grip);
- scene.add(shovel);shovel.visible=false;
- const carried=new THREE.Group();
- for(let i=0;i<3;i++){
-  const clod=new THREE.Mesh(new THREE.DodecahedronGeometry(.055+i*.008,0),soilMat);
-  clod.position.set((i-1)*.06,-.10,-.042);carried.add(clod);
- }
- shovel.add(carried);carried.visible=false;
- // Translucent circular footprint appears only while the tool is active.
- const markerMaterial=new THREE.MeshBasicMaterial({color:0xeee8bc,transparent:true,opacity:.48,depthWrite:false});
+ // Shared shovel model and animation poses (same source as the workshop).
+ const shovelModel=makeShovel();
+ const shovel=shovelModel.group;scene.add(shovel);shovel.visible=false;
+ const carried=shovelModel.soil;
+ const markerMaterial=new THREE.MeshBasicMaterial({color:0xeee8bc,transparent:true,opacity:.40,depthWrite:false});
  const marker=new THREE.Mesh(new THREE.TorusGeometry(.48,.008,3,48),markerMaterial);
  marker.rotation.x=-Math.PI/2;marker.renderOrder=9;scene.add(marker);marker.visible=false;
  type Cycle={mode:Action;x:number;z:number;target:number;start:number;duration:number;applied:boolean};
@@ -161,7 +141,7 @@ export function openEarthworks(app:HTMLElement){
  };
  const startCycle=(now:number)=>{
   if(!painting||!lastPoint||cycle)return;
-  const duration=action==='dig'?780:action==='fill'?690:460;
+  const duration=CYCLE_DURATION[action];
   cycle={mode:action,x:lastPoint.x,z:lastPoint.z,target,duration,start:now,applied:false};
   shovel.visible=true;
  };
@@ -170,7 +150,7 @@ export function openEarthworks(app:HTMLElement){
    update();spawnParticles(current.x,current.z,now,current.mode);
   }
  };
- const canvas=renderer.domElement;canvas.style.touchAction='none';
+ const canvas=renderer.domElement;canvas.style.touchAction='none';canvas.style.cursor='none';
  canvas.addEventListener('contextmenu',e=>e.preventDefault());
  const down=(e:PointerEvent)=>{
   if(e.button!==0&&e.button!==2)return;
@@ -181,51 +161,38 @@ export function openEarthworks(app:HTMLElement){
  };
  const move=(e:PointerEvent)=>{
   if(orbit){azimuth-=(e.clientX-lastX)*.008;elevation=clamp(elevation+(e.clientY-lastY)*.007,.25,1.48);updateCamera();}
-  else if(painting){const p=hit(e);if(p)lastPoint=p.clone();}
+  else {const p=hit(e);lastPoint=p?.clone()??null;}
   lastX=e.clientX;lastY=e.clientY;
  };
- const up=()=>{if(painting)earth.save();painting=false;orbit=false;lastPoint=null;marker.visible=false;};
+ const up=()=>{if(painting)earth.save();painting=false;orbit=false;marker.visible=false;};
  canvas.addEventListener('pointerdown',down);canvas.addEventListener('pointermove',move);
  canvas.addEventListener('pointerup',up);canvas.addEventListener('pointercancel',up);
- canvas.addEventListener('lostpointercapture',up);
+ canvas.addEventListener('lostpointercapture',up);canvas.addEventListener('pointerleave',()=>{if(!painting&&!orbit)lastPoint=null;});
  const wheel=(e:WheelEvent)=>{e.preventDefault();zoom=clamp(zoom*(e.deltaY>0?1.08:.92),8,31);updateCamera();};
  canvas.addEventListener('wheel',wheel,{passive:false});
  root.querySelectorAll<HTMLButtonElement>('[data-earth]').forEach(button=>button.onclick=()=>{action=button.dataset.earth as Action;root.querySelectorAll('[data-earth]').forEach(b=>b.classList.toggle('active',b===button));});
+ const workshopButton=document.createElement('button');workshopButton.textContent='Atelier animations ↗';workshopButton.id='shovel-workshop-open';root.querySelector('.earthworks-toolbar')!.append(workshopButton);workshopButton.onclick=()=>openShovelWorkshop();
  root.querySelector<HTMLButtonElement>('#earthworks-reset')!.onclick=()=>{if(confirm('Remettre la parcelle à zéro ?')){earth.reset();update();}};
  let alive=true,frame=0;
  const resize=()=>{const w=host.clientWidth,h=host.clientHeight;if(w<2||h<2)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);};
  const observer=new ResizeObserver(resize);observer.observe(host);resize();
  const loop=(now:number)=>{if(!alive)return;frame=requestAnimationFrame(loop);
   if(painting&&!cycle&&now-lastCompleted>40)startCycle(now);
-  marker.visible=painting&&!!lastPoint;
-  if(marker.visible&&lastPoint){marker.position.set(lastPoint.x,earth.height(lastPoint.x,lastPoint.z)+.022,lastPoint.z);}
+  // Tool remains visible at the cursor even before the first click.
+  const point=lastPoint;
+  marker.visible=painting&&!!point;
+  if(marker.visible&&point)marker.position.set(point.x,earth.height(point.x,point.z)+.022,point.z);
   if(cycle){
    const c=cycle,t=clamp((now-c.start)/c.duration,0,1);
-   const floorY=earth.height(c.x,c.z),ease=(v:number)=>v*v*(3-2*v);
-   // Each action uses its own physical gesture. The tip follows the live floor depth.
-   shovel.position.set(c.x,floorY+.29,c.z);
-   shovel.rotation.set(0,azimuth+.6,0);
-   if(c.mode==='dig'){
-    // Enter soil -> lever -> lift loaded scoop -> empty to the side.
-    shovel.position.y+=t<.23?.28*(1-ease(t/.23)):t<.52?-.16*Math.sin((t-.23)/.29*Math.PI):.28*ease((t-.52)/.48);
-    shovel.position.x+=t>.56?.29*ease((t-.56)/.44):0;
-    shovel.rotation.z=t<.32?-.35*ease(t/.32):t<.67?-.35+.85*ease((t-.32)/.35):.50-.55*ease((t-.67)/.33);
-    carried.visible=t>.44&&t<.80;
-   }else if(c.mode==='fill'){
-    // Loaded spade arrives above the target and slowly tips to pour.
-    shovel.position.y+=.28-(t<.40?.12*ease(t/.40):.12);
-    shovel.rotation.z=t<.38?-.12:.95*ease(clamp((t-.38)/.42,0,1));
-    carried.visible=t<.60;
-   }else{
-    // Back of the spade taps the ground to level, then rebounds.
-    shovel.position.y+=.12+Math.abs(Math.cos(t*Math.PI*2))*.18;
-    shovel.rotation.z=Math.PI*.52+.10*Math.sin(t*Math.PI*2);
-    carried.visible=false;
-   }
-   const effectTime=c.mode==='dig'?.56:c.mode==='fill'?.74:.36;
-   if(!c.applied&&t>=effectTime){applyCycle(c,now);c.applied=true;}
-   if(t>=1){if(!c.applied)applyCycle(c,now);carried.visible=false;cycle=null;lastCompleted=now;
-    earth.save();if(!painting)shovel.visible=false;}
+   shovel.visible=true;
+   shovel.position.set(c.x,earth.height(c.x,c.z)+.12,c.z);
+   shovel.rotation.set(0,azimuth,0);
+   poseShovel(shovelModel.tool,carried,c.mode,t);
+   if(!c.applied&&t>=EFFECT_AT[c.mode]){applyCycle(c,now);c.applied=true;}
+   if(t>=1){if(!c.applied)applyCycle(c,now);carried.visible=false;cycle=null;lastCompleted=now;earth.save();}
+  }else if(point&&!orbit){
+   shovel.visible=true;shovel.position.set(point.x,earth.height(point.x,point.z)+.12,point.z);
+   shovel.rotation.set(0,azimuth,0);poseShovel(shovelModel.tool,carried,action,0);
   }else{shovel.visible=false;carried.visible=false;}
   for(let i=particles.length-1;i>=0;i--){const part=particles[i],age=(now-part.birth)/1000;
    if(age>.60){scene.remove(part.mesh);part.mesh.geometry.dispose();particles.splice(i,1);continue;}
