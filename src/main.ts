@@ -11,7 +11,7 @@ import { createWater, waterTime, waterLevel, shorePoint, shoreDistance } from '.
 
 type Style = 'lowpoly'|'organic'|'vector';
 type Kind = 'tree'|'sapling'|'bush'|'flower'|'rock'|'pond'|'fern';
-type Plant = {id:number;kind:Kind;x:number;z:number;seed:number};
+type Plant = {id:number;kind:Kind;x:number;z:number;seed:number;rotation?:number};
 const storageKey = 'komorebi-lab-v1';
 // A composed reference garden, not a scattering of individual props.
 // Distinct planting zones: northern grove, woodland edge, pond margin,
@@ -44,6 +44,9 @@ let style:Style='lowpoly';
 let selected:Kind='tree';
 let selectedSpeciesFamily:number|undefined;
 let deleting=false;
+let editing=false;
+let pickedId:number|undefined;
+let brushRotation=0;
 let dense=false;
 let nextId=Math.max(0,...plants.map(p=>p.id))+1;
 const labels:Record<Kind,string>={tree:'Arbre',sapling:'Jeune arbre',bush:'Buisson',flower:'Fleurs',rock:'Rocher',pond:'Mare',fern:'Fougère'};
@@ -53,6 +56,8 @@ const app=document.querySelector<HTMLDivElement>('#app')!;
 app.innerHTML=`<main class="garden-shell"><div id="viewport" class="viewport"><div id="scene"></div></div><nav class="hud hud-top"><div class="wordmark">${icon('sapling')}<strong>Komorebi</strong></div><div class="hud-actions"><button id="home" title="Recentrer" aria-label="Recentrer">${icon('home')}</button><button id="botany-open" title="Atelier botanique" aria-label="Ouvrir l’atelier botanique">${icon('flower')}</button><button id="density" title="Basculer la densité" aria-label="Basculer la densité">${icon('density')}</button><button id="focus" title="Masquer les commandes" aria-label="Mode contemplation">${icon('focus')}</button><button id="menu-toggle" title="Ouvrir le menu" aria-label="Ouvrir le menu">${icon('menu')}</button></div></nav><section id="build-panel" class="build-panel" aria-label="Outils du jardin"><div class="panel-top"><span>Construire</span><button id="erase" title="Supprimer un élément">✕ Effacer</button></div><div id="tools" class="tools"></div></section><aside id="menu-panel" class="menu-panel" hidden><h2>Komorebi</h2><p>Un jardin à composer librement.</p><div class="sun-settings"><strong>Étude de lumière</strong><div id="sun-presets" class="sun-presets"></div><small id="sun-label">Soleil franc</small></div><button id="reset">↺ Restaurer le jardin</button><div id="counter"></div><div id="fps"></div><small id="scene-title">01 — Low-poly</small><p id="scene-description">Jardin miniature</p><small id="hint">Glisser : rotation · Molette : zoom · Clic : planter</small></aside><section id="botany" class="botany" hidden aria-label="Atelier botanique"><div class="botany-shell"><header class="botany-top"><div><small>ATELIER BOTANIQUE · ÉTUDE 01</small><h2>Les espèces du jardin</h2><p>Observer les formes, comparer les variantes, puis retourner composer.</p></div><button id="botany-close" title="Retourner au jardin">✕ &nbsp; Retour au jardin</button></header><div class="botany-body"><aside class="botany-list" id="botany-list"></aside><div class="botany-view"><div id="botany-canvas" class="botany-canvas"></div><div class="species-navigation"><button id="species-prev" type="button" aria-label="Espèce précédente">← Précédent</button><span id="species-position"></span><button id="species-next" type="button" aria-label="Espèce suivante">Suivant →</button></div><div class="botany-variants" id="botany-variants"></div><div class="botany-help">Glisser pour tourner · Molette pour zoomer</div></div><aside class="botany-card"><small>FICHE D’ESPÈCE</small><h3 id="botany-name"></h3><p id="botany-desc"></p><div id="botany-facts"></div><div class="review-note"><label for="botany-review-note">Mes remarques sur cette espèce</label><textarea id="botany-review-note" rows="4" placeholder="Silhouette, couleurs, détail à changer…"></textarea><button id="botany-copy-note" type="button">Copier la fiche et mon avis</button></div><button id="botany-plant">Choisir pour le jardin ↗</button><small>Étude visuelle · aucune progression ni ressource</small></aside></div></div></section><button id="build-toggle" class="build-toggle" title="Afficher les outils">✿</button></main>`;
 const viewport=app.querySelector<HTMLDivElement>('#scene')!;
 const tools=app.querySelector<HTMLDivElement>('#tools')!;
+const builderPanel=document.createElement('div');builderPanel.className='builder-details';builderPanel.innerHTML=`<div class="builder-row"><div class="builder-tools"><button id="builder-plant" class="selected">＋ Planter</button><button id="builder-select">↖ Sélectionner</button></div><button id="builder-undo" title="Annuler">↶</button><button id="builder-redo" title="Rétablir">↷</button></div><div class="builder-species" id="builder-species"></div><div id="builder-picked" hidden><div class="builder-row" style="margin-top:8px"><strong id="builder-picked-name">Élément sélectionné</strong><button id="builder-rotate">↻ Rotation</button><button id="builder-variant">✿ Variante</button><button id="builder-remove">✕ Supprimer</button></div></div><div class="builder-hint" id="builder-tip">Survolez le terrain pour prévisualiser · R pour pivoter · Ctrl+Z pour annuler</div>`;
+app.querySelector('#build-panel')!.append(builderPanel);
 let sunPreset:SunPreset='clear';
 const sunButtons=app.querySelector<HTMLElement>('#sun-presets')!;
 function chooseSun(preset:SunPreset){
@@ -72,7 +77,7 @@ app.querySelector<HTMLButtonElement>('#menu-toggle')!.onclick=()=>{
 };
 app.querySelector<HTMLButtonElement>('#focus')!.onclick=()=>app.classList.toggle('contemplation');
 app.querySelector<HTMLButtonElement>('#build-toggle')!.onclick=()=>app.classList.toggle('tools-open');
-(Object.keys(labels) as Kind[]).forEach(k=>{const btn=document.createElement('button');btn.dataset.kind=k;btn.innerHTML=`<span class="tool-icon">${icon(k)}</span><span>${labels[k]}</span>`;btn.onclick=()=>{selected=k;selectedSpeciesFamily=undefined;deleting=false;refreshUI();};tools.append(btn);});
+(Object.keys(labels) as Kind[]).forEach(k=>{const btn=document.createElement('button');btn.dataset.kind=k;btn.innerHTML=`<span class="tool-icon">${icon(k)}</span><span>${labels[k]}</span>`;btn.onclick=()=>{selected=k;selectedSpeciesFamily=undefined;deleting=false;editing=false;pickedId=undefined;refreshUI();updateGhost();};tools.append(btn);});
 let renderer:THREE.WebGLRenderer|undefined;
 let gardenContours:ContourRenderer|undefined;
 let scene:THREE.Scene|undefined;
@@ -84,6 +89,16 @@ const densityIds = new Set<number>();
 let request=0;
 let yaw=Math.PI/4, pitch=.99, distance=16;
 let dragging=false, moved=false, downX=0,downY=0;
+let downClientX=0,downClientY=0;
+let moveId:number|undefined,moveStart:Plant|undefined;
+let ghost:THREE.Group|undefined;
+let ghostKey="";
+const undoStack:Plant[][]=[];const redoStack:Plant[][]=[];
+const snapshot=()=>plants.map(p=>({...p}));
+function record(before:Plant[]){undoStack.push(before);if(undoStack.length>80)undoStack.shift();redoStack.length=0;}
+function restore(history:Plant[][],other:Plant[][]){if(!history.length)return;other.push(snapshot());plants=history.pop()!;nextId=Math.max(0,...plants.map(p=>p.id))+1;moveId=undefined;pickedId=undefined;changed();updateGhost();}
+function doUndo(){restore(undoStack,redoStack);}
+function doRedo(){restore(redoStack,undoStack);}
 let lastFrame=performance.now(),frames=0;
 function shape(group:THREE.Group,geometry:THREE.BufferGeometry,color:number,x:number,y:number,z:number,rx=0,rz=0){
  const faceted=['IcosahedronGeometry','DodecahedronGeometry','ConeGeometry'].includes(geometry.type);
@@ -150,7 +165,7 @@ function batchPlant(group:THREE.Group):THREE.Group {
 }
 
 function buildPlant(p:Plant){
- const g=new THREE.Group();g.position.set(p.x,p.kind==='pond'?baseHeight(p.x,p.z):groundHeight(p.x,p.z),p.z);g.userData.id=p.id;
+ const g=new THREE.Group();g.position.set(p.x,p.kind==='pond'?baseHeight(p.x,p.z):groundHeight(p.x,p.z),p.z);g.userData.id=p.id;g.rotation.y=p.rotation??0;
  // Soft local grounding without opaque canopy silhouettes painted across grass.
  // Exclude water: its surface must remain bright, not receive a shadow disc.
  if(p.kind==='tree'||p.kind==='sapling'||p.kind==='bush'||p.kind==='rock'){
@@ -506,7 +521,7 @@ function init3d(){
  renderer.domElement.addEventListener('pointerdown',pointerDown);
  renderer.domElement.addEventListener('pointermove',pointerMove);
  renderer.domElement.addEventListener('pointerup',pointerUp);
- renderer.domElement.addEventListener('wheel',wheel,{passive:false});loop();
+ renderer.domElement.addEventListener('wheel',wheel,{passive:false});renderer.domElement.addEventListener('pointerleave',()=>{if(ghost)ghost.visible=false;});updateGhost();loop();
 }
 let previousPlants:Plant[]=[];
 function refreshPlants3d(){
@@ -519,7 +534,7 @@ function refreshPlants3d(){
   for(const child of [...objects.children]){
    const original=oldById.get(Number(child.userData.id));
    const current=newById.get(Number(child.userData.id));
-   if(!current || !original || original.kind!==current.kind || original.seed!==current.seed || original.x!==current.x || original.z!==current.z){
+   if(!current || !original || original.kind!==current.kind || original.seed!==current.seed || original.x!==current.x || original.z!==current.z || original.rotation!==current.rotation){
     objects.remove(child);disposeGeometry(child);
    }
   }
@@ -529,7 +544,7 @@ function refreshPlants3d(){
   if(renderer)renderer.shadowMap.needsUpdate=true;
   return;
  }
- disposeGeometry(objects);objects.clear();
+ dropGhost();disposeGeometry(objects);objects.clear();
  if(landscape){scene.remove(landscape);disposeGeometry(landscape);}
  landscape=new THREE.Group();scene.add(landscape);addLandscape(landscape);
  plants.forEach(p=>objects!.add(buildPlant(p)));
@@ -564,10 +579,73 @@ function loop(){
  updateWater();if(scene&&camera)gardenContours?.render(scene,camera);frames++;const now=performance.now();
  if(now-lastFrame>1000){app.querySelector('#fps')!.textContent=`${Math.round(frames*1000/(now-lastFrame))} FPS · ${renderer?.info.render.calls??0} appels GPU`;frames=0;lastFrame=now;}
 }
-function pointerDown(e:PointerEvent){dragging=true;moved=false;downX=e.clientX;downY=e.clientY;(e.currentTarget as HTMLCanvasElement).setPointerCapture(e.pointerId);}
-function pointerMove(e:PointerEvent){if(!dragging)return;const dx=e.clientX-downX,dy=e.clientY-downY;if(Math.abs(dx)+Math.abs(dy)>3)moved=true;if(moved){yaw-=dx*.008;pitch=Math.max(.35,Math.min(1.5,pitch+dy*.006));updateCamera();}downX=e.clientX;downY=e.clientY;}
+function pointerDown(e:PointerEvent){
+ dragging=true;moved=false;downX=e.clientX;downY=e.clientY;downClientX=e.clientX;downClientY=e.clientY;
+ moveId=editing&&!deleting?pickedAt(e):undefined;
+ moveStart=moveId!==undefined?{...plants.find(p=>p.id===moveId)!}:undefined;
+ (e.currentTarget as HTMLCanvasElement).setPointerCapture(e.pointerId);
+}
+function pointerMove(e:PointerEvent){
+ if(!dragging){updateGhost(e);return;}
+ const total=Math.abs(e.clientX-downClientX)+Math.abs(e.clientY-downClientY);
+ if(total>4)moved=true;
+ if(editing&&moveId!==undefined){
+  if(moved){const pt=placePoint(e);const p=plants.find(p=>p.id===moveId);if(pt&&p){p.x=pt.x;p.z=pt.z;const group=objects?.children.find(c=>c.userData.id===moveId);if(group)group.position.set(pt.x,p.kind==='pond'?baseHeight(pt.x,pt.z):groundHeight(pt.x,pt.z),pt.z);}}
+ }else if(moved){const dx=e.clientX-downX,dy=e.clientY-downY;yaw-=dx*.008;pitch=Math.max(.35,Math.min(1.5,pitch+dy*.006));updateCamera();}
+ downX=e.clientX;downY=e.clientY;
+}
+function pointerUp(e:PointerEvent){
+ if(!dragging)return;dragging=false;
+ if(moveId!==undefined){
+  const p=plants.find(p=>p.id===moveId);
+  if(p&&moveStart&&(p.x!==moveStart.x||p.z!==moveStart.z)){
+   const before=snapshot().map(item=>item.id===moveId?moveStart!:item);record(before);changed();
+  }
+  pickedId=moveId;moveId=undefined;moveStart=undefined;refreshUI();return;
+ }
+ if(moved||!camera||!scene||!renderer)return;
+ if(deleting){const id=pickedAt(e);if(id!==undefined){record(snapshot());plants=plants.filter(p=>p.id!==id);if(pickedId===id)pickedId=undefined;changed();}return;}
+ if(editing){pickedId=pickedAt(e);refreshUI();return;}
+ const pt=placePoint(e);if(!pt)return;
+ const seed=selectedSpeciesFamily!==undefined&&(selected==='tree'||selected==='sapling')?nextId*4+selectedSpeciesFamily:nextId;
+ record(snapshot());plants.push({id:nextId++,kind:selected,x:pt.x,z:pt.z,seed,rotation:brushRotation});changed();updateGhost(e);
+}
 const raycaster=new THREE.Raycaster();const mouse=new THREE.Vector2();
-function pointerUp(e:PointerEvent){if(!dragging)return;dragging=false;if(moved||!camera||!scene||!land||!renderer)return;const rect=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);raycaster.setFromCamera(mouse,camera);const hits=raycaster.intersectObjects(objects!.children,true);if(deleting){const id=hits[0]?.object.userData.id as number|undefined;if(id!==undefined){plants=plants.filter(p=>p.id!==id);changed();}return;}const h=raycaster.intersectObject(land)[0];if(h && Math.abs(h.point.x)<5.25 && Math.abs(h.point.z)<5.25){const seed=selectedSpeciesFamily!==undefined&&(selected==='tree'||selected==='sapling')?nextId*4+selectedSpeciesFamily:nextId;plants.push({id:nextId++,kind:selected,x:Math.round(h.point.x*4)/4,z:Math.round(h.point.z*4)/4,seed});changed();}}
+function placePoint(e:PointerEvent){
+ if(!renderer||!camera||!land)return;
+ const rect=renderer.domElement.getBoundingClientRect();
+ mouse.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);
+ raycaster.setFromCamera(mouse,camera);
+ const hit=raycaster.intersectObject(land)[0];
+ if(!hit||Math.abs(hit.point.x)>=5.25||Math.abs(hit.point.z)>=5.25)return;
+ return {x:Math.round(hit.point.x*4)/4,z:Math.round(hit.point.z*4)/4};
+}
+function pickedAt(e:PointerEvent){
+ if(!camera||!renderer||!objects)return;
+ const rect=renderer.domElement.getBoundingClientRect();
+ mouse.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);
+ raycaster.setFromCamera(mouse,camera);
+ // Parent group stores ID; merged meshes may store it too.
+ const hits=raycaster.intersectObjects(objects.children,true);
+ for(const hit of hits){let node:THREE.Object3D|null=hit.object;while(node && node!==objects){if(typeof node.userData.id==='number')return node.userData.id as number;node=node.parent;}}
+}
+function dropGhost(){if(ghost&&scene){scene.remove(ghost);disposeGeometry(ghost);}ghost=undefined;ghostKey='';}
+function updateGhost(e?:PointerEvent){
+ if(!scene||!camera||!renderer||deleting||editing||document.body.classList.contains('botany-open')){dropGhost();return;}
+ const seed=selectedSpeciesFamily!==undefined&&(selected==='tree'||selected==='sapling')?nextId*4+selectedSpeciesFamily:nextId;
+ const key=selected+':'+seed+':'+brushRotation;
+ if(key!==ghostKey){dropGhost();ghost=buildPlant({id:-9999,kind:selected,x:0,z:0,seed,rotation:brushRotation});ghostKey=key;
+  ghost.traverse(c=>{if(c instanceof THREE.Mesh){c.castShadow=false;c.receiveShadow=false;const source=c.material as THREE.Material;
+    // Only ghost meshes receive temporary transparent material clones.
+    const m=source.clone() as THREE.MeshStandardMaterial;m.transparent=true;m.opacity=.48;m.depthWrite=false;c.material=m;}});
+  ghost.userData.preview=true;scene.add(ghost);
+ }
+ if(!ghost)return;
+ if(e){const pt=placePoint(e);ghost.visible=!!pt;if(pt)ghost.position.set(pt.x,selected==='pond'?baseHeight(pt.x,pt.z):groundHeight(pt.x,pt.z),pt.z);}
+ else ghost.visible=false;
+}
+function redrawSelection(){if(!objects)return;objects.children.forEach(c=>{c.traverse(node=>{if(node instanceof THREE.Mesh){const selectedNow=Number(c.userData.id)===pickedId;node.userData.builderSelected=selectedNow;}});});}
+
 function wheel(e:WheelEvent){e.preventDefault();if(!camera)return;camera.zoom=Math.max(.65,Math.min(2.5,camera.zoom*(e.deltaY>0?.9:1.1)));camera.updateProjectionMatrix();}
 function project(x:number,z:number){return {x:400+(x-z)*25,y:233+(x+z)*18};}
 function svgPlant(p:Plant){const q=project(p.x,p.z),x=q.x,y=q.y;const ss=Math.sin(p.seed*4)*.17;const wrap=(s:string)=>`<g data-id="${p.id}" transform="translate(${x} ${y})">${s}</g>`;
@@ -579,15 +657,22 @@ function svgPlant(p:Plant){const q=project(p.x,p.z),x=q.x,y=q.y;const ss=Math.si
 }
 function initVector(){const root=document.createElement('div');root.className='vector-stage';root.innerHTML='<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Jardin vectoriel interactif"><defs><filter id="shadow"><feGaussianBlur stdDeviation="5"/></filter></defs><rect width="800" height="600" fill="#e1e9d9"/><path d="M400 35 L675 235 L400 440 L125 235Z" fill="#849d7a" opacity=".35" transform="translate(4 12)"/><path d="M400 35 L675 235 L400 440 L125 235Z" fill="#b8cda3"/><g id="plants-svg"></g></svg>';viewport.append(root);const svg=root.querySelector('svg')!;let dx=0,dy=0,drag=false;svg.addEventListener('pointerdown',e=>{dx=e.clientX;dy=e.clientY;drag=false;svg.setPointerCapture(e.pointerId);});svg.addEventListener('pointermove',e=>{if(Math.abs(e.clientX-dx)+Math.abs(e.clientY-dy)>5)drag=true;});svg.addEventListener('pointerup',e=>{if(drag)return;const t=e.target as Element;const node=t.closest('[data-id]');if(deleting){if(node){plants=plants.filter(p=>p.id!==Number(node.getAttribute('data-id')));changed();}return;}const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const m=svg.getScreenCTM();if(!m)return;const at=pt.matrixTransform(m.inverse());const a=(at.x-400)/25,b=(at.y-233)/18;const x=(a+b)/2,z=(b-a)/2;if(Math.abs(x)<4.9&&Math.abs(z)<4.9){plants.push({id:nextId++,kind:selected,x:Math.round(x*4)/4,z:Math.round(z*4)/4,seed:nextId});changed();}});refreshVector();}
 function refreshVector(){const group=viewport.querySelector('#plants-svg');if(group)group.innerHTML=[...plants].sort((a,b)=>(a.x+a.z)-(b.x+b.z)).map(svgPlant).join('');}
-function dispose(){cancelAnimationFrame(request);renderer?.domElement.removeEventListener('pointerdown',pointerDown);renderer?.domElement.removeEventListener('pointermove',pointerMove);renderer?.domElement.removeEventListener('pointerup',pointerUp);renderer?.domElement.removeEventListener('wheel',wheel);if(scene)disposeGeometry(scene);gardenContours?.dispose();gardenContours=undefined;renderer?.dispose();renderer=undefined;landscape=undefined;camera=undefined;scene=undefined;objects=undefined;land=undefined;viewport.replaceChildren();app.querySelector('#fps')!.textContent='— FPS';}
-function changed(){save();if(style==='vector')refreshVector();else refreshPlants3d();refreshUI();}
-function refreshUI(){app.querySelectorAll<HTMLButtonElement>('[data-style]').forEach(b=>b.classList.toggle('active',b.dataset.style===style));app.querySelectorAll<HTMLButtonElement>('[data-kind]').forEach(b=>{b.classList.toggle('active',!deleting&&b.dataset.kind===selected);b.title=b.dataset.kind===selected&&selectedSpeciesFamily!==undefined&&selected==='tree'?['Chêne','Bouleau','Conifère','Cyprès'][selectedSpeciesFamily]:'Sélectionner';});app.querySelector('#erase')!.classList.toggle('active',deleting);app.querySelector('#counter')!.textContent=`${plants.length} éléments · sauvegarde locale`;app.querySelector('#scene-title')!.textContent=style==='lowpoly'?'01 — Low-poly':style==='organic'?'02 — Organique':'03 — Vectoriel';app.querySelector('#scene-description')!.textContent=style==='lowpoly'?'Des volumes francs, une nature simple et lumineuse.':style==='organic'?'Des volumes adoucis, une végétation plus généreuse.':'Des formes illustrées et des couleurs en aplats.';app.querySelector('#hint')!.textContent=style==='vector'?'Clic pour planter · Cliquez sur un élément pour le supprimer':'Glisser pour tourner · Molette pour zoomer · Clic pour planter';app.querySelector('#density')!.setAttribute('aria-pressed',String(dense));app.querySelector('#density')!.setAttribute('title',dense?'Retirer les ajouts de densité':'Densifier le jardin');}
+function dispose(){cancelAnimationFrame(request);renderer?.domElement.removeEventListener('pointerdown',pointerDown);renderer?.domElement.removeEventListener('pointermove',pointerMove);renderer?.domElement.removeEventListener('pointerup',pointerUp);renderer?.domElement.removeEventListener('wheel',wheel);dropGhost();if(scene)disposeGeometry(scene);gardenContours?.dispose();gardenContours=undefined;renderer?.dispose();renderer=undefined;landscape=undefined;camera=undefined;scene=undefined;objects=undefined;land=undefined;viewport.replaceChildren();app.querySelector('#fps')!.textContent='— FPS';}
+function changed(){save();if(style==='vector')refreshVector();else refreshPlants3d();refreshUI();redrawSelection();}
+function refreshUI(){app.querySelectorAll<HTMLButtonElement>('[data-style]').forEach(b=>b.classList.toggle('active',b.dataset.style===style));app.querySelectorAll<HTMLButtonElement>('[data-kind]').forEach(b=>{b.classList.toggle('active',!deleting&&b.dataset.kind===selected);b.title=b.dataset.kind===selected&&selectedSpeciesFamily!==undefined&&selected==='tree'?['Chêne','Bouleau','Conifère','Cyprès'][selectedSpeciesFamily]:'Sélectionner';});app.querySelector('#erase')!.classList.toggle('active',deleting);app.querySelector('#builder-select')!.classList.toggle('selected',editing);app.querySelector('#builder-plant')!.classList.toggle('selected',!editing&&!deleting);(app.querySelector('#builder-undo') as HTMLButtonElement).disabled=undoStack.length===0;(app.querySelector('#builder-redo') as HTMLButtonElement).disabled=redoStack.length===0;const picked=plants.find(p=>p.id===pickedId);(app.querySelector('#builder-picked') as HTMLElement).hidden=!editing||!picked;app.querySelector('#builder-picked-name')!.textContent=picked?labels[picked.kind]+' #'+picked.id:'';app.querySelector('#counter')!.textContent=`${plants.length} éléments · sauvegarde locale`;app.querySelector('#scene-title')!.textContent=style==='lowpoly'?'01 — Low-poly':style==='organic'?'02 — Organique':'03 — Vectoriel';app.querySelector('#scene-description')!.textContent=style==='lowpoly'?'Des volumes francs, une nature simple et lumineuse.':style==='organic'?'Des volumes adoucis, une végétation plus généreuse.':'Des formes illustrées et des couleurs en aplats.';app.querySelector('#hint')!.textContent=editing?'Sélection : clic sur un élément, puis glisser pour déplacer':style==='vector'?'Clic pour planter':'Glisser pour tourner · Molette pour zoomer · Clic pour planter';app.querySelector('#density')!.setAttribute('aria-pressed',String(dense));app.querySelector('#density')!.setAttribute('title',dense?'Retirer les ajouts de densité':'Densifier le jardin');}
 function changeStyle(s:Style){if(style===s)return;dispose();style=s;if(s==='vector')initVector();else init3d();refreshUI();}
 app.querySelectorAll<HTMLButtonElement>('[data-style]').forEach(b=>b.onclick=()=>changeStyle(b.dataset.style as Style));
-app.querySelector<HTMLButtonElement>('#erase')!.onclick=()=>{deleting=!deleting;refreshUI();};
-app.querySelector<HTMLButtonElement>('#reset')!.onclick=()=>{plants=seedGarden.map(p=>({...p}));dense=false;densityIds.clear();nextId=Math.max(0,...plants.map(p=>p.id))+1;changed();};
+app.querySelector<HTMLButtonElement>('#erase')!.onclick=()=>{deleting=!deleting;editing=false;pickedId=undefined;refreshUI();updateGhost();};
+app.querySelector<HTMLButtonElement>('#builder-plant')!.onclick=()=>{editing=false;deleting=false;pickedId=undefined;refreshUI();updateGhost();};
+app.querySelector<HTMLButtonElement>('#builder-select')!.onclick=()=>{editing=true;deleting=false;refreshUI();updateGhost();};
+app.querySelector<HTMLButtonElement>('#builder-undo')!.onclick=doUndo;
+app.querySelector<HTMLButtonElement>('#builder-redo')!.onclick=doRedo;
+app.querySelector<HTMLButtonElement>('#builder-rotate')!.onclick=()=>{const p=plants.find(p=>p.id===pickedId);if(!p)return;record(snapshot());p.rotation=(p.rotation??0)+Math.PI/4;changed();};
+app.querySelector<HTMLButtonElement>('#builder-variant')!.onclick=()=>{const p=plants.find(p=>p.id===pickedId);if(!p||p.kind==='pond')return;record(snapshot());p.seed+=p.kind==='tree'||p.kind==='sapling'?4:1;changed();};
+app.querySelector<HTMLButtonElement>('#builder-remove')!.onclick=()=>{if(pickedId===undefined)return;record(snapshot());plants=plants.filter(p=>p.id!==pickedId);pickedId=undefined;changed();};
+app.querySelector<HTMLButtonElement>('#reset')!.onclick=()=>{record(snapshot());plants=seedGarden.map(p=>({...p}));dense=false;densityIds.clear();nextId=Math.max(0,...plants.map(p=>p.id))+1;changed();};
 app.querySelector<HTMLButtonElement>('#home')!.onclick=()=>{yaw=Math.PI/4;pitch=.89;if(camera)camera.zoom=1;updateCamera();};
-app.querySelector<HTMLButtonElement>('#density')!.onclick=()=>{dense=!dense;if(dense){for(let i=0;i<110;i++){
+app.querySelector<HTMLButtonElement>('#density')!.onclick=()=>{record(snapshot());dense=!dense;if(dense){for(let i=0;i<110;i++){
   // Dense planting happens in woodland edges and meadow beds, not uniformly.
   const a=i*2.399963229728653, ring=Math.sqrt((i%37)/37);
   const zones=[[-3.15,-2.6,1.45],[3.25,-2.4,1.30],[-2.75,3.05,1.35],[3.05,2.95,1.25]];
@@ -615,6 +700,26 @@ const speciesCatalog:SpeciesRecord[]=[
  {id:'rock',name:'Roche',group:'Minéraux',kind:'rock',family:0,description:'Pierre facettée aux volumes simples et aux teintes minérales.',habitat:'Partout'},
  {id:'pond',name:'Mare',group:'Eau',kind:'pond',family:0,description:'Une surface d’eau calme aux berges irrégulières.',habitat:'Terrain humide'},
 ];
+const builderSpecies=app.querySelector<HTMLElement>('#builder-species')!;
+const builderEntries=speciesCatalog.filter(entry=>entry.kind==='tree'||entry.kind==='sapling');
+builderSpecies.innerHTML=builderEntries.map(entry=>`<button data-build-species="${entry.id}">${entry.name}</button>`).join('');
+builderSpecies.querySelectorAll<HTMLButtonElement>('[data-build-species]').forEach(btn=>btn.onclick=()=>{
+ const entry=builderEntries.find(item=>item.id===btn.dataset.buildSpecies)!;
+ selected=entry.kind;selectedSpeciesFamily=entry.family;editing=false;deleting=false;pickedId=undefined;
+ builderSpecies.querySelectorAll('button').forEach(b=>b.classList.toggle('selected',b===btn));refreshUI();updateGhost();
+});
+window.addEventListener('keydown',e=>{
+ if((e.target as HTMLElement)?.matches('input, textarea, select, [contenteditable]'))return;
+ if(document.body.classList.contains('botany-open'))return;
+ if((e.ctrlKey||e.metaKey)&&!e.altKey){
+  if(e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?doRedo():doUndo();}
+  if(e.key.toLowerCase()==='y'){e.preventDefault();doRedo();}
+ }else if(e.key.toLowerCase()==='r'&&!e.repeat){
+  const p=editing?plants.find(item=>item.id===pickedId):undefined;
+  if(p){record(snapshot());p.rotation=(p.rotation??0)+Math.PI/4;changed();}
+  else if(!editing){brushRotation+=Math.PI/4;updateGhost();}
+ }
+});
 const botanyPanel=app.querySelector<HTMLElement>('#botany')!;
 const botanicalList=app.querySelector<HTMLElement>('#botany-list')!;
 const variantBar=app.querySelector<HTMLElement>('#botany-variants')!;
@@ -690,7 +795,7 @@ app.querySelector<HTMLButtonElement>('#botany-copy-note')!.onclick=async()=>{
  const text=`Komorebi · ${botanicalSpecies.name} · Variante ${botanicalVariant+1} · ${SUN_PRESETS[sunPreset].name}\n${app.querySelector<HTMLTextAreaElement>('#botany-review-note')!.value}`;
  try{await navigator.clipboard.writeText(text);}catch{window.prompt('Copie cette fiche :',text);}
 };
-app.querySelector<HTMLButtonElement>('#botany-plant')!.onclick=()=>{selected=botanicalSpecies.kind;selectedSpeciesFamily=botanicalSpecies.kind==='tree'||botanicalSpecies.kind==='sapling'?botanicalSpecies.family:undefined;deleting=false;closeBotanical();refreshUI();};
+app.querySelector<HTMLButtonElement>('#botany-plant')!.onclick=()=>{editing=false;pickedId=undefined;selected=botanicalSpecies.kind;selectedSpeciesFamily=botanicalSpecies.kind==='tree'||botanicalSpecies.kind==='sapling'?botanicalSpecies.family:undefined;deleting=false;closeBotanical();refreshUI();};
 window.addEventListener('resize',()=>{if(!botanyPanel.hidden)resizeBotanical();});
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!botanyPanel.hidden)closeBotanical();});
 
