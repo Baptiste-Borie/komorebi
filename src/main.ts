@@ -807,6 +807,8 @@ window.addEventListener('resize',()=>{if(!botanyPanel.hidden)resizeBotanical();}
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!botanyPanel.hidden)closeBotanical();});
 
 window.addEventListener('resize',resize);init3d();refreshUI();chooseSun('clear');
+// Earthworks is the current development playground; retain the garden via Retour.
+if(!new URLSearchParams(location.search).has('review'))openEarthworks(app);
 
 if(reviewParams.has('review'))Object.assign(window,{
  __komorebiReview:{

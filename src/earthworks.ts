@@ -1,10 +1,13 @@
 import * as THREE from 'three';
+import {configureRenderer,addDaylight,studioBackground} from './rendering/Lighting';
+import {styleSurface} from './rendering/SurfaceShader';
 
 // Heightfield is kept separate from its editor and renderer. All measurements
 // are in garden units; later a character can issue exactly the same strokes.
 type Action = 'dig'|'fill'|'level';
 const RES=81, SIZE=11, STEP=SIZE/(RES-1), LIMIT=1.65, KEY='komorebi-earthworks-v1';
 const clamp=THREE.MathUtils.clamp;
+const naturalHeight=(x:number,z:number)=> .13*Math.sin(x*.6+.5)*Math.cos(z*.7)+.075*Math.sin(x*1.4+z*.9)+.035*Math.cos(z*2.1-x*.5);
 class Earth {
  heights=new Float32Array(RES*RES);
  worked=new Float32Array(RES*RES);
@@ -13,11 +16,11 @@ class Earth {
   const u=clamp((x+SIZE/2)/STEP,0,RES-1.00001),v=clamp((z+SIZE/2)/STEP,0,RES-1.00001);
   const i=Math.floor(u),j=Math.floor(v),a=u-i,b=v-j;
   const h=(ii:number,jj:number)=>this.heights[this.index(ii,jj)];
-  return (1-b)*((1-a)*h(i,j)+a*h(i+1,j))+b*((1-a)*h(i,j+1)+a*h(i+1,j+1));
+  return naturalHeight(x,z)+(1-b)*((1-a)*h(i,j)+a*h(i+1,j))+b*((1-a)*h(i,j+1)+a*h(i+1,j+1));
  }
  stroke(x:number,z:number,action:Action,target:number){
   // The fixed .53 radius represents a hand tool, not an adjustable brush.
-  const radius=.53, amount=.085;
+  const radius=.53, amount=.11;
   const i0=Math.max(0,Math.floor((x-radius+SIZE/2)/STEP));
   const i1=Math.min(RES-1,Math.ceil((x+radius+SIZE/2)/STEP));
   const j0=Math.max(0,Math.floor((z-radius+SIZE/2)/STEP));
@@ -27,7 +30,8 @@ class Earth {
    const dx=i*STEP-SIZE/2-x,dz=j*STEP-SIZE/2-z,d=Math.hypot(dx,dz);
    if(d>=radius)continue;
    const t=1-d/radius,fall=t*t*(3-2*t),k=this.index(i,j),before=this.heights[k];
-   const after=action==='dig'?before-amount*fall:action==='fill'?before+amount*fall:before+(target-before)*Math.min(1,.26*fall);
+   const surface=before+naturalHeight(i*STEP-SIZE/2,j*STEP-SIZE/2);
+   const after=action==='dig'?before-amount*fall:action==='fill'?before+amount*fall:before+(target-surface)*Math.min(1,.31*fall);
    this.heights[k]=clamp(after,-LIMIT,LIMIT);
    if(Math.abs(this.heights[k]-before)>.0001){this.worked[k]=clamp(this.worked[k]+.16*fall,0,1);changed=true;}
   }
@@ -47,42 +51,66 @@ export function openEarthworks(app:HTMLElement){
  const earth=new Earth();earth.load();
  let action:Action='dig',target=0;
  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
- renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;
- renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.65;
- renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ configureRenderer(renderer);
  host.append(renderer.domElement);
- const scene=new THREE.Scene();scene.background=new THREE.Color(0xdce9e2);
- scene.add(new THREE.HemisphereLight(0xe9f5ff,0xa1a06d,2.05));
- const sun=new THREE.DirectionalLight(0xffedcf,2.6);sun.position.set(-6,12,7);sun.castShadow=true;
- sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-9;sun.shadow.camera.right=9;sun.shadow.camera.top=9;sun.shadow.camera.bottom=-9;scene.add(sun);
+ const scene=new THREE.Scene();addDaylight(scene);scene.background=new THREE.Color(studioBackground);
  const geo=new THREE.PlaneGeometry(SIZE,SIZE,RES-1,RES-1);geo.rotateX(-Math.PI/2);
  // PlaneGeometry's vertical coordinate maps to negative world z after rotation.
  const colors=new Float32Array(RES*RES*3);
- const terrainMaterial=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,flatShading:true,side:THREE.DoubleSide});
+ const terrainMaterial=styleSurface(new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,flatShading:true,side:THREE.DoubleSide}),'ground');
  const ground=new THREE.Mesh(geo,terrainMaterial);ground.receiveShadow=true;scene.add(ground);
- const grass=new THREE.Color(0x89b65a),moss=new THREE.Color(0x709c50),fresh=new THREE.Color(0x8e6950),subsoil=new THREE.Color(0x775741);
+ const grass=new THREE.Color(0xa7c665),moss=new THREE.Color(0x65945b),warm=new THREE.Color(0xc3d57c),fresh=new THREE.Color(0x967858),subsoil=new THREE.Color(0x71573e);
  const pos=geo.getAttribute('position') as THREE.BufferAttribute;
  const update=()=>{
   for(let j=0;j<RES;j++)for(let i=0;i<RES;i++){
    const n=j*RES+i,x=pos.getX(n),z=pos.getZ(n);
    // Plane vertex row 0 lies at z=-SIZE/2 after rotation.
-   pos.setY(n,earth.heights[n]);
+   pos.setY(n,naturalHeight(x,z)+earth.heights[n]);
    const height=earth.heights[n],worked=earth.worked[n];
-   const t=clamp(.4+.16*Math.sin(x*1.45+z*.75)+.10*Math.cos(z*2.0-x),0,1);
+   const t=clamp(.5+.12*Math.sin(x*1.05+z*.75)+.07*Math.cos(z*1.63-x*.48)+.025*Math.sin(x*2.8-z*3.1),0,1);
    const c=moss.clone().lerp(grass,t);
-   const soil=clamp(worked*.95+Math.max(0,-height)*.30,0,1);
+   c.lerp(warm,.28*Math.max(0,Math.sin(z*1.9+x*.7)));
+   const soil=clamp(worked*.90+Math.max(0,-height)*.25,0,1);
    c.lerp(fresh.clone().lerp(subsoil,clamp(-height*.36,0,1)),soil);
    colors[n*3]=c.r;colors[n*3+1]=c.g;colors[n*3+2]=c.b;
   }
   pos.needsUpdate=true;geo.setAttribute('color',new THREE.BufferAttribute(colors,3));
   geo.computeVertexNormals();geo.computeBoundingSphere();geo.computeBoundingBox();
+  if(typeof updateSkirt==='function')updateSkirt();
+  renderer.shadowMap.needsUpdate=true;
+ };
+ // Continuous sidewalls follow the editable heightfield boundary: no floating grass sheet.
+ const border:number[]=[];
+ for(let i=0;i<RES;i++)border.push(i);
+ for(let j=1;j<RES;j++)border.push(j*RES+RES-1);
+ for(let i=RES-2;i>=0;i--)border.push((RES-1)*RES+i);
+ for(let j=RES-2;j>0;j--)border.push(j*RES);
+ const skirtGeo=new THREE.BufferGeometry();
+ const skirtPos=new Float32Array(border.length*2*3);
+ const skirtColors=new Float32Array(border.length*2*3);
+ const skirtIndex:number[]=[];
+ for(let k=0;k<border.length;k++){
+  const v=k*2;const n=(k+1)%border.length*2;
+  skirtIndex.push(v,n,v+1,n,n+1,v+1);
+ }
+ skirtGeo.setIndex(skirtIndex);
+ skirtGeo.setAttribute('position',new THREE.BufferAttribute(skirtPos,3));
+ skirtGeo.setAttribute('color',new THREE.BufferAttribute(skirtColors,3));
+ const skirtMaterial=styleSurface(new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,flatShading:true,side:THREE.DoubleSide}),'ground');
+ const skirt=new THREE.Mesh(skirtGeo,skirtMaterial);skirt.castShadow=true;skirt.receiveShadow=true;scene.add(skirt);
+ const updateSkirt=()=>{
+  for(let k=0;k<border.length;k++){
+   const ix=border[k],px=pos.getX(ix),pz=pos.getZ(ix),py=pos.getY(ix);
+   const o=k*6;skirtPos.set([px,py-.012,pz,px,-.88,pz],o);
+   const top=new THREE.Color(0x779551),lower=new THREE.Color(0x907557);
+   skirtColors.set([top.r,top.g,top.b,lower.r,lower.g,lower.b],o);
+  }
+  skirtGeo.attributes.position.needsUpdate=true;skirtGeo.attributes.color.needsUpdate=true;
+  skirtGeo.computeVertexNormals();skirtGeo.computeBoundingSphere();
  };
  update();
- // Thin solid slab underneath the editable surface; its upper rim is hidden by the ground.
- const slab=new THREE.Mesh(new THREE.BoxGeometry(SIZE,.45,SIZE),new THREE.MeshStandardMaterial({color:0x8a7658,roughness:1}));
- slab.position.y=-1.88;slab.castShadow=true;slab.receiveShadow=true;scene.add(slab);
  const shadow=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0xd3dec8,roughness:1}));
- shadow.rotation.x=-Math.PI/2;shadow.position.y=-2.15;shadow.receiveShadow=true;scene.add(shadow);
+ shadow.rotation.x=-Math.PI/2;shadow.position.y=-.885;shadow.receiveShadow=true;scene.add(shadow);
  const camera=new THREE.PerspectiveCamera(42,1,.1,100);
  let azimuth=.75,elevation=.75,zoom=17,orbit=false,painting=false,lastX=0,lastY=0,lastStamp=0,lastPoint:THREE.Vector3|null=null;
  const updateCamera=()=>{camera.position.set(Math.sin(azimuth)*Math.cos(elevation)*zoom,Math.sin(elevation)*zoom,Math.cos(azimuth)*Math.cos(elevation)*zoom);camera.lookAt(0,0,0);};updateCamera();
@@ -136,6 +164,6 @@ export function openEarthworks(app:HTMLElement){
   earth.save();alive=false;cancelAnimationFrame(frame);observer.disconnect();
   canvas.removeEventListener('pointerdown',down);canvas.removeEventListener('pointermove',move);canvas.removeEventListener('pointerup',up);canvas.removeEventListener('wheel',wheel);
   for(const p of particles){scene.remove(p.mesh);p.mesh.geometry.dispose();}
-  geo.dispose();terrainMaterial.dispose();renderer.dispose();root.remove();
+  geo.dispose();skirtGeo.dispose();skirtMaterial.dispose();terrainMaterial.dispose();renderer.dispose();root.remove();
  };
 }
