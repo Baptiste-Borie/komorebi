@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {CYCLE_DURATION,EFFECT_AT} from './shovel';
 import {makeGardener} from './gardener';
 import {openShovelWorkshop} from './shovelWorkshop';
+import {openCharacterLab} from './characterLab';
 import {configureRenderer,addDaylight,studioBackground} from './rendering/Lighting';
 import {styleSurface} from './rendering/SurfaceShader';
 
@@ -173,6 +174,7 @@ export function openEarthworks(app:HTMLElement){
  canvas.addEventListener('wheel',wheel,{passive:false});
  root.querySelectorAll<HTMLButtonElement>('[data-earth]').forEach(button=>button.onclick=()=>{action=button.dataset.earth as Action;root.querySelectorAll('[data-earth]').forEach(b=>b.classList.toggle('active',b===button));});
  const workshopButton=document.createElement('button');workshopButton.textContent='Atelier animations ↗';workshopButton.id='shovel-workshop-open';root.querySelector('.earthworks-toolbar')!.append(workshopButton);workshopButton.onclick=()=>openShovelWorkshop();
+ const characterButton=document.createElement('button');characterButton.id='character-lab-open';characterButton.textContent='Personnage 3D ↗';root.querySelector('.earthworks-toolbar')!.append(characterButton);characterButton.onclick=()=>openCharacterLab();
  root.querySelector<HTMLButtonElement>('#earthworks-reset')!.onclick=()=>{if(confirm('Remettre la parcelle à zéro ?')){earth.reset();update();}};
  let alive=true,frame=0;
  const resize=()=>{const w=host.clientWidth,h=host.clientHeight;if(w<2||h<2)return;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);};
