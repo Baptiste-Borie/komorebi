@@ -219,10 +219,15 @@ function buildPlant(p:Plant){
       const rr=radius+( .032-radius)*tt+.0035;
       return [center.x+Math.cos(a)*rr,center.y,center.z+Math.sin(a)*rr];
      };
+     // Short dashes, wedges, triangular scars and wider irregular bark flecks.
+     const shapeType=(i+Math.floor(r(i+trunkId*30+201)*4))%4;
      const a=radial(angle,t),b=radial(angle+width,t),c=radial(angle,t2),d=radial(angle+width*.86,t2);
-     const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute([
-      ...a,...b,...c,...b,...d,...c
-     ],3));geo.computeVertexNormals();
+     const mid=radial(angle+width*(.33+.34*r(i+203)),Math.min(.98,t2+.004));
+     const vertices=shapeType===0?[...a,...b,...c]:
+       shapeType===1?[...a,...b,...c,...b,...d,...c]:
+       shapeType===2?[...a,...b,...mid]:
+       [...a,...b,...c,...b,...d,...c,...c,...d,...mid];
+     const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geo.computeVertexNormals();
      const scar=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:i%7===0?0x64665b:0x363e37,roughness:1,side:THREE.DoubleSide}));
      scar.castShadow=false;g.add(scar);
     }
@@ -245,6 +250,17 @@ function buildPlant(p:Plant){
       const leaf=shape(g,new THREE.IcosahedronGeometry(.23+.09*r(i*6+j+172),1),greens[(i+j+trunkId)%greens.length],cx,cy,cz);
       leaf.scale.set(.88+.17*r(i+j+181),.82+.27*r(i+j+180),.89);leaf.castShadow=false;
      }
+    }    // Crown clusters grow from the leader itself; some variants have a tall
+    // open tip while others have several overlapping, leafy top clusters.
+    const upperCount=trunkId===0?2+Math.floor(r(250)*3):1+Math.floor(r(251+trunkId)*2);
+    for(let i=0;i<upperCount;i++){
+     const a=i*2.39996+r(i+trunkId*11+260)*.9;
+     const spread=.08+.19*r(i+270);
+     const position=top.clone().add(v(Math.cos(a)*spread,-.10-.21*r(i+280)-i*.07,Math.sin(a)*spread));
+     tapered(g,top.clone().add(v(0,-.36,0)),position,.022,.008,0xd4cdbb,5);
+     const crown=shape(g,new THREE.IcosahedronGeometry(.19+.11*r(i+290),1),
+      greens[(i+trunkId+Math.floor(r(299)*3))%greens.length],position.x,position.y,position.z);
+     crown.scale.set(.90, .78+.24*r(i+300), .86);crown.castShadow=false;
     }
    }
   }else if(species===2){ // Pine: staggered conical whorls with the trunk below.
