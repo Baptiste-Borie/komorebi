@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import {makeShovel,poseShovel,CYCLE_DURATION,EFFECT_AT} from './shovel';
+import {CYCLE_DURATION,EFFECT_AT} from './shovel';
+import {makeGardener} from './gardener';
 import {openShovelWorkshop} from './shovelWorkshop';
 import {configureRenderer,addDaylight,studioBackground} from './rendering/Lighting';
 import {styleSurface} from './rendering/SurfaceShader';
@@ -120,9 +121,9 @@ export function openEarthworks(app:HTMLElement){
  const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
  const hit=(e:PointerEvent)=>{const rect=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);ray.setFromCamera(pointer,camera);return ray.intersectObject(ground)[0]?.point||null;};
  // Shared shovel model and animation poses (same source as the workshop).
- const shovelModel=makeShovel();
- const shovel=shovelModel.group;scene.add(shovel);shovel.visible=false;
- const carried=shovelModel.soil;
+ const actor=makeGardener();
+ const shovel=actor.group;scene.add(shovel);shovel.visible=false;
+ const carried=actor.shovel.soil;
  const markerMaterial=new THREE.MeshBasicMaterial({color:0xeee8bc,transparent:true,opacity:.40,depthWrite:false});
  const marker=new THREE.Mesh(new THREE.TorusGeometry(.48,.008,3,48),markerMaterial);
  marker.rotation.x=-Math.PI/2;marker.renderOrder=9;scene.add(marker);marker.visible=false;
@@ -185,14 +186,17 @@ export function openEarthworks(app:HTMLElement){
   if(cycle){
    const c=cycle,t=clamp((now-c.start)/c.duration,0,1);
    shovel.visible=true;
-   shovel.position.set(c.x,earth.height(c.x,c.z)+.12,c.z);
-   shovel.rotation.set(0,azimuth,0);
-   poseShovel(shovelModel.tool,carried,c.mode,t);
+   const facing=azimuth;
+   shovel.rotation.set(0,facing,0);
+   const dx=Math.sin(facing)*.62,dz=Math.cos(facing)*.62;
+   shovel.position.set(c.x+dx,earth.height(c.x+dx,c.z+dz),c.z+dz);
+   actor.pose(c.mode,t);
    if(!c.applied&&t>=EFFECT_AT[c.mode]){applyCycle(c,now);c.applied=true;}
    if(t>=1){if(!c.applied)applyCycle(c,now);carried.visible=false;cycle=null;lastCompleted=now;earth.save();}
   }else if(point&&!orbit){
-   shovel.visible=true;shovel.position.set(point.x,earth.height(point.x,point.z)+.12,point.z);
-   shovel.rotation.set(0,azimuth,0);poseShovel(shovelModel.tool,carried,action,0);
+   shovel.visible=true;shovel.rotation.set(0,azimuth,0);
+   const dx=Math.sin(azimuth)*.62,dz=Math.cos(azimuth)*.62;
+   shovel.position.set(point.x+dx,earth.height(point.x+dx,point.z+dz),point.z+dz);actor.pose(action,0);
   }else{shovel.visible=false;carried.visible=false;}
   for(let i=particles.length-1;i>=0;i--){const part=particles[i],age=(now-part.birth)/1000;
    if(age>.60){scene.remove(part.mesh);part.mesh.geometry.dispose();particles.splice(i,1);continue;}

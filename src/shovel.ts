@@ -18,14 +18,10 @@ export function makeShovel():{group:THREE.Group,tool:THREE.Group,soil:THREE.Grou
   mesh.position.copy(a).add(b).multiplyScalar(.5);
   mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());mesh.castShadow=true;tool.add(mesh);
  };
- // The shaft ends inside the socket; the D grip has no disconnected pieces.
+ // Straight continuous shaft with a minimal rounded upper grip.
  cylinder(new THREE.Vector3(0,.24,0),new THREE.Vector3(0,1.12,0),.027,wood);
  cylinder(new THREE.Vector3(0,.12,0),new THREE.Vector3(0,.34,0),.042,dark);
- cylinder(new THREE.Vector3(-.095,1.11,0),new THREE.Vector3(-.095,1.34,0),.020,wood);
- cylinder(new THREE.Vector3(.095,1.11,0),new THREE.Vector3(.095,1.34,0),.020,wood);
- cylinder(new THREE.Vector3(-.095,1.34,0),new THREE.Vector3(.095,1.34,0),.026,wood);
- cylinder(new THREE.Vector3(-.095,1.11,0),new THREE.Vector3(0,1.09,0),.020,wood);
- cylinder(new THREE.Vector3(.095,1.11,0),new THREE.Vector3(0,1.09,0),.020,wood);
+ cylinder(new THREE.Vector3(0,1.085,0),new THREE.Vector3(0,1.15,0),.037,wood);
  // Low-poly spade blade, coherent silhouette, connected to metal socket.
  const outline=new THREE.Shape();
  outline.moveTo(-.14,.21);outline.lineTo(.14,.21);outline.lineTo(.14,.11);
