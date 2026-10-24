@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { configureRenderer, addDaylight, studioBackground } from './rendering/Lighting';
 
-/** V0.39: static KayKit-derived gardener; inspect the Blender model before touching rigging or Earthworks. */
+/** V0.40: polished static KayKit-derived gardener; inspect the Blender model before touching rigging or Earthworks. */
 export function openCharacterLab() {
   if (document.querySelector('#character-lab')) return;
   const root = document.createElement('section');
@@ -56,7 +56,7 @@ export function openCharacterLab() {
   updateCamera();
   let actor: THREE.Group | undefined;
   let alive = true;
-  new GLTFLoader().load('/assets/gardener-v039.glb', gltf => {
+  new GLTFLoader().load('/assets/gardener-v040.glb', gltf => {
     if (!alive) return;
     actor = gltf.scene;
     actor.traverse(node => {
@@ -70,7 +70,7 @@ export function openCharacterLab() {
     status.textContent = `Modèle Blender · GLB chargé · ${meshes} groupes`;
     renderer.shadowMap.needsUpdate = true;
   }, undefined, error => {
-    status.textContent = 'Impossible de charger public/assets/gardener-v039.glb';
+    status.textContent = 'Impossible de charger public/assets/gardener-v040.glb';
     console.error('Character Lab:', error);
   });
   const angles: Record<string, number> = { front: 0, 'three-quarter': .63, side: Math.PI / 2 };
