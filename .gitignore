@@ -5,3 +5,4 @@ review-temp/
 
 review-staging/
 reviews/character-lab/
+__pycache__/
