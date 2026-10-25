@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import {makeShovel,poseShovel,type ShovelAction} from './shovel';
 
 const v=(x:number,y:number,z:number)=>new THREE.Vector3(x,y,z);
@@ -40,7 +41,35 @@ export function makeGardener(){
   const delta=b.clone().sub(a);mesh.position.copy(a).add(b).multiplyScalar(.5);
   mesh.quaternion.setFromUnitVectors(direct,delta.clone().normalize());mesh.scale.y=delta.length();
  };
+ // Load the Blender-skinned actor asynchronously. The old procedural actor is
+ // retained solely as a fallback if WebGL/glTF loading fails.
+ let mixer:THREE.AnimationMixer|null=null;
+ let loadedClips:Partial<Record<ShovelAction,THREE.AnimationClip>>={};
+ let active:ShovelAction|null=null;
+ let currentAction:THREE.AnimationAction|null=null;
+ const legacyChildren=[...group.children];
+ new GLTFLoader().load('/assets/gardener-v044.glb',gltf=>{
+  const find=(name:string)=>gltf.animations.find(clip=>clip.name.toLowerCase().includes(name));
+  const clips={dig:find('dig'),fill:find('fill'),level:find('level')};
+  if(!clips.dig||!clips.fill||!clips.level){
+   console.error('Komorebi V0.44: GLB incomplet, gestes manquants');return;
+  }
+  for(const child of legacyChildren)child.visible=false;
+  const visual=gltf.scene;
+  visual.traverse(obj=>{if(obj instanceof THREE.Mesh){obj.castShadow=true;obj.receiveShadow=true;}});
+  group.add(visual);mixer=new THREE.AnimationMixer(visual);
+  loadedClips=clips;active=null;currentAction=null;
+  pose('dig',0);
+ },undefined,error=>console.error('Komorebi V0.44: chargement du rig échoué',error));
  function pose(mode:ShovelAction,phase:number){
+  if(mixer&&loadedClips[mode]){
+   const clip=loadedClips[mode]!;
+   if(active!==mode){mixer.stopAllAction();currentAction=mixer.clipAction(clip);currentAction.reset().play();active=mode;}
+   // The same absolute phase is used by Earthworks and the workshop.
+   mixer.setTime(Math.min(.9999,Math.max(0,phase))*clip.duration);
+   mixer.update(0);
+   return;
+  }
   const t=THREE.MathUtils.clamp(phase,0,1);
   poseShovel(shovel.tool,shovel.soil,mode,t);
   // Small body anticipation: no exaggerated horizontal waggle.
