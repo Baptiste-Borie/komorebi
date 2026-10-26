@@ -61,6 +61,18 @@ earthworksButton.id='earthworks-open';earthworksButton.textContent='⛏ Terre';
 earthworksButton.title='Ouvrir le terrain de travail';
 app.querySelector('.hud-actions')?.prepend(earthworksButton);
 earthworksButton.addEventListener('click',()=>openEarthworks(app));
+// The new KayKit gardener is an opt-in study; the V0.44 garden remains untouched.
+const kaykitLabButton = document.createElement('button');
+kaykitLabButton.id = 'kaykit-lab-open';
+kaykitLabButton.textContent = 'Jardinier V0.45';
+kaykitLabButton.title = 'Atelier de personnage KayKit (gratuit)';
+app.querySelector('.hud-actions')?.prepend(kaykitLabButton);
+kaykitLabButton.addEventListener('click', () => {
+  void import('./kaykitLab').then(m => m.openKaykitLab());
+});
+if (new URLSearchParams(window.location.search).has('kaykit')) {
+  queueMicrotask(() => { void import('./kaykitLab').then(m => m.openKaykitLab()); });
+}
 const viewport=app.querySelector<HTMLDivElement>('#scene')!;
 const tools=app.querySelector<HTMLDivElement>('#tools')!;
 const builderPanel=document.createElement('div');builderPanel.className='builder-details';builderPanel.innerHTML=`<div class="builder-row"><div class="builder-tools"><button id="builder-plant" class="selected">＋ Planter</button><button id="builder-select">↖ Sélectionner</button></div><button id="builder-undo" title="Annuler">↶</button><button id="builder-redo" title="Rétablir">↷</button></div><div class="builder-species" id="builder-species"></div><div id="builder-picked" hidden><div class="builder-row" style="margin-top:8px"><strong id="builder-picked-name">Élément sélectionné</strong><button id="builder-rotate">↻ Rotation</button><button id="builder-variant">✿ Variante</button><button id="builder-remove">✕ Supprimer</button></div></div><div class="builder-hint" id="builder-tip">Survolez le terrain pour prévisualiser · R pour pivoter · Ctrl+Z pour annuler</div>`;

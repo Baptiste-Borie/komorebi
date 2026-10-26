@@ -6,3 +6,5 @@ review-temp/
 review-staging/
 reviews/character-lab/
 __pycache__/
+# Archives KayKit gratuites importées localement par le créateur du jeu
+public/assets/kaykit-v045/
