@@ -51,18 +51,18 @@ export function openKaykitLab() {
   const root = document.createElement('section');
   root.id = 'kaykit-lab';
   root.innerHTML = `
-    <header class="kkl-top"><div><small>KOMOREBI / PERSONNAGES / ANIMATIONS</small><h2>Tester les mouvements · V0.51</h2></div>
+    <header class="kkl-top"><div><small>KOMOREBI / PERSONNAGES / ANIMATIONS</small><h2>Jardinier V0.44 · Rig_Medium</h2></div>
     <button data-close type="button">← Retour aux ateliers</button></header>
     <div class="kkl-stage"></div>
     <footer class="kkl-bottom">
       <strong class="kkl-section-title">01 / ANIMATION</strong><div class="kkl-buttons" data-animations></div>
       <strong class="kkl-section-title">02 / MODÈLE ET RÉFÉRENCES</strong>
-      <div class="kkl-row"><button data-character-compare type="button">Comparer avec notre ancien jardinier ↗</button><button data-variant type="button">Comparer : ancienne V0.47</button></div><strong class="kkl-section-title">03 / LECTURE</strong><div class="kkl-row"><button data-pause>Pause</button><label>Pose <input data-scrub type="range" min="0" max="100" value="0"></label>
+      <div class="kkl-row"><button data-character-compare type="button">Comparer avec le V0.44 original ↗</button><button data-variant type="button">Comparer : Ranger de référence</button></div><strong class="kkl-section-title">03 / LECTURE</strong><div class="kkl-row"><button data-pause>Pause</button><label>Pose <input data-scrub type="range" min="0" max="100" value="0"></label>
       <label>Vitesse <input data-speed type="range" min="0.2" max="1.5" step="0.1" value="0.8"></label>
       <label>Angle pelle <input data-spade-pitch type="range" min="-90" max="90" step="5" value="0"></label>
       <button data-angle>Vue : 3/4</button></div>
       <small data-status>Chargement des assets…</small>
-      <small class="kkl-note">Cette V0.51 contient enfin la géométrie hybride. Les raccords et animations restent à valider visuellement.</small>
+      <small class="kkl-note">Géométrie et matériaux du vrai V0.44, liés au squelette KayKit Rig_Medium. La validation esthétique reste à faire.</small>
       <small>Tourner : glisser · Zoom : molette · Comparer la silhouette et vérifier les mains/pieds</small>
     </footer>`;
   document.body.append(root);
@@ -111,7 +111,7 @@ export function openKaykitLab() {
   root.querySelector<HTMLButtonElement>('[data-character-compare]')!.onclick = () => {
     void import('./characterCompare').then(m => m.openCharacterCompare());
   };
-  const toolsByVariant = new Map<'gardener' | 'original', THREE.Group>();
+  const toolsByVariant = new Map<'gardener' | 'original', THREE.Object3D>();
   let spadePitch = 0;
   const updateSpade = () => {
     for (const spade of toolsByVariant.values()) {
@@ -141,6 +141,17 @@ export function openKaykitLab() {
     }
     mixer.setTime(Math.min(phase, .99999) * clip.duration);
     mixer.update(0);
+    const diagnostics = (root as HTMLElement & { kaykitDiagnostics?: Record<string, unknown> }).kaykitDiagnostics;
+    if (diagnostics) {
+      let hand: THREE.Object3D | undefined;
+      model?.traverse(node => { if (!hand && norm(node.name) === 'handr') hand = node; });
+      const tool = toolsByVariant.get(variant);
+      model?.updateMatrixWorld(true);
+      diagnostics.activeMotion = active;
+      diagnostics.phase = phase;
+      diagnostics.rightHandMatrix = hand?.matrixWorld.toArray();
+      diagnostics.spadeMatrix = tool?.matrixWorld.toArray();
+    }
   }
   function choose(key: Motion) {
     active = key;
@@ -161,8 +172,8 @@ export function openKaykitLab() {
     mixer = new THREE.AnimationMixer(model);
     current = undefined;
     pose(phase);
-    variantButton.textContent = variant === 'gardener' ? 'Comparer : ancienne V0.47' : 'Revenir au jardinier';
-    report(`Affichage : ${variant === 'gardener' ? 'jardinier V0.51' : 'jardinier V0.47 précédent'} · animations sur Rig_Medium`);
+    variantButton.textContent = variant === 'gardener' ? 'Comparer : Ranger de référence' : 'Revenir au jardinier V0.44';
+    report(`Affichage : ${variant === 'gardener' ? 'jardinier V0.44 riggé' : 'Ranger KayKit de référence'} · animations sur Rig_Medium`);
   };
   pause.onclick = () => { running = !running; pause.textContent = running ? 'Pause' : 'Lecture'; };
   scrub.oninput = () => { running = false; pause.textContent = 'Lecture'; pose(Number(scrub.value) / 100); };
@@ -187,7 +198,7 @@ export function openKaykitLab() {
       if (!response.ok) throw new Error('Assets non installés. Consulte docs/V045_KAYKIT.md.');
       const manifest = await response.json() as KayKitManifest;
       const original = await loadGLTF('/assets/kaykit-v045/gardener-v047.glb');
-      const dressed = await loadGLTF('/assets/kaykit-v045/gardener-v051.glb');
+      const dressed = await loadGLTF('/assets/kaykit-v045/gardener-v044-rig-medium.glb');
       if (!alive) return;
       variants = { original: original.scene, gardener: dressed.scene };
       model = variants.gardener;
@@ -195,13 +206,22 @@ export function openKaykitLab() {
       for (const candidate of Object.values(variants)) {
         candidate.traverse(o => { if (o instanceof THREE.Mesh) { o.castShadow = true; o.receiveShadow = true; } });
       }
+      const embeddedSpade = dressed.scene.getObjectByName('V044_Spade');
+      if (!embeddedSpade) throw new Error('Pelle V0.44 calibrée absente du GLB riggé.');
+      const spadeWasVisible = embeddedSpade.visible;
+      embeddedSpade.visible = false;
       const box = new THREE.Box3().setFromObject(model);
+      embeddedSpade.visible = spadeWasVisible;
       const size = box.getSize(new THREE.Vector3());
       if (size.y < .1) throw new Error('Modèle KayKit sans géométrie exploitable.');
       // Uniform transform: the dress shares original Ranger bind pose and bones.
       for (const candidate of Object.values(variants)) {
         candidate.scale.multiplyScalar(1.85 / size.y);
+        const internalTool = candidate.getObjectByName('V044_Spade');
+        const toolWasVisible = internalTool?.visible;
+        if (internalTool) internalTool.visible = false;
         const scaled = new THREE.Box3().setFromObject(candidate);
+        if (internalTool) internalTool.visible = toolWasVisible ?? true;
         candidate.position.set(-scaled.getCenter(new THREE.Vector3()).x, -scaled.min.y, -scaled.getCenter(new THREE.Vector3()).z);
         candidate.visible = candidate === model;
         scene.add(candidate);
@@ -210,8 +230,9 @@ export function openKaykitLab() {
         let hand: THREE.Bone | undefined;
         candidate.traverse(n => { if (n instanceof THREE.Bone && norm(n.name) === 'handslotr') hand = n; });
         if (!hand) throw new Error(`Os handslot.r introuvable sur ${key} : impossible d'attacher la pelle.`);
-        const spade = makeGardeningSpade();
-        hand.add(spade);
+        const spade = key === 'gardener' ? candidate.getObjectByName('V044_Spade') : makeGardeningSpade();
+        if (!spade) throw new Error('Pelle V0.44 intégrée introuvable.');
+        if (key === 'original') hand.add(spade);
         toolsByVariant.set(key, spade);
       }
       updateSpade();
@@ -225,7 +246,12 @@ export function openKaykitLab() {
       for (const motion of MOTIONS) {
         const originalName = manifest.clips[motion.key];
         if (!originalName) continue;
-        const source = sourceSets.flatMap(s => s.animations).find(c => c.name === originalName);
+        // Digging is embedded in the deliverable GLB so the file remains
+        // directly playable outside Komorebi. Other workshop motions still
+        // come from the unmodified KayKit animation sets.
+        const source = motion.key === 'Digging'
+          ? dressed.animations.find(c => c.name === 'Digging')
+          : sourceSets.flatMap(s => s.animations).find(c => c.name === originalName);
         if (!source) { diagnostics.push(`${motion.key} absent du GLB`); continue; }
         const mapped = bindClip(source, bones);
         if (mapped.matched < 8) { diagnostics.push(`${motion.key}: ${mapped.matched} pistes seulement`); continue; }
@@ -257,7 +283,8 @@ export function openKaykitLab() {
       // should be dressed in Blender; do not include private local filenames.
       Object.assign(root, { kaykitDiagnostics: {
         model: manifest.model.split('/').pop(),
-        gardener: 'gardener-v051.glb',
+        gardener: 'gardener-v044-rig-medium.glb',
+        embeddedDigging: dressed.animations.some(clip => clip.name === 'Digging'),
         spadeBone: 'handslot.r',
         spadeAngle: spadePitch,
         comparison: true,
@@ -265,10 +292,10 @@ export function openKaykitLab() {
         meshes,
         animations: [...motions.keys()],
       }});
-      report(`Jardinier hybride V0.51 : ${bones.size} os KayKit · ${motions.size} animations · tenue réelle (GLB)${diagnostics.length ? ' · ' + diagnostics.join('; ') : ''}`);
+      report(`Jardinier V0.44 riggé : ${bones.size} os KayKit · ${motions.size} animations · Digging intégré au GLB${diagnostics.length ? ' · ' + diagnostics.join('; ') : ''}`);
       root.dataset.ready = 'true';
     } catch (err) {
-      report(`V0.46 : ${err instanceof Error ? err.message : String(err)}`, true);
+      report(`V0.44 riggé : ${err instanceof Error ? err.message : String(err)}`, true);
       console.error('KayKit atelier:', err);
     }
   }

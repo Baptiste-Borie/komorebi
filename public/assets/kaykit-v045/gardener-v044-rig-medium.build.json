@@ -1,0 +1,98 @@
+{
+  "output": "public/assets/kaykit-v045/gardener-v044-rig-medium.glb",
+  "bytes": 985692,
+  "source_meshes": 38,
+  "active_meshes": [
+    "V044_Arm L • KayKit hand and continuous forearm",
+    "V044_Arm L • KayKit hand and continuous forearm.001",
+    "V044_Bib side seam 1",
+    "V044_Bib side seam -1",
+    "V044_Bib • fitted curved denim",
+    "V044_Boot 1 • adapted KayKit mesh",
+    "V044_Boot -1 • adapted KayKit mesh",
+    "V044_Cylinder.001",
+    "V044_Cylinder",
+    "V044_Brows • relaxed KayKit islands",
+    "V044_Eyes • refitted black KayKit meshes",
+    "V044_Face and ears • adapted KayKit topology",
+    "V044_Folded cuff 1",
+    "V044_Folded cuff -1",
+    "V044_Hair • short tapered tousled cap",
+    "V044_Hat brim bound edge",
+    "V044_Hat ribbon • fitted olive band",
+    "V044_Neck • tucked into collar",
+    "V044_Overalls • continuous waist seat crotch and legs",
+    "V044_Pocket top rolled edge",
+    "V044_Embroidery • leaf stem",
+    "V044_Pocket • fitted five-sided patch",
+    "V044_Small botanical stitched motif",
+    "V044_Shirt • shaped shoulder and torso mesh",
+    "V044_Shoulder strap 1",
+    "V044_Shoulder strap -1",
+    "V044_Sleeve 1",
+    "V044_Sleeve -1",
+    "V044_Smile • surface fitted",
+    "V044_Straw brim • cambered oval with rolled lip",
+    "V044_Straw crown • shaped shoulder and shallow top",
+    "V044_curved steel spade",
+    "V044_soil chunk 0",
+    "V044_soil chunk 1",
+    "V044_soil chunk 2",
+    "V044_soil chunk 3",
+    "V044_steel collar",
+    "V044_wood shaft"
+  ],
+  "removed_ranger_mesh_payloads": [
+    "Ranger_ArmLeft",
+    "Ranger_ArmRight",
+    "Ranger_Body",
+    "Ranger_Cape",
+    "Ranger_Head",
+    "Ranger_LegLeft",
+    "Ranger_LegRight",
+    "Ranger_Quiver"
+  ],
+  "materials": [
+    "Skin • warm peach",
+    "Overalls • stitched edge",
+    "Overalls • garden green",
+    "Boots • chestnut leather",
+    "Boots • sole and welt",
+    "Buttons • aged brass",
+    "Hair • chestnut",
+    "Eyes • soft black",
+    "Linen • folded edge",
+    "Hat • golden straw",
+    "Hat • olive ribbon",
+    "Embroidery • muted sage",
+    "Shirt • warm linen",
+    "Smile • warm umber",
+    "Tool metal",
+    "Tool earth",
+    "Tool wood"
+  ],
+  "joints": 23,
+  "embedded_animations": [
+    "Digging"
+  ],
+  "animation_modified": false,
+  "tool_parent": "handslot.r",
+  "tool_calibration": {
+    "axis": [
+      0.1925454690217639,
+      0.9805476750182824,
+      -0.03811166980637191
+    ],
+    "center": [
+      -0.13349809,
+      -0.1558383,
+      -0.08468653
+    ],
+    "source_axis_q": ".784 - source_y"
+  },
+  "counts": {
+    "vertices": 7551,
+    "rigid_vertices": 6361,
+    "blended_vertices": 1217
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "pass": true,
+  "url": "http://127.0.0.1:5176/?kaykit=1",
+  "asset": "gardener-v044-rig-medium.glb",
+  "mesh_count": 40,
+  "bones": 23,
+  "animations": [
+    "Idle_A",
+    "Walking_A",
+    "Running_A",
+    "Dig",
+    "Digging",
+    "Working_A"
+  ],
+  "embedded_digging": true,
+  "observed_motion": {
+    "right_hand_matrix_changed": true,
+    "spade_matrix_changed": true,
+    "phase_from": 0,
+    "phase_to": 0.45
+  },
+  "javascript_errors": []
+}

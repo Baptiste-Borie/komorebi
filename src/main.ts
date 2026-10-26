@@ -65,7 +65,7 @@ earthworksButton.addEventListener('click',()=>openEarthworks(app));
 // The new KayKit gardener is an opt-in study; the V0.44 garden remains untouched.
 const kaykitLabButton = document.createElement('button');
 kaykitLabButton.id = 'kaykit-lab-open';
-kaykitLabButton.textContent = 'Jardinier hybride V0.51';
+kaykitLabButton.textContent = 'Jardinier V0.44 animé';
 kaykitLabButton.title = 'Atelier de personnage KayKit (gratuit)';
 app.querySelector('.hud-actions')?.prepend(kaykitLabButton);
 kaykitLabButton.addEventListener('click', () => {

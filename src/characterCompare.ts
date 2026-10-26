@@ -51,7 +51,7 @@ export function openCharacterCompare() {
       <button data-close type="button">← Retour aux ateliers</button></header>
     <main class="cc-layout">
       <div class="cc-view">
-        <div class="cc-names"><span>NOTRE ANCIEN JARDINIER · V0.44</span><span>PREMIER HYBRIDE · V0.51</span></div>
+        <div class="cc-names"><span>JARDINIER ORIGINAL · V0.44</span><span>V0.44 RIGGÉ · RIG_MEDIUM</span></div>
         <div class="cc-canvas"></div>
         <div class="cc-camera">
           <button data-view="front">Face</button><button data-view="three-quarter" class="active">3/4</button>
@@ -60,11 +60,11 @@ export function openCharacterCompare() {
         </div>
       </div>
       <aside class="cc-panel">
-        <div class="cc-intro"><strong>Le prototype hybride est maintenant modélisé.</strong>
-          <p>À gauche l’ancien V0.44, à droite le nouvel hybride V0.51 : compare leurs raccords et leurs silhouettes.</p>
+        <div class="cc-intro"><strong>Comparaison avant/après rigging.</strong>
+          <p>À gauche le V0.44 original, à droite exactement sa géométrie liée au squelette Rig_Medium.</p>
           <p>Tes choix enregistrent des corrections à effectuer : ils ne changent pas instantanément la géométrie.</p>
         </div>
-        <div class="cc-review-state"><strong>V0.51 modélisée :</strong> visage KayKit, tenue V0.44, articulations KayKit, jambes et bottes Ranger. <strong>À valider visuellement.</strong></div>
+        <div class="cc-review-state"><strong>V0.44 riggé :</strong> aucun mesh Ranger ni V0.51 ; seules les transformations du squelette KayKit sont reprises. <strong>À valider visuellement.</strong></div>
         <div class="cc-tabs" aria-label="Parties à comparer"><button type="button" data-group-tab="face" class="active">Visage</button><button type="button" data-group-tab="body">Corps</button><button type="button" data-group-tab="legs">Jambes</button></div>
         <div class="cc-choices"></div>
         <div class="cc-inspector"><strong>Pièce sélectionnée</strong><div data-mesh> Clique sur le personnage pour identifier son maillage.</div></div>
@@ -115,7 +115,7 @@ export function openCharacterCompare() {
     el.className = 'cc-region';
     el.dataset.group = grouped[item.id];
     el.innerHTML = `<strong>${safe(item.name)}</strong><div class="cc-region-switch">
-      <button type="button" data-source="old">V0.44</button><button type="button" data-source="new">V0.51</button></div>
+      <button type="button" data-source="old">Original</button><button type="button" data-source="new">Riggé</button></div>
       <textarea rows="2" aria-label="Remarques : ${safe(item.name)}" placeholder="Ce qui doit changer…"></textarea>`;
     const buttons = el.querySelectorAll<HTMLButtonElement>('[data-source]');
     const sync = () => buttons.forEach(b => { const active = b.dataset.source === choices[item.id].source; b.classList.toggle('active', active); b.setAttribute('aria-pressed', String(active)); });
@@ -200,10 +200,12 @@ export function openCharacterCompare() {
     try {
       const [older, newer] = await Promise.all([
         gltfLoader.loadAsync('/assets/gardener-v044.glb'),
-        gltfLoader.loadAsync('/assets/kaykit-v045/gardener-v051.glb'),
+        gltfLoader.loadAsync('/assets/kaykit-v045/gardener-v044-rig-medium.glb'),
       ]);
       if (!alive) return;
       roots.old = older.scene; roots.new = newer.scene;
+      const comparisonTool = roots.new.getObjectByName('V044_Spade');
+      if (comparisonTool) comparisonTool.visible = false;
       for (const [key, obj] of Object.entries(roots) as Array<[Origin, THREE.Group]>) {
         const box = new THREE.Box3().setFromObject(obj);
         const height = box.getSize(new THREE.Vector3()).y;
@@ -226,7 +228,7 @@ export function openCharacterCompare() {
         scene.add(pedestal);
       }
       loaded = true;
-      status.textContent = 'Modèle hybride V0.51 chargé · inspecte les bras, le visage et les raccords.';
+      status.textContent = 'V0.44 original et V0.44 riggé chargés · compare la silhouette et les raccords.';
       root.dataset.ready = 'true';
     } catch (err) {
       status.textContent = `Impossible de charger les modèles : ${err instanceof Error ? err.message : String(err)}`;
@@ -241,8 +243,8 @@ export function openCharacterCompare() {
       type: 'komorebi-character-review', version: 1,
       createdAt: new Date().toISOString(),
       status: 'propositions_non_validees',
-      reference: { old: 'gardener-v044.glb', new: 'gardener-v051.glb' },
-      rigNote: 'Références esthétiques seulement : les deux rigs ne sont pas interchangeables.',
+      reference: { old: 'gardener-v044.glb', new: 'gardener-v044-rig-medium.glb' },
+      rigNote: 'Comparaison esthétique : même géométrie source, nouvelle liaison au Rig_Medium.',
       selections: choices,
       comment: textSummary.value,
       clickedMesh: selected,

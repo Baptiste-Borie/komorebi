@@ -1,0 +1,567 @@
+{
+  "asset": "public/assets/kaykit-v045/gardener-v044-rig-medium.glb",
+  "height": 2.3128823884326266,
+  "duration_s": 1.4,
+  "samples": 143,
+  "limits": {
+    "scale": 1e-05,
+    "rigid_edge_strain": 0.01,
+    "hand_surface_gap_H": 0.005,
+    "fixed_grip_H": 1e-05,
+    "foot_slide_H": 0.005,
+    "ground_penetration_H": 0.001,
+    "blade_impact_H": 0.005,
+    "collision_depth_delta_H": 0.005,
+    "collision_area_delta_H2": 0.001
+  },
+  "support_phases": {
+    "left": [
+      [
+        0.0,
+        1.4
+      ]
+    ],
+    "right": [
+      [
+        0.0,
+        1.4
+      ]
+    ]
+  },
+  "impact_definition": {
+    "time_s": 0.3333333333333333,
+    "reason": "native key at the first local minimum of the downward shovel stroke; defined before checking blade height",
+    "sample": {
+      "index": 33,
+      "time_s": 0.33333333,
+      "percent": 23.809523571428574,
+      "scale": 3.6954879760742188e-06,
+      "rigid_edge_strain": 0.00010880497832788105,
+      "worst_rigid_mesh": "V044_Eyes • refitted black KayKit meshes",
+      "blend_edge_strain_p95": 0.6913636893127217,
+      "blend_edge_strain_max": 7.813757328658442,
+      "right_surface_gap_H": 0.0,
+      "left_surface_gap_H": 0.0,
+      "right_shaft_parameter": 0.6924933154497881,
+      "left_shaft_parameter": 0.10880711276351629,
+      "fixed_grip_matrix_error": 1.1362135410308838e-07,
+      "left_foot_slide_H": 0.00013793024498967677,
+      "right_foot_slide_H": 2.1820208341873496e-05,
+      "left_foot_min_z_H": -0.00018105979477274286,
+      "right_foot_min_z_H": -0.00012003739712643925,
+      "blade_min_z_H": 1.6912035099353915e-08
+    }
+  },
+  "edge_classification": {
+    "rigid": "both vertices have exactly one identical bone weight > 0.999; 1% threshold applies",
+    "blend": "joint/clothing transition; reported p95/max separately and never silently removed"
+  },
+  "collision_classification": {
+    "visible": "BVH test on garment surfaces and exposed lower-arm/wrist/hand triangles; quality threshold applies",
+    "covered_internal": "full continuous arm volume hidden under a sleeve; raw excess retained in every audited pose",
+    "expected_seam": "intentional garment boundary overlap; measured separately, never deleted"
+  },
+  "checks": {
+    "scale": true,
+    "rigid_edges": true,
+    "right_grip": true,
+    "left_sliding_contact": true,
+    "feet_support": true,
+    "blade_impact": true,
+    "major_collisions": true
+  },
+  "pass_all": true,
+  "maxima": {
+    "scale": 3.6954879760742188e-06,
+    "rigid_edge_strain": 0.00027693604278899997,
+    "blend_edge_strain_p95": 0.9741052903858829,
+    "blend_edge_strain_max": 7.813757328658442,
+    "right_surface_gap_H": 0.0,
+    "left_surface_gap_H": 0.0,
+    "fixed_grip_matrix_error": 1.7881393432617188e-07,
+    "left_foot_slide_H": 0.00014381125886460904,
+    "right_foot_slide_H": 7.157502869080835e-05
+  },
+  "ground_penetration_H": 0.0001995630963412888,
+  "collision_audit": [
+    {
+      "index": 0,
+      "time_s": 0.0,
+      "visible_collisions": [],
+      "expected_seams": [
+        {
+          "left": "V044_Bib • fitted curved denim",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.023759563486761406,
+          "area_H2": 0.025522751150899685,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 92
+        },
+        {
+          "left": "V044_Boot -1 • adapted KayKit mesh",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.01740298020359809,
+          "area_H2": 0.008945677851929184,
+          "rest_depth_H": 0.004458466258464858,
+          "rest_area_H2": 0.006424330512129117,
+          "triangle_pairs": 43
+        },
+        {
+          "left": "V044_Folded cuff 1",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.009238319973272785,
+          "area_H2": 0.003849593151984805,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 60
+        }
+      ],
+      "covered_internal_overlaps": [
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Bib • fitted curved denim",
+          "depth_H": 0.0201994254740265,
+          "area_H2": 0.015007248582575452,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 110,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Cylinder.001",
+          "depth_H": 0.007041344336321111,
+          "area_H2": 0.0014031679697348069,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 30,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Pocket • fitted five-sided patch",
+          "depth_H": 0.005026965123664645,
+          "area_H2": 0.0013133342231862668,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.02744081744152784,
+          "area_H2": 0.012217733350497629,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 84,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shoulder strap 1",
+          "depth_H": 0.020365155364650122,
+          "area_H2": 0.005516742854161919,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 36,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        }
+      ],
+      "tool_collisions": []
+    },
+    {
+      "index": 28,
+      "time_s": 0.2799999872843424,
+      "visible_collisions": [],
+      "expected_seams": [
+        {
+          "left": "V044_Bib • fitted curved denim",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.011447583411726648,
+          "area_H2": 0.02477416052023329,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 84
+        },
+        {
+          "left": "V044_Boot -1 • adapted KayKit mesh",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.022059396598223358,
+          "area_H2": 0.015563322179356846,
+          "rest_depth_H": 0.004458466258464858,
+          "rest_area_H2": 0.006424330512129117,
+          "triangle_pairs": 83
+        },
+        {
+          "left": "V044_Boot 1 • adapted KayKit mesh",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.02384422835580879,
+          "area_H2": 0.021737996139696764,
+          "rest_depth_H": 0.014554697129585153,
+          "rest_area_H2": 0.0062388359856085,
+          "triangle_pairs": 103
+        },
+        {
+          "left": "V044_Folded cuff 1",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.00874384669637288,
+          "area_H2": 0.0036567862890979474,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 46
+        }
+      ],
+      "covered_internal_overlaps": [
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Bib • fitted curved denim",
+          "depth_H": 0.01737198769127602,
+          "area_H2": 0.01597269987084973,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 125,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Cylinder.001",
+          "depth_H": 0.012785615308687246,
+          "area_H2": 0.0011500415355023622,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 22,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Pocket • fitted five-sided patch",
+          "depth_H": 0.014906974820704695,
+          "area_H2": 0.003398462488186379,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 34,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.02719873696044568,
+          "area_H2": 0.01418922967377948,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 94,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shoulder strap 1",
+          "depth_H": 0.011047180511394382,
+          "area_H2": 0.0033797264037576033,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        }
+      ],
+      "tool_collisions": []
+    },
+    {
+      "index": 33,
+      "time_s": 0.33333333,
+      "visible_collisions": [],
+      "expected_seams": [
+        {
+          "left": "V044_Bib • fitted curved denim",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.01201253397089559,
+          "area_H2": 0.024312277566075714,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 82
+        },
+        {
+          "left": "V044_Boot -1 • adapted KayKit mesh",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.040817789438854155,
+          "area_H2": 0.019290979419155068,
+          "rest_depth_H": 0.004458466258464858,
+          "rest_area_H2": 0.006424330512129117,
+          "triangle_pairs": 88
+        },
+        {
+          "left": "V044_Boot 1 • adapted KayKit mesh",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.022713860143168167,
+          "area_H2": 0.021887382366606464,
+          "rest_depth_H": 0.014554697129585153,
+          "rest_area_H2": 0.0062388359856085,
+          "triangle_pairs": 102
+        },
+        {
+          "left": "V044_Folded cuff 1",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.01147884973795033,
+          "area_H2": 0.0029060439983681903,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 40
+        }
+      ],
+      "covered_internal_overlaps": [
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Bib side seam 1",
+          "depth_H": 0.023750832044640114,
+          "area_H2": 0.0011484879029427782,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 28,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Bib • fitted curved denim",
+          "depth_H": 0.022191025383406643,
+          "area_H2": 0.011642917895697458,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 82,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Cylinder.001",
+          "depth_H": 0.007444734224185925,
+          "area_H2": 0.0012527751038335139,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.023824603952413502,
+          "area_H2": 0.01281661810230071,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 91,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shoulder strap 1",
+          "depth_H": 0.010302116778417322,
+          "area_H2": 0.0029319848927329955,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        }
+      ],
+      "tool_collisions": []
+    },
+    {
+      "index": 63,
+      "time_s": 0.6299999713897705,
+      "visible_collisions": [],
+      "expected_seams": [
+        {
+          "left": "V044_Bib • fitted curved denim",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.010845726765295893,
+          "area_H2": 0.02937477399998974,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 108
+        },
+        {
+          "left": "V044_Boot -1 • adapted KayKit mesh",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.028482885502909727,
+          "area_H2": 0.015360181089628463,
+          "rest_depth_H": 0.004458466258464858,
+          "rest_area_H2": 0.006424330512129117,
+          "triangle_pairs": 89
+        },
+        {
+          "left": "V044_Boot 1 • adapted KayKit mesh",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.025654906535036066,
+          "area_H2": 0.024013408988968456,
+          "rest_depth_H": 0.014554697129585153,
+          "rest_area_H2": 0.0062388359856085,
+          "triangle_pairs": 137
+        }
+      ],
+      "covered_internal_overlaps": [
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.014565435466538238,
+          "area_H2": 0.007880992847981175,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 72,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm.001",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.010396994100659702,
+          "area_H2": 0.0061409589300175284,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 59,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        }
+      ],
+      "tool_collisions": []
+    },
+    {
+      "index": 113,
+      "time_s": 1.1199999491373696,
+      "visible_collisions": [],
+      "expected_seams": [
+        {
+          "left": "V044_Bib • fitted curved denim",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.006973511774207612,
+          "area_H2": 0.02740054819876389,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 86
+        },
+        {
+          "left": "V044_Boot -1 • adapted KayKit mesh",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.024367485111112794,
+          "area_H2": 0.009572603864162844,
+          "rest_depth_H": 0.004458466258464858,
+          "rest_area_H2": 0.006424330512129117,
+          "triangle_pairs": 49
+        },
+        {
+          "left": "V044_Folded cuff 1",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.01247489290381183,
+          "area_H2": 0.0034226542683902187,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 44
+        }
+      ],
+      "covered_internal_overlaps": [
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.016136060998225264,
+          "area_H2": 0.008956140421199386,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 73,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        }
+      ],
+      "tool_collisions": []
+    },
+    {
+      "index": 142,
+      "time_s": 1.39999994,
+      "visible_collisions": [],
+      "expected_seams": [
+        {
+          "left": "V044_Bib • fitted curved denim",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.023759563486761406,
+          "area_H2": 0.025522751150899685,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 92
+        },
+        {
+          "left": "V044_Boot -1 • adapted KayKit mesh",
+          "right": "V044_Overalls • continuous waist seat crotch and legs",
+          "depth_H": 0.01740298020359809,
+          "area_H2": 0.008945677851929184,
+          "rest_depth_H": 0.004458466258464858,
+          "rest_area_H2": 0.006424330512129117,
+          "triangle_pairs": 43
+        },
+        {
+          "left": "V044_Folded cuff 1",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.009238319973272785,
+          "area_H2": 0.003849593151984805,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 60
+        }
+      ],
+      "covered_internal_overlaps": [
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Bib • fitted curved denim",
+          "depth_H": 0.0201994254740265,
+          "area_H2": 0.015007248582575452,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 110,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Cylinder.001",
+          "depth_H": 0.007041344336321111,
+          "area_H2": 0.0014031679697348069,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 30,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Pocket • fitted five-sided patch",
+          "depth_H": 0.005026965123664645,
+          "area_H2": 0.0013133342231862668,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shirt • shaped shoulder and torso mesh",
+          "depth_H": 0.02744081744152784,
+          "area_H2": 0.012217733350497629,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 84,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        },
+        {
+          "left": "V044_Arm L • KayKit hand and continuous forearm",
+          "right": "V044_Shoulder strap 1",
+          "depth_H": 0.020365155364650122,
+          "area_H2": 0.005516742854161919,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 36,
+          "classification": "covered upper-arm volume; retained for audit, excluded from visible-surface verdict"
+        }
+      ],
+      "tool_collisions": []
+    }
+  ],
+  "reference_deviations": {
+    "Ranger is comparison only": "Prior report remains in reviews/digging-measures; no Ranger PASS assumption.",
+    "blend_edge_max_is_not_rigid_test": 7.813757328658442
+  },
+  "limitations": [
+    "Hand distance samples low-poly hand-surface vertices against the fitted finite shaft capsule; it does not prove finger wrapping or absence of tool penetration.",
+    "Collision depth remains a BVH/nearest-surface proxy. Hidden continuous upper-arm skin is reported as covered_internal_overlap; same-family nested clothing is inspected visually.",
+    "Both feet are annotated as support for the full in-place Digging cycle; no interval is dropped based on measured velocity."
+  ]
+}

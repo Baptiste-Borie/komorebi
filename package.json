@@ -10,7 +10,7 @@
     "review": "node scripts/review.mjs && node scripts/auto_push.mjs review-garden",
     "review:quick": "node scripts/review.mjs --quick && node scripts/auto_push.mjs review-quick",
     "review:full": "node scripts/review.mjs --full && node scripts/auto_push.mjs review-full",
-    "review:gardener": "node scripts/review_kaykit_v045.mjs",
+    "review:gardener": "node scripts/review_gardener_v044_rig_medium.mjs",
     "review:clean": "node scripts/clean_reviews.mjs"
   },
   "dependencies": {
