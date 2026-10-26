@@ -1,12 +1,12 @@
-// V0.46 — inspect actual skinned gardener + original KayKit, auto-start Vite.
+// V0.47 — inspect KayKit gardener + hand-attached shovel, auto-start Vite.
 // Does not modify or restart a server already running at the chosen URL.
 import { chromium } from 'playwright';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, rmdir } from 'node:fs/promises';
 import { spawn, execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 
 const url = process.env.KOMOREBI_URL ?? 'http://127.0.0.1:5173/?kaykit=1';
-const reviewDir = resolve('reviews/character-lab/v046');
+const reviewDir = resolve('reviews/character-lab/v047');
 await mkdir(reviewDir, { recursive: true });
 
 const ping = async () => {
@@ -61,6 +61,20 @@ try {
       }
     }
   }
+  // Check that the shovel really exists on the right-hand bone before capturing.
+  const spadeBone = await page.locator('#kaykit-lab').evaluate(el => el.kaykitDiagnostics?.spadeBone);
+  if (spadeBone !== 'handslot.r') throw new Error('Pelle non attachée à handslot.r.');
+  // Review the hand grip in a close front view and at multiple digging phases.
+  await page.locator('[data-motion="Digging"]').click();
+  await page.locator('[data-angle]').click(); // 3/4 -> face
+  for (const pose of [20, 45, 80]) {
+    await setPose(pose);
+    await page.screenshot({ path: `${reviewDir}/Pelle_face_${pose}.png` });
+  }
+  await page.locator('[data-angle]').click(); // face -> profile
+  await setPose(45);
+  await page.screenshot({ path: `${reviewDir}/Pelle_profil_45.png` });
+  await page.locator('[data-angle]').click(); // profile -> 3/4
   // Compare the exact same animated poses with the source KayKit Ranger.
   await page.locator('#kaykit-lab button[data-variant]').click();
   for (const motion of ['Walking_A', 'Digging']) {
@@ -91,7 +105,7 @@ try {
   const sourceGlb = resolve('public', String(manifest.model).replace(/^\//, ''));
   if (!sourceGlb.startsWith(resolve('public/assets/kaykit-v045') + '/'))
     throw new Error('Chemin de modèle KayKit non valide dans le manifeste.');
-  const archive = resolve('reviews/komorebi-v046-review.zip');
+  const archive = resolve('reviews/komorebi-v047-review.zip');
   execFileSync('python3', ['-c', `import zipfile,sys
 from pathlib import Path
 folder=Path(sys.argv[1]); output=Path(sys.argv[2]); files=sorted([*folder.glob('*.png'),*folder.glob('*.json')])
@@ -101,13 +115,17 @@ source=Path(sys.argv[3]); modified=Path(sys.argv[4]);
 with zipfile.ZipFile(output,'a',zipfile.ZIP_DEFLATED,compresslevel=6) as archive:
  if source.is_file() and source.suffix.lower()=='.glb': archive.write(source,'source/Ranger.glb')
  if not modified.is_file(): raise RuntimeError('GLB jardinier non généré. Lance python3 scripts/build_gardener_v046.py')
- archive.write(modified,'source/gardener-v046.glb')
+ archive.write(modified,'source/gardener-v047.glb')
 with zipfile.ZipFile(output) as archive:
  assert archive.testzip() is None and len(archive.namelist())>=10
 for file in files:file.unlink()
-`, reviewDir, archive, sourceGlb, resolve('public/assets/kaykit-v045/gardener-v046.glb')], { stdio: 'inherit' });
+`, reviewDir, archive, sourceGlb, resolve('public/assets/kaykit-v045/gardener-v047.glb')], { stdio: 'inherit' });
+  await rmdir(reviewDir).catch(error => { if (error.code !== 'ENOTEMPTY') throw error; });
   console.log('Revue, diagnostic et fichier Ranger GLB (si disponible) :', archive);
-  console.log('Jardinier V0.46 + Ranger d’origine : poses comparatives et GLB embarqués.');
+  console.log('Jardinier V0.47 et pelle + Ranger d’origine : poses comparatives et GLB embarqués.');
+  // A completed visual review also builds, commits and pushes. No second command.
+  const { autoCommitAndPush } = await import('./auto_push.mjs');
+  await autoCommitAndPush({ label: 'review-gardener' });
 } catch (error) {
   loggedFailure = true;
   console.error('Revue KayKit :', error);
@@ -121,6 +139,6 @@ for file in files:file.unlink()
     } catch { /* server already exited */ }
   }
   if (loggedFailure) {
-    console.error('Aucune conclusion visuelle possible tant que la revue échoue.');
+    console.error('La revue ou la publication a échoué : regarde le message ci-dessus.');
   }
 }

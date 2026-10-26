@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdir, rm, rename, writeFile, readFile } from 'node:fs/promises';
+import { mkdir, rm, rename, readdir, writeFile, readFile } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 
 const mode = process.argv.includes('--quick') ? 'quick' : process.argv.includes('--full') ? 'full' : 'standard';
@@ -134,11 +134,24 @@ try {
   console.log(`✓ ${checks.length} contrôles fonctionnels`);
   if(errors.length)throw Error(`Erreurs JavaScript : ${errors.join(' ; ')}`);
   await writeFile(join(staging,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
-  // Previous review is only replaced if all captures completed.
-  await rm(output,{recursive:true,force:true});
-  await rename(staging,output);
+  // Publish only the garden captures, never delete archives of other workshops.
+  const oldManifest = await readFile(join(output,'manifest.json'),'utf8')
+    .then(JSON.parse).catch(() => null);
+  const safeName = name => typeof name === 'string' && /^[\w.-]+$/.test(name);
+  const assetsIn = m => new Set((Array.isArray(m?.images) ? m.images : [])
+    .flatMap(item => [item.file, ...(Array.isArray(item.parts) ? item.parts : [])])
+    .filter(name => safeName(name) && /\.(webp|b64)$/.test(name)));
+  const oldFiles = assetsIn(oldManifest), newFiles = assetsIn(manifest);
+  await mkdir(output,{recursive:true});
+  for (const name of await readdir(staging)) {
+    if (!safeName(name)) throw new Error(`Nom de fichier inattendu : ${name}`);
+    if (name !== 'manifest.json') await rename(join(staging,name),join(output,name));
+  }
+  await rename(join(staging,'manifest.json'),join(output,'manifest.json'));
+  for (const name of oldFiles) if (!newFiles.has(name)) await rm(join(output,name),{force:true});
+  await rm(staging,{recursive:true,force:true});
   success=true;
-  console.log(`✓ Revue ${mode} : ${manifest.images.length} captures WebP publiables dans reviews/`);
+  console.log(`✓ Revue ${mode} : ${manifest.images.length} captures, autres ateliers préservés`);
 } finally {
   await browser?.close();
   if(process.platform==='win32')server.kill();

@@ -7,4 +7,14 @@ review-staging/
 reviews/character-lab/
 __pycache__/
 # Archives KayKit gratuites importées localement par le créateur du jeu
-public/assets/kaykit-v045/
+# Curated CC0 models, animations and generated gardener are used by the game:
+# commit them so clones work; only original download archives stay local.
+public/assets/kaykit-v045/**/*.zip
+public/assets/kaykit-v045/**/*.blend1
+
+
+# Review ZIPs and screenshots are generated locally and exchanged separately.
+reviews/
+.env
+.env.*
+!.env.example

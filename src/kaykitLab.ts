@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { addDaylight, configureRenderer, studioBackground } from './rendering/Lighting';
+import { makeGardeningSpade } from './gardeningSpade';
 
 type KayKitManifest = {
   version: string;
@@ -50,16 +51,17 @@ export function openKaykitLab() {
   const root = document.createElement('section');
   root.id = 'kaykit-lab';
   root.innerHTML = `
-    <header class="kkl-top"><div><small>KOMOREBI / V0.46 · KAYKIT</small><h2>Atelier du jardinier</h2></div>
+    <header class="kkl-top"><div><small>KOMOREBI / V0.47 · KAYKIT</small><h2>Atelier du jardinier</h2></div>
     <button data-close type="button">✕ Fermer</button></header>
     <div class="kkl-stage"></div>
     <footer class="kkl-bottom">
       <div class="kkl-buttons" data-animations></div>
-      <div class="kkl-row"><button data-variant type="button">Comparer : Ranger original</button><button data-pause>Pause</button><label>Pose <input data-scrub type="range" min="0" max="100" value="0"></label>
+      <div class="kkl-row"><button data-character-compare type="button">Comparer avec notre ancien jardinier ↗</button><button data-variant type="button">Comparer : Ranger original</button><button data-pause>Pause</button><label>Pose <input data-scrub type="range" min="0" max="100" value="0"></label>
       <label>Vitesse <input data-speed type="range" min="0.2" max="1.5" step="0.1" value="0.8"></label>
+      <label>Angle pelle <input data-spade-pitch type="range" min="-90" max="90" step="5" value="0"></label>
       <button data-angle>Vue : 3/4</button></div>
       <small data-status>Chargement des assets…</small>
-      <small>Jardinier V0.46 : tenue ajustée au vrai GLB · Squelette original conservé · Compare avec le Ranger.</small>
+      <small>Jardinier V0.47 : bras simplifiés · Sourcils adoucis · Pelle liée à la main · Comparaison Ranger.</small>
       <small>Tourner : glisser · Zoom : molette · Comparer la silhouette et vérifier les mains/pieds</small>
     </footer>`;
   document.body.append(root);
@@ -104,7 +106,18 @@ export function openKaykitLab() {
   let mixer: THREE.AnimationMixer | undefined;
   let variants: { gardener: THREE.Group; original: THREE.Group } | undefined;
   let variant: 'gardener' | 'original' = 'gardener';
-  const variantButton = root.querySelector<HTMLButtonElement>('[data-variant]')!;
+  const variantButton = root.querySelector<HTMLButtonElement>('#kaykit-lab button[data-variant]')!;
+  root.querySelector<HTMLButtonElement>('[data-character-compare]')!.onclick = () => {
+    void import('./characterCompare').then(m => m.openCharacterCompare());
+  };
+  const toolsByVariant = new Map<'gardener' | 'original', THREE.Group>();
+  let spadePitch = 0;
+  const updateSpade = () => {
+    for (const spade of toolsByVariant.values()) {
+      spade.rotation.x = THREE.MathUtils.degToRad(spadePitch);
+      spade.visible = active === 'Dig' || active === 'Digging';
+    }
+  };
   let active: Motion = 'Idle_A';
   let current: THREE.AnimationAction | undefined;
   const motions = new Map<Motion, THREE.AnimationClip>();
@@ -116,6 +129,7 @@ export function openKaykitLab() {
   function pose(t: number) {
     phase = THREE.MathUtils.clamp(t, 0, 1);
     scrub.value = String(Math.round(phase * 100));
+    updateSpade();
     const clip = motions.get(active);
     if (!clip || !mixer) return;
     const action = mixer.clipAction(clip);
@@ -147,11 +161,15 @@ export function openKaykitLab() {
     current = undefined;
     pose(phase);
     variantButton.textContent = variant === 'gardener' ? 'Comparer : Ranger original' : 'Revenir au jardinier';
-    report(`Affichage : ${variant === 'gardener' ? 'jardinier V0.46' : 'Ranger KayKit original'} · animations sur Rig_Medium`);
+    report(`Affichage : ${variant === 'gardener' ? 'jardinier V0.47' : 'Ranger KayKit original'} · animations sur Rig_Medium`);
   };
   pause.onclick = () => { running = !running; pause.textContent = running ? 'Pause' : 'Lecture'; };
   scrub.oninput = () => { running = false; pause.textContent = 'Lecture'; pose(Number(scrub.value) / 100); };
   root.querySelector<HTMLInputElement>('[data-speed]')!.oninput = e => { speed = Number((e.target as HTMLInputElement).value); };
+  root.querySelector<HTMLInputElement>('[data-spade-pitch]')!.oninput = e => {
+    spadePitch = Number((e.target as HTMLInputElement).value);
+    updateSpade();
+  };
   const canvas = renderer.domElement;
   let dragging = false, lastX = 0, lastY = 0;
   canvas.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); });
@@ -168,7 +186,7 @@ export function openKaykitLab() {
       if (!response.ok) throw new Error('Assets non installés. Consulte docs/V045_KAYKIT.md.');
       const manifest = await response.json() as KayKitManifest;
       const original = await loadGLTF(manifest.model);
-      const dressed = await loadGLTF('/assets/kaykit-v045/gardener-v046.glb');
+      const dressed = await loadGLTF('/assets/kaykit-v045/gardener-v047.glb');
       if (!alive) return;
       variants = { original: original.scene, gardener: dressed.scene };
       model = variants.gardener;
@@ -187,6 +205,15 @@ export function openKaykitLab() {
         candidate.visible = candidate === model;
         scene.add(candidate);
       }
+      for (const [key, candidate] of Object.entries(variants) as Array<['gardener' | 'original', THREE.Group]>) {
+        let hand: THREE.Bone | undefined;
+        candidate.traverse(n => { if (n instanceof THREE.Bone && norm(n.name) === 'handslotr') hand = n; });
+        if (!hand) throw new Error(`Os handslot.r introuvable sur ${key} : impossible d'attacher la pelle.`);
+        const spade = makeGardeningSpade();
+        hand.add(spade);
+        toolsByVariant.set(key, spade);
+      }
+      updateSpade();
       const bones = new Map<string, THREE.Bone>();
       model.traverse(n => { if (n instanceof THREE.Bone) bones.set(norm(n.name), n); });
       if (bones.size < 10) throw new Error(`Rig incomplet : ${bones.size} os. Il faut le modèle Adventurers FREE 2.0.`);
@@ -229,13 +256,15 @@ export function openKaykitLab() {
       // should be dressed in Blender; do not include private local filenames.
       Object.assign(root, { kaykitDiagnostics: {
         model: manifest.model.split('/').pop(),
-        gardener: 'gardener-v046.glb',
+        gardener: 'gardener-v047.glb',
+        spadeBone: 'handslot.r',
+        spadeAngle: spadePitch,
         comparison: true,
         bones: [...bones.values()].map(b => b.name),
         meshes,
         animations: [...motions.keys()],
       }});
-      report(`Jardinier V0.46 : ${bones.size} os KayKit · ${motions.size} animations · tenue réelle (GLB)${diagnostics.length ? ' · ' + diagnostics.join('; ') : ''}`);
+      report(`Jardinier V0.47 : ${bones.size} os KayKit · ${motions.size} animations · tenue réelle (GLB)${diagnostics.length ? ' · ' + diagnostics.join('; ') : ''}`);
       root.dataset.ready = 'true';
     } catch (err) {
       report(`V0.46 : ${err instanceof Error ? err.message : String(err)}`, true);

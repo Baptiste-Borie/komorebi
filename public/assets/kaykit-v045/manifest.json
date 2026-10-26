@@ -1,0 +1,21 @@
+{
+  "version": "0.45",
+  "author": "Kay Lousberg / KayKit",
+  "license": "CC0 1.0",
+  "model": "/assets/kaykit-v045/character/KayKit_Adventurers_2.0_FREE/Characters/gltf/Ranger.glb",
+  "sets": [
+    "/assets/kaykit-v045/animations/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_Tools.glb",
+    "/assets/kaykit-v045/animations/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb",
+    "/assets/kaykit-v045/animations/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb"
+  ],
+  "clips": {
+    "Dig": "Dig",
+    "Working_A": "Working_A",
+    "Work_A": "Work_A",
+    "Holding_A": "Holding_A",
+    "Digging": "Digging",
+    "Walking_A": "Walking_A",
+    "Running_A": "Running_A",
+    "Idle_A": "Idle_A"
+  }
+}

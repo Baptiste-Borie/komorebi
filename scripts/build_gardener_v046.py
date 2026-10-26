@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Make the V0.46 gardener *from the original KayKit Ranger GLB*.
+"""Make the V0.47 gardener *from the original KayKit Ranger GLB*.
 
 Preserves the official Rig_Medium, bone weights and mesh topology. Removes
 only independent, identified mesh components (cape, quiver, beard, scarf,
@@ -7,7 +7,7 @@ RPG belt). Adds a chest-fitted bib and straps, skinned to the existing rig.
 No Blender, Python packages or generated rig required.
 
 Usage: python3 scripts/build_gardener_v046.py
-Optional: python3 scripts/build_gardener_v046.py path/to/Ranger.glb path/to/gardener.glb
+Optional: python3 scripts/build_gardener_v046.py path/to/Ranger.glb path/to/gardener-v047.glb
 """
 from pathlib import Path
 from collections import defaultdict
@@ -66,6 +66,8 @@ def build(source,output):
     denim_dark=add_material('KOMOREBI • poche surpiquée',(.195,.338,.335))
     seams=add_material('KOMOREBI • coutures en toile',(.52,.61,.52))
     metal=add_material('KOMOREBI • boutons cuivrés',(.69,.50,.28),.76)
+    shirt=add_material('KOMOREBI • manches sauge clair',(.62,.68,.54))
+    skin=add_material('KOMOREBI • mains et avant-bras',(.74,.51,.34))
     # Connected-component analysis uses actual triangle indices, not heuristics
     # about world-space bone transforms. We preserve all source skin attributes.
     def components(mesh):
@@ -89,6 +91,17 @@ def build(source,output):
         if name in ('Ranger_Cape','Ranger_Quiver'):continue
         xyz,tris,rank,groups=components(m)
         if name=='Ranger_Head':
+            # Flatten both dark brow shells to reduce the harsh RPG expression.
+            # Preserve every vertex, skin weight and face texture.
+            if len(groups)<16 or [len(groups[i]) for i in (7,8)] != [58,55]:
+                raise RuntimeError('Sourcils du Ranger inattendus, modification annulée')
+            positions=list(xyz)
+            for index in (7,8):
+                avg_y=sum(xyz[v][1] for v in groups[index])/len(groups[index])
+                for v in groups[index]:
+                    x,y,z=xyz[v]
+                    positions[v]=(x,avg_y+(y-avg_y)*.68-.008,z)
+            m['primitives'][0]['attributes']['POSITION']=add_accessor(positions,'f','VEC3',5126,34962)
             # Isolated brown moustache halves and tiny chin goatee.
             if len(groups)<16 or len(groups[2])!=63 or len(groups[14])!=35:
                 raise RuntimeError('Visage KayKit inattendu : ne pas supprimer des composants au hasard')
@@ -104,13 +117,34 @@ def build(source,output):
             allowed=fabric_upper
             skip=set(range(len(groups)))-allowed
         else:skip=set()
+        if name.startswith('Ranger_Arm'):
+            # Components 0-2: original body/arm/hand. The others are leather
+            # cuffs, thick shoulder armor, colored bands and trim. Retain
+            # those topology pieces (to avoid holes) but slim and recolor them.
+            if len(groups)!=19 or [len(groups[i]) for i in (0,1,2,7,14)]!=[89,64,64,32,26]:
+                raise RuntimeError('Armature KayKit incompatible : bras non modifié')
+            adjusted=list(xyz)
+            for i in range(len(groups)):
+                if i in (0,1,2): continue
+                for v in groups[i]:
+                    x,y,z=xyz[v]
+                    adjusted[v]=(x,1.105+(y-1.105)*.77,z*.77)
+            m['primitives'][0]['attributes']['POSITION']=add_accessor(adjusted,'f','VEC3',5126,34962)
         kept=[t for t in tris if rank[t[0]] not in skip]
         removed[name]=len(tris)-len(kept)
         attributes=m['primitives'][0]['attributes'];mat=m['primitives'][0]['material']
         def primitive(ts,material):
             ai=add_accessor([i for tri in ts for i in tri],'H','SCALAR',5123,34963)
             return {'attributes':attributes,'indices':ai,'material':material,'mode':4}
-        if name=='Ranger_Body':
+        if name.startswith('Ranger_Arm'):
+            # Make ordinary shirt cuffs and exposed forearms instead of RPG
+            # bracers. Pieces are individually classified in the audited GLB.
+            sleeve={0,1,4,5,6,10,11,12,13}
+            natural={2,3,7,8,9,14,15,16,17,18}
+            a=[t for t in kept if rank[t[0]] in sleeve]
+            b=[t for t in kept if rank[t[0]] in natural]
+            m['primitives']=[primitive(a,shirt),primitive(b,skin)]
+        elif name=='Ranger_Body':
             # Keep native shirt, native lower fabric and a few true waistband
             # meshes. All oversized leather RPG satchels are physically gone.
             m['primitives']=[primitive(kept,mat)]
@@ -216,12 +250,12 @@ def build(source,output):
     output.parent.mkdir(parents=True,exist_ok=True)
     output.write_bytes(b'glTF'+struct.pack('<II',2,total)+struct.pack('<I4s',len(js),b'JSON')+js+
                        struct.pack('<I4s',len(blob),b'BIN\x00')+blob)
-    print('Komorebi V0.46 :',output,'| taille',output.stat().st_size,'| maillages RPG supprimés',removed)
+    print('Komorebi V0.47 :',output,'| taille',output.stat().st_size,'| maillages RPG supprimés',removed)
 
 if __name__=='__main__':
     src=Path(sys.argv[1]) if len(sys.argv)>1 else None
     if src is None:
         manifest=json.loads((DEFAULT/'manifest.json').read_text())
         src=ROOT/'public'/manifest['model'].lstrip('/')
-    dst=Path(sys.argv[2]) if len(sys.argv)>2 else DEFAULT/'gardener-v046.glb'
+    dst=Path(sys.argv[2]) if len(sys.argv)>2 else DEFAULT/'gardener-v047.glb'
     build(src,dst)
