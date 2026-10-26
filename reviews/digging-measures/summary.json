@@ -1,0 +1,34 @@
+{
+  "status": "baseline_rejected",
+  "models": [
+    {
+      "model": "ranger",
+      "pass_all": false,
+      "checks": {
+        "scale": true,
+        "edge_strain": false,
+        "grip_left": false,
+        "grip_right": true,
+        "feet_slide": false,
+        "feet_ground": true,
+        "blade_contact": false,
+        "collisions": false
+      }
+    },
+    {
+      "model": "v051",
+      "pass_all": false,
+      "checks": {
+        "scale": true,
+        "edge_strain": false,
+        "grip_left": false,
+        "grip_right": true,
+        "feet_slide": false,
+        "feet_ground": true,
+        "blade_contact": false,
+        "collisions": false
+      }
+    }
+  ],
+  "solution_iterations": 0
+}

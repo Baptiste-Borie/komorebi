@@ -1,0 +1,2933 @@
+{
+  "model": "ranger",
+  "source": "public/assets/kaykit-v045/character/KayKit_Adventurers_2.0_FREE/Characters/gltf/Ranger.glb",
+  "sha256": "3a0b0166b9d61d58dcaaa739c3cc0538be46e00d2928dd5cb513d9a41770d2e9",
+  "clip_sha256": "e3b62dc122c5073373376a846e354137add2088ddcce8731c389fc5c20734aad",
+  "height": 2.2749511944130063,
+  "duration_s": 1.3999999364217122,
+  "samples": 143,
+  "fixed_marker_least_squares": {
+    "left_local": [
+      0.06314385571391637,
+      0.2254066640845449,
+      0.06094125504365444
+    ],
+    "tool_local": [
+      0.023033178063709456,
+      -0.07457678395253758,
+      -0.1578429878935526
+    ],
+    "max_residual_H": 0.03175024170585079,
+    "rms_residual_H": 0.018938647131369533,
+    "note": "Unconstrained least-squares diagnostic; not a minimax optimum or a corrected animation."
+  },
+  "limits": {
+    "scale": 1e-05,
+    "edge_strain": 0.01,
+    "grip": 0.005,
+    "foot_slide": 0.005,
+    "ground_penetration": 0.001,
+    "blade_contact": 0.005,
+    "collision_depth": 0.005,
+    "collision_area": 0.001
+  },
+  "calibration": {
+    "left": [
+      0.04568133503198624,
+      0.11285310983657837,
+      -0.08862810581922531
+    ],
+    "axis": [
+      0.30334770679473877,
+      0.7494030594825745,
+      -0.5885365009307861
+    ],
+    "length": 1.2512231569271535,
+    "width": 0.17062133958097547
+  },
+  "joint_exclusion_radius_H": 0.04,
+  "joint_mask": "Cylindrical joint cross sections: axial half-width .04H; radial extent .20H torso, .10H shoulders, .07H other joints.",
+  "edge_masks": {
+    "Ranger_ArmLeft": {
+      "total": 1483,
+      "tested": 296
+    },
+    "Ranger_ArmRight": {
+      "total": 1483,
+      "tested": 296
+    },
+    "Ranger_Body": {
+      "total": 6570,
+      "tested": 1816
+    },
+    "Ranger_Cape": {
+      "total": 139,
+      "tested": 82
+    },
+    "Ranger_Head": {
+      "total": 2763,
+      "tested": 2720
+    },
+    "Ranger_LegLeft": {
+      "total": 1682,
+      "tested": 194
+    },
+    "Ranger_LegRight": {
+      "total": 1682,
+      "tested": 194
+    },
+    "Ranger_Quiver": {
+      "total": 575,
+      "tested": 396
+    }
+  },
+  "checks": {
+    "scale": true,
+    "edge_strain": false,
+    "grip_left": false,
+    "grip_right": true,
+    "feet_slide": false,
+    "feet_ground": true,
+    "blade_contact": false,
+    "collisions": false
+  },
+  "pass_all": false,
+  "maxima": {
+    "scale": 4.887580871582031e-06,
+    "edge_strain": 0.5118773884173259,
+    "grip_right_H": 0.0,
+    "grip_left_H": 0.0514393145078987,
+    "foot_left_slide_H": 0.009015727766581896,
+    "foot_right_slide_H": 0.006204995720636857,
+    "foot_left_min_z_H": -4.7262052564896005e-06,
+    "foot_right_min_z_H": -2.8661913603264884e-05,
+    "blade_min_z_H": 0.5174469606402293,
+    "major_collision_pairs": 4
+  },
+  "ground_penetration_H": 0.0001295997962296179,
+  "tentative_strike": {
+    "time_s": 0.30000001,
+    "percent": 21.428573115994276,
+    "scale": 4.649162292480469e-06,
+    "edge_strain": 0.5025006906640883,
+    "grip_right_H": 0.0,
+    "grip_left_H": 0.04385044302207833,
+    "foot_left_slide_H": 0.008891169314182509,
+    "foot_right_slide_H": 0.004939721690431988,
+    "foot_left_min_z_H": -7.87612859092913e-05,
+    "foot_right_min_z_H": -5.3102491490962736e-05,
+    "blade_min_z_H": -0.008834973384245989,
+    "major_collision_pairs": 1
+  },
+  "diagnostics": [
+    {
+      "time_s": 0.0,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029904923905536736,
+          "area_H2": 0.010681760566540924,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006730544088744345,
+          "area_H2": 0.006605400837766177,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023374570977819763,
+          "area_H2": 0.09835049670271444,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.01399999936421712,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02968716250666071,
+          "area_H2": 0.010048032505604992,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006343414668897825,
+          "area_H2": 0.006605152666638333,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023378302898140094,
+          "area_H2": 0.09834806625210465,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.02799999872843424,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02947008559338973,
+          "area_H2": 0.010050514425471207,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005954406598069515,
+          "area_H2": 0.006693924165533866,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023382105232051375,
+          "area_H2": 0.09834564692652449,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.03333334,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029387410212462592,
+          "area_H2": 0.010051450348011652,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005805626774206287,
+          "area_H2": 0.006693822669730606,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023383433265127193,
+          "area_H2": 0.09834470075409163,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.04199999809265136,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02901608823440293,
+          "area_H2": 0.01005562010337652,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005150039398144007,
+          "area_H2": 0.00669338567341495,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.0233897066248232,
+          "area_H2": 0.09834062470140048,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.05599999745686848,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02841975717017554,
+          "area_H2": 0.010062345862254603,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023399679154332116,
+          "area_H2": 0.09833403347701897,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.04268323196065361,
+          "area_H2": 0.021094728817608044,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 75
+        }
+      ]
+    },
+    {
+      "time_s": 0.06666667,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.027968435527644827,
+          "area_H2": 0.007280012504964685,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 10
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02340720849598762,
+          "area_H2": 0.09832896113008621,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.043871010988452294,
+          "area_H2": 0.023498731804080096,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 89
+        }
+      ]
+    },
+    {
+      "time_s": 0.0699999968210856,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02775626464038513,
+          "area_H2": 0.00728149952203639,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 10
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02341067022462175,
+          "area_H2": 0.0983266345099957,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.04436027736887803,
+          "area_H2": 0.023893101765814127,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 88
+        }
+      ]
+    },
+    {
+      "time_s": 0.08399999618530272,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02687179133683946,
+          "area_H2": 0.007287707238234238,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 10
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023424934708127856,
+          "area_H2": 0.09831676753872069,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.04126953010753021,
+          "area_H2": 0.02486665727563972,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 90
+        }
+      ]
+    },
+    {
+      "time_s": 0.09799999554951985,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.025998045461998708,
+          "area_H2": 0.0072938933468573615,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 10
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023439023976419275,
+          "area_H2": 0.09830687586082895,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.1,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.025874063503590047,
+          "area_H2": 0.007294777065903395,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 10
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023441043045201622,
+          "area_H2": 0.09830546608854214,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.11199999491373697,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.024760469287670263,
+          "area_H2": 0.007301220633697682,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 10
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02345546800619408,
+          "area_H2": 0.09829508303590254,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.12599999427795408,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.023286712829093652,
+          "area_H2": 0.007308702569412996,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 10
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023471952974103157,
+          "area_H2": 0.09828289969516024,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.13333335,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02252211620785174,
+          "area_H2": 0.007312613282167344,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 10
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023480471381082696,
+          "area_H2": 0.09827649761803622,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.1399999936421712,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.021785626072076347,
+          "area_H2": 0.007316510903136656,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 10
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023488722871426775,
+          "area_H2": 0.09826713310981765,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.15399999300638834,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.020254855892660326,
+          "area_H2": 0.007594250045146663,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 11
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023505964376057217,
+          "area_H2": 0.09825336294764722,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.16666667,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmLeft",
+          "b": "Ranger_Body",
+          "depth_H": 0.04137658169112891,
+          "area_H2": 0.08707818433013861,
+          "rest_depth_H": 0.036223967284339124,
+          "rest_area_H2": 0.02564707856400821,
+          "triangle_pairs": 255
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.01984589539395001,
+          "area_H2": 0.007601632714800912,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 11
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02352107546018009,
+          "area_H2": 0.09824083146895257,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.16799999237060545,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023522729360804722,
+          "area_H2": 0.09823949243997548,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 0.18199999173482256,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023539080051633385,
+          "area_H2": 0.0977369985890919,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 0.1959999910990397,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.020905721464315553,
+          "area_H2": 0.007618733809786446,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 11
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023555031186271544,
+          "area_H2": 0.0977229419246004,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 0.20000001,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.021315202696093823,
+          "area_H2": 0.007621062998287907,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 11
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023559544206193803,
+          "area_H2": 0.09771888249175383,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 0.20999999046325682,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023569718151323346,
+          "area_H2": 0.09770960521148547,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 0.22399998982747393,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02358360436646877,
+          "area_H2": 0.09624647854184788,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 0.23333333,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023592792521325016,
+          "area_H2": 0.09623769188641346,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 0.23799998919169105,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023596514616493123,
+          "area_H2": 0.09623408406688203,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 0.25199998855590816,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023607525337087206,
+          "area_H2": 0.09622319397659199,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 0.2659999879201253,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023618228202911557,
+          "area_H2": 0.09621223552551345,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 0.26666669,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02361874566092877,
+          "area_H2": 0.09621170484582531,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 0.2799999872843424,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023625516828337533,
+          "area_H2": 0.09620461964741428,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 0.29399998664855953,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023632641701226417,
+          "area_H2": 0.09293028015477597,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 145
+        }
+      ]
+    },
+    {
+      "time_s": 0.30000001,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023635620359876125,
+          "area_H2": 0.09292708052234178,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 145
+        }
+      ]
+    },
+    {
+      "time_s": 0.30799998601277667,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023637074482405505,
+          "area_H2": 0.09292548442176893,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 145
+        }
+      ]
+    },
+    {
+      "time_s": 0.32199998537699376,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmLeft",
+          "b": "Ranger_Body",
+          "depth_H": 0.042514622523311195,
+          "area_H2": 0.07119455228595221,
+          "rest_depth_H": 0.036223967284339124,
+          "rest_area_H2": 0.02564707856400821,
+          "triangle_pairs": 271
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02363955042076634,
+          "area_H2": 0.09292270919005102,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 145
+        }
+      ]
+    },
+    {
+      "time_s": 0.33333333,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023641630077987412,
+          "area_H2": 0.09292047495069182,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 145
+        }
+      ]
+    },
+    {
+      "time_s": 0.3359999847412109,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023477589336429874,
+          "area_H2": 0.09292048113855562,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 145
+        }
+      ]
+    },
+    {
+      "time_s": 0.34999998410542804,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02262069523518128,
+          "area_H2": 0.09381760132408064,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 144
+        }
+      ]
+    },
+    {
+      "time_s": 0.3639999834696451,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.021771479490396945,
+          "area_H2": 0.09548743295530294,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 0.36666667,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02161067122392161,
+          "area_H2": 0.09548744055277128,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 0.37799998283386227,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.3919999821980794,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.40000002,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.4059999815622965,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.41999998092651364,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.43333332,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.4339999802907307,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.44799997965494787,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.461999979019165,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.46666666,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.4759999783833821,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.48999997774759924,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.5,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.5039999771118163,
+      "worst_edge": [
+        "Ranger_LegLeft",
+        26,
+        450
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.5179999764760335,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.5319999758402506,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.53333338,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.5459999752044677,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.5599999745686848,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.56666668,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.5739999739329019,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.5879999732971191,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.60000002,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.6019999726613362,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.6159999720255533,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.6299999713897705,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.63333333,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.6439999707539875,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.6579999701182047,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.66666667,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.6719999694824218,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.6859999688466389,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.6999999682108561,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.69999997,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.7139999675750731,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.7279999669392903,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.73333335,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.7419999663035074,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.7559999656677245,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.76666665,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.7699999650319417,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.7839999643961588,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.7979999637603759,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.80000003,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.811999963124593,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.8259999624888101,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.83333333,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.8399999618530273,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.8539999612172444,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.86666663,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.8679999605814614,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.8819999599456786,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.8959999593098957,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.89999994,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.9099999586741129,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.92399995803833,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.93333332,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.937999957402547,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.9519999567667642,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.9659999561309813,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.96666662,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.9799999554951985,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 0.9939999548594156,
+      "worst_edge": [
+        "Ranger_LegRight",
+        27,
+        451
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 1.0,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 1.0079999542236326,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 1.02199995358785,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 1.0333333,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 1.035999952952067,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 1.049999952316284,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": []
+    },
+    {
+      "time_s": 1.0639999516805012,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.022996038975551927,
+          "area_H2": 0.007961648323730664,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        }
+      ]
+    },
+    {
+      "time_s": 1.06666676,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.022895864998511112,
+          "area_H2": 0.007960669307950113,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        }
+      ]
+    },
+    {
+      "time_s": 1.0779999510447182,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.022462955691251053,
+          "area_H2": 0.007956775727356081,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.03892053598849994,
+          "area_H2": 0.02620109701372245,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 97
+        }
+      ]
+    },
+    {
+      "time_s": 1.0919999504089355,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.023781984015054557,
+          "area_H2": 0.007951858976499672,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.03957272631818024,
+          "area_H2": 0.024951704628450345,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 94
+        }
+      ]
+    },
+    {
+      "time_s": 1.10000006,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02468192210820322,
+          "area_H2": 0.007948996721222738,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.03995774128339156,
+          "area_H2": 0.025140112051781106,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 94
+        }
+      ]
+    },
+    {
+      "time_s": 1.1059999497731525,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.025081370222033845,
+          "area_H2": 0.007947061907385639,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.040191697808186,
+          "area_H2": 0.0250165593964946,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 92
+        }
+      ]
+    },
+    {
+      "time_s": 1.1199999491373696,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.026023189664069222,
+          "area_H2": 0.007942443874220339,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.040750084134518375,
+          "area_H2": 0.024796940083432847,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 94
+        }
+      ]
+    },
+    {
+      "time_s": 1.13333337,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.026932322462175615,
+          "area_H2": 0.007937902907972158,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.04129787567170088,
+          "area_H2": 0.02385177097280785,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 87
+        }
+      ]
+    },
+    {
+      "time_s": 1.1339999485015868,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.026958445904417944,
+          "area_H2": 0.007937709508489911,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.04131946480619113,
+          "area_H2": 0.02385138750147699,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 87
+        }
+      ]
+    },
+    {
+      "time_s": 1.1479999478658038,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.027508664254200153,
+          "area_H2": 0.007933553153909662,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 12
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.04170971657753865,
+          "area_H2": 0.022048327569947575,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 73
+        }
+      ]
+    },
+    {
+      "time_s": 1.161999947230021,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02806226245634795,
+          "area_H2": 0.010716771257775065,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.0051767511213758385,
+          "area_H2": 0.005746078874521755,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.042106950757067794,
+          "area_H2": 0.022044266231743024,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 73
+        }
+      ]
+    },
+    {
+      "time_s": 1.16666667,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02824767617904677,
+          "area_H2": 0.010714789716413447,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005340011582094134,
+          "area_H2": 0.005747798947243328,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.04224166669428285,
+          "area_H2": 0.0220261616339337,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 73
+        }
+      ]
+    },
+    {
+      "time_s": 1.1759999465942381,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.028454358081263134,
+          "area_H2": 0.010711637058230935,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005548873439960539,
+          "area_H2": 0.0057507565462533595,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.04215424903988152,
+          "area_H2": 0.02225633241886253,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 73
+        }
+      ]
+    },
+    {
+      "time_s": 1.1899999459584554,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.028764724814915574,
+          "area_H2": 0.010706831337165355,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005875478284572389,
+          "area_H2": 0.005755220347316881,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_LegLeft",
+          "depth_H": 0.04151986843613537,
+          "area_H2": 0.021743999232035578,
+          "rest_depth_H": 0.03364073171109986,
+          "rest_area_H2": 0.019880047077830157,
+          "triangle_pairs": 71
+        }
+      ]
+    },
+    {
+      "time_s": 1.20000005,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.0289866815537919,
+          "area_H2": 0.010703338436729364,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005897757226625134,
+          "area_H2": 0.005758425384526681,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        }
+      ]
+    },
+    {
+      "time_s": 1.2039999453226724,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029035784389564386,
+          "area_H2": 0.01070229515357631,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005899525344644387,
+          "area_H2": 0.005759418833342579,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        }
+      ]
+    },
+    {
+      "time_s": 1.2179999446868894,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        494,
+        522
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02920760665168455,
+          "area_H2": 0.010698610770457865,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005911658588880238,
+          "area_H2": 0.005762923095682845,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        }
+      ]
+    },
+    {
+      "time_s": 1.2319999440511067,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02937922258560798,
+          "area_H2": 0.010694870866727407,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.005932384338118662,
+          "area_H2": 0.005766443150961096,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        }
+      ]
+    },
+    {
+      "time_s": 1.23333335,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02939548321254124,
+          "area_H2": 0.010694515638549933,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.0059347587499065,
+          "area_H2": 0.005766778717925149,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        }
+      ]
+    },
+    {
+      "time_s": 1.2459999434153237,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmLeft",
+          "b": "Ranger_Body",
+          "depth_H": 0.044044889982438336,
+          "area_H2": 0.08635524134286296,
+          "rest_depth_H": 0.036223967284339124,
+          "rest_area_H2": 0.02564707856400821,
+          "triangle_pairs": 278
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029483048244225953,
+          "area_H2": 0.010692174828273716,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006008029003865745,
+          "area_H2": 0.005769002080110102,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.021453156020967194,
+          "area_H2": 0.0957117544835655,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 147
+        }
+      ]
+    },
+    {
+      "time_s": 1.259999942779541,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029579675341313352,
+          "area_H2": 0.010689563773111716,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006172720661758227,
+          "area_H2": 0.005771471506561027,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 24
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02192761098441293,
+          "area_H2": 0.09449462499618828,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 146
+        }
+      ]
+    },
+    {
+      "time_s": 1.26666665,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029625634128373667,
+          "area_H2": 0.01068830650382288,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006252209827694893,
+          "area_H2": 0.006599497261893738,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02215432145944105,
+          "area_H2": 0.09449518189496595,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 146
+        }
+      ]
+    },
+    {
+      "time_s": 1.273999942143758,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029654726404113478,
+          "area_H2": 0.010687466465586371,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006307248283555629,
+          "area_H2": 0.006600292843516045,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02230686513536934,
+          "area_H2": 0.09449555494566708,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 146
+        }
+      ]
+    },
+    {
+      "time_s": 1.287999941507975,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02971035641601446,
+          "area_H2": 0.010685845881934832,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006413229744324424,
+          "area_H2": 0.006601809923283875,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.022598726194804984,
+          "area_H2": 0.09449625241425506,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 146
+        }
+      ]
+    },
+    {
+      "time_s": 1.29999995,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02975785447692344,
+          "area_H2": 0.010684449597437692,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006505044973109367,
+          "area_H2": 0.006603113426762881,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02284960654430792,
+          "area_H2": 0.09449684325658406,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 146
+        }
+      ]
+    },
+    {
+      "time_s": 1.3019999408721923,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02976291770537033,
+          "area_H2": 0.010684331041451616,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006513686603873068,
+          "area_H2": 0.006603216119699016,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.022871449495230654,
+          "area_H2": 0.09449689235605718,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 146
+        }
+      ]
+    },
+    {
+      "time_s": 1.3159999402364093,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029798170351555554,
+          "area_H2": 0.010683514263004004,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006574261533012893,
+          "area_H2": 0.0066039464915928275,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02302417493647512,
+          "area_H2": 0.0944972541369773,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 146
+        }
+      ]
+    },
+    {
+      "time_s": 1.3299999396006266,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02983345574824819,
+          "area_H2": 0.010682693059850056,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006635307250696858,
+          "area_H2": 0.006604685634651386,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023177129631271515,
+          "area_H2": 0.09776444030617516,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 1.33333333,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029841872628654734,
+          "area_H2": 0.01068249552593962,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006649842744651853,
+          "area_H2": 0.006604855602687944,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023213610421484926,
+          "area_H2": 0.09776449990232725,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 1.3439999389648436,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.0298570459387417,
+          "area_H2": 0.010682285455723415,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006670700724063979,
+          "area_H2": 0.006605020699974657,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.02325802174706972,
+          "area_H2": 0.0977646185121863,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 1.3579999383290606,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.02987700409796251,
+          "area_H2": 0.01068200103374047,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006698310629961762,
+          "area_H2": 0.006605246234114832,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023316409351695332,
+          "area_H2": 0.09776474239179177,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 1.36666663,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029889403440071134,
+          "area_H2": 0.010681830394504937,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006715300774447769,
+          "area_H2": 0.006605383069453348,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023352495498294355,
+          "area_H2": 0.09776481158996501,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 1.3719999376932779,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029891790952061938,
+          "area_H2": 0.010681817207397673,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006717766478275036,
+          "area_H2": 0.0066053891699489505,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023356050565874628,
+          "area_H2": 0.09776481537283145,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 148
+        }
+      ]
+    },
+    {
+      "time_s": 1.385999937057495,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029898436030017142,
+          "area_H2": 0.010681787036057171,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006724163471136545,
+          "area_H2": 0.006605392606179777,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023365333697202388,
+          "area_H2": 0.09835047186632886,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 1.3999999364217122,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029904923905536736,
+          "area_H2": 0.010681760566540924,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006730544088744345,
+          "area_H2": 0.006605400837766177,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023374570977819763,
+          "area_H2": 0.09835049670271444,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    },
+    {
+      "time_s": 1.39999994,
+      "worst_edge": [
+        "Ranger_ArmRight",
+        468,
+        538
+      ],
+      "collisions": [
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Cape",
+          "depth_H": 0.029904923905536736,
+          "area_H2": 0.010681760566540924,
+          "rest_depth_H": 0.01474726364853806,
+          "rest_area_H2": 0.0037768432136634426,
+          "triangle_pairs": 14
+        },
+        {
+          "a": "Ranger_ArmRight",
+          "b": "Ranger_Head",
+          "depth_H": 0.006730544088744345,
+          "area_H2": 0.006605400837766177,
+          "rest_depth_H": 0.0,
+          "rest_area_H2": 0.0,
+          "triangle_pairs": 26
+        },
+        {
+          "a": "Ranger_Body",
+          "b": "Ranger_Head",
+          "depth_H": 0.023374570977819763,
+          "area_H2": 0.09835049670271444,
+          "rest_depth_H": 0.016300759405051744,
+          "rest_area_H2": 0.09090920589195807,
+          "triangle_pairs": 150
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Strike is deepest blade pose, not independently annotated: blade_contact is provisional and cannot certify final acceptance.",
+    "Foot slide is measured for the full cycle; lift/stance intervals require visual annotation.",
+    "Collision depth is an intersection/nearest-surface proxy, not exact solid penetration.",
+    "Diagnostic tool calibrated once to Ranger first-frame handslots; not the legacy Three.js spade.",
+    "Grip right is exact by construction; grip left tests a fixed material handle point.",
+    "Ranger textured albedo may not be reproduced by Workbench diagnostic renders."
+  ]
+}
