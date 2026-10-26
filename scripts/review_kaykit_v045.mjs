@@ -1,4 +1,4 @@
-// V0.47 — inspect KayKit gardener + hand-attached shovel, auto-start Vite.
+// V0.51 — inspect KayKit gardener + hand-attached shovel, auto-start Vite.
 // Does not modify or restart a server already running at the chosen URL.
 import { chromium } from 'playwright';
 import { mkdir, readFile, writeFile, rmdir } from 'node:fs/promises';
@@ -6,7 +6,7 @@ import { spawn, execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 
 const url = process.env.KOMOREBI_URL ?? 'http://127.0.0.1:5173/?kaykit=1';
-const reviewDir = resolve('reviews/character-lab/v047');
+const reviewDir = resolve('reviews/character-lab/v051');
 await mkdir(reviewDir, { recursive: true });
 
 const ping = async () => {
@@ -93,7 +93,17 @@ try {
   await page.locator('[data-angle]').click();
   await page.screenshot({ path: `${reviewDir}/Jardinier_profil.png` });
 
+  // Never accept the old Ranger in place of the requested hybrid.
   const diagnostics = await page.locator('#kaykit-lab').evaluate(element => element.kaykitDiagnostics ?? null);
+  if (diagnostics?.gardener !== 'gardener-v051.glb' ||
+      diagnostics.meshes.filter(mesh => String(mesh.name).startsWith('Hybrid_v051_')).length < 20) {
+    throw new Error('Le vrai GLB hybride V0.51 n’est pas affiché : revue et push annulés.');
+  }
+  // Front/side plus side-by-side old V0.44 vs hybrid V0.51 under same lighting.
+  await page.locator('[data-character-compare]').click();
+  await page.waitForSelector('#character-compare[data-ready="true"]', { timeout: 30000 });
+  await page.screenshot({ path: `${reviewDir}/Comparatif_V044_hybride_V051.png` });
+  await page.locator('#character-compare [data-close]').click();
   if (!diagnostics) throw new Error('Rapport des maillages introuvable. Recharge le patch V0.45b.');
   const reportPath = `${reviewDir}/KayKit-diagnostic.json`;
   await writeFile(reportPath, JSON.stringify(diagnostics, null, 2) + '\n');
@@ -105,24 +115,27 @@ try {
   const sourceGlb = resolve('public', String(manifest.model).replace(/^\//, ''));
   if (!sourceGlb.startsWith(resolve('public/assets/kaykit-v045') + '/'))
     throw new Error('Chemin de modèle KayKit non valide dans le manifeste.');
-  const archive = resolve('reviews/komorebi-v047-review.zip');
+  const archive = resolve('reviews/komorebi-v051-review.zip');
   execFileSync('python3', ['-c', `import zipfile,sys
 from pathlib import Path
 folder=Path(sys.argv[1]); output=Path(sys.argv[2]); files=sorted([*folder.glob('*.png'),*folder.glob('*.json')])
 with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as archive:
  for file in files:archive.write(file,file.name)
-source=Path(sys.argv[3]); modified=Path(sys.argv[4]);
+source=Path(sys.argv[3]); modified=Path(sys.argv[4]); old=Path(sys.argv[5]); previous=Path(sys.argv[6]);
 with zipfile.ZipFile(output,'a',zipfile.ZIP_DEFLATED,compresslevel=6) as archive:
  if source.is_file() and source.suffix.lower()=='.glb': archive.write(source,'source/Ranger.glb')
  if not modified.is_file(): raise RuntimeError('GLB jardinier non généré. Lance python3 scripts/build_gardener_v046.py')
- archive.write(modified,'source/gardener-v047.glb')
+ archive.write(modified,'source/gardener-v051.glb')
+ if not old.is_file() or not previous.is_file(): raise RuntimeError('Sources du modèle hybride manquantes')
+ archive.write(old,'source/gardener-v044.glb')
+ archive.write(previous,'source/gardener-v047.glb')
 with zipfile.ZipFile(output) as archive:
  assert archive.testzip() is None and len(archive.namelist())>=10
 for file in files:file.unlink()
-`, reviewDir, archive, sourceGlb, resolve('public/assets/kaykit-v045/gardener-v047.glb')], { stdio: 'inherit' });
+`, reviewDir, archive, sourceGlb, resolve('public/assets/kaykit-v045/gardener-v051.glb'), resolve('public/assets/gardener-v044.glb'), resolve('public/assets/kaykit-v045/gardener-v047.glb')], { stdio: 'inherit' });
   await rmdir(reviewDir).catch(error => { if (error.code !== 'ENOTEMPTY') throw error; });
   console.log('Revue, diagnostic et fichier Ranger GLB (si disponible) :', archive);
-  console.log('Jardinier V0.47 et pelle + Ranger d’origine : poses comparatives et GLB embarqués.');
+  console.log('Hybride V0.51 et pelle + V0.44/V0.47 : poses comparatives et GLB embarqués.');
   // A completed visual review also builds, commits and pushes. No second command.
   const { autoCommitAndPush } = await import('./auto_push.mjs');
   await autoCommitAndPush({ label: 'review-gardener' });

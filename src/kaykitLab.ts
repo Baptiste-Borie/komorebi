@@ -51,18 +51,18 @@ export function openKaykitLab() {
   const root = document.createElement('section');
   root.id = 'kaykit-lab';
   root.innerHTML = `
-    <header class="kkl-top"><div><small>KOMOREBI / PERSONNAGES / ANIMATIONS</small><h2>Tester les mouvements · V0.47</h2></div>
+    <header class="kkl-top"><div><small>KOMOREBI / PERSONNAGES / ANIMATIONS</small><h2>Tester les mouvements · V0.51</h2></div>
     <button data-close type="button">← Retour aux ateliers</button></header>
     <div class="kkl-stage"></div>
     <footer class="kkl-bottom">
       <strong class="kkl-section-title">01 / ANIMATION</strong><div class="kkl-buttons" data-animations></div>
       <strong class="kkl-section-title">02 / MODÈLE ET RÉFÉRENCES</strong>
-      <div class="kkl-row"><button data-character-compare type="button">Comparer avec notre ancien jardinier ↗</button><button data-variant type="button">Comparer : Ranger original</button></div><strong class="kkl-section-title">03 / LECTURE</strong><div class="kkl-row"><button data-pause>Pause</button><label>Pose <input data-scrub type="range" min="0" max="100" value="0"></label>
+      <div class="kkl-row"><button data-character-compare type="button">Comparer avec notre ancien jardinier ↗</button><button data-variant type="button">Comparer : ancienne V0.47</button></div><strong class="kkl-section-title">03 / LECTURE</strong><div class="kkl-row"><button data-pause>Pause</button><label>Pose <input data-scrub type="range" min="0" max="100" value="0"></label>
       <label>Vitesse <input data-speed type="range" min="0.2" max="1.5" step="0.1" value="0.8"></label>
       <label>Angle pelle <input data-spade-pitch type="range" min="-90" max="90" step="5" value="0"></label>
       <button data-angle>Vue : 3/4</button></div>
       <small data-status>Chargement des assets…</small>
-      <small class="kkl-note">Cette V0.47 est un prototype animé. Le modèle hybride V0.44 + V0.47 n’a pas encore été réalisé.</small>
+      <small class="kkl-note">Cette V0.51 contient enfin la géométrie hybride. Les raccords et animations restent à valider visuellement.</small>
       <small>Tourner : glisser · Zoom : molette · Comparer la silhouette et vérifier les mains/pieds</small>
     </footer>`;
   document.body.append(root);
@@ -161,8 +161,8 @@ export function openKaykitLab() {
     mixer = new THREE.AnimationMixer(model);
     current = undefined;
     pose(phase);
-    variantButton.textContent = variant === 'gardener' ? 'Comparer : Ranger original' : 'Revenir au jardinier';
-    report(`Affichage : ${variant === 'gardener' ? 'jardinier V0.47' : 'Ranger KayKit original'} · animations sur Rig_Medium`);
+    variantButton.textContent = variant === 'gardener' ? 'Comparer : ancienne V0.47' : 'Revenir au jardinier';
+    report(`Affichage : ${variant === 'gardener' ? 'jardinier V0.51' : 'jardinier V0.47 précédent'} · animations sur Rig_Medium`);
   };
   pause.onclick = () => { running = !running; pause.textContent = running ? 'Pause' : 'Lecture'; };
   scrub.oninput = () => { running = false; pause.textContent = 'Lecture'; pose(Number(scrub.value) / 100); };
@@ -186,8 +186,8 @@ export function openKaykitLab() {
       const response = await fetch('/assets/kaykit-v045/manifest.json', { cache: 'no-store' });
       if (!response.ok) throw new Error('Assets non installés. Consulte docs/V045_KAYKIT.md.');
       const manifest = await response.json() as KayKitManifest;
-      const original = await loadGLTF(manifest.model);
-      const dressed = await loadGLTF('/assets/kaykit-v045/gardener-v047.glb');
+      const original = await loadGLTF('/assets/kaykit-v045/gardener-v047.glb');
+      const dressed = await loadGLTF('/assets/kaykit-v045/gardener-v051.glb');
       if (!alive) return;
       variants = { original: original.scene, gardener: dressed.scene };
       model = variants.gardener;
@@ -257,7 +257,7 @@ export function openKaykitLab() {
       // should be dressed in Blender; do not include private local filenames.
       Object.assign(root, { kaykitDiagnostics: {
         model: manifest.model.split('/').pop(),
-        gardener: 'gardener-v047.glb',
+        gardener: 'gardener-v051.glb',
         spadeBone: 'handslot.r',
         spadeAngle: spadePitch,
         comparison: true,
@@ -265,7 +265,7 @@ export function openKaykitLab() {
         meshes,
         animations: [...motions.keys()],
       }});
-      report(`Jardinier V0.47 : ${bones.size} os KayKit · ${motions.size} animations · tenue réelle (GLB)${diagnostics.length ? ' · ' + diagnostics.join('; ') : ''}`);
+      report(`Jardinier hybride V0.51 : ${bones.size} os KayKit · ${motions.size} animations · tenue réelle (GLB)${diagnostics.length ? ' · ' + diagnostics.join('; ') : ''}`);
       root.dataset.ready = 'true';
     } catch (err) {
       report(`V0.46 : ${err instanceof Error ? err.message : String(err)}`, true);

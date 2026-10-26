@@ -1,0 +1,73 @@
+{
+  "version": "0.51",
+  "reference_v044": "gardener-v044.glb",
+  "reference_v047": "gardener-v047.glb",
+  "joints": 23,
+  "original_kept": [
+    "Ranger_Head",
+    "Ranger_LegLeft",
+    "Ranger_LegRight"
+  ],
+  "original_untouched_geometry": [
+    "Ranger_LegLeft",
+    "Ranger_LegRight"
+  ],
+  "original_head": "source V0.47 skin/eyes/nose/brows with old Ranger hair islands removed",
+  "removed_ranger_hair": [
+    [
+      58,
+      0.627
+    ],
+    [
+      167,
+      0.841
+    ],
+    [
+      63,
+      0.666
+    ],
+    [
+      63,
+      0.666
+    ],
+    [
+      48,
+      0.551
+    ],
+    [
+      48,
+      0.551
+    ]
+  ],
+  "hybrid_parts": [
+    "bras_gauche",
+    "bras_droit",
+    "couture_bavette_gauche",
+    "couture_bavette_droite",
+    "bavette_ancienne",
+    "bouton_gauche",
+    "bouton_droit",
+    "revers_manche_gauche",
+    "revers_manche_droite",
+    "cheveux_anciens",
+    "rebord_chapeau",
+    "ruban_chapeau",
+    "cou_ancien",
+    "taille_salopette",
+    "couture_poche",
+    "broderie_poche",
+    "poche_ancienne",
+    "broderie_feuille",
+    "tee_shirt_ancien",
+    "bretelle_gauche",
+    "bretelle_droite",
+    "manche_gauche",
+    "manche_droite",
+    "chapeau_bord",
+    "chapeau_couronne"
+  ],
+  "imported_vertices": 7282,
+  "arms": "old V0.44 geometry reposed to KayKit T-pose; 4 joint zones (upperarm, lowerarm, wrist, hand)",
+  "waist": "v044 upper waist meshes clipped at y=0.505; native Ranger legs kept",
+  "human_visual_approval": false
+}
