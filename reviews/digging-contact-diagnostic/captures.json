@@ -1,0 +1,2227 @@
+{
+  "native_blender_alignment_max_H": 1.088622974750112e-05,
+  "captures": [
+    {
+      "name": "baseline_synthetic-023-ensemble",
+      "config": "baseline_synthetic",
+      "index": 23,
+      "time_s": 0.23333333,
+      "percent": 16.66666671240307,
+      "view": "ensemble",
+      "reason": "maximum-historical_fixed_marker_error_H",
+      "projected": {
+        "r": {
+          "slot": [
+            357.9663932323456,
+            523.2860326766968
+          ],
+          "reference": [
+            357.9663932323456,
+            523.2860326766968
+          ],
+          "hand_bone_origin": [
+            368.6678111553192,
+            403.9584159851074
+          ],
+          "hand_centroid": [
+            346.693217754364,
+            406.0754060745239
+          ],
+          "closest_hand_surface": [
+            330.07895946502686,
+            435.1296663284302
+          ],
+          "closest_shaft_surface": [
+            308.8979423046112,
+            474.153470993042
+          ]
+        },
+        "l": {
+          "slot": [
+            398.06050062179565,
+            580.0373077392578
+          ],
+          "reference": [
+            389.7821307182312,
+            548.6379861831665
+          ],
+          "hand_bone_origin": [
+            414.9934649467468,
+            562.9971742630005
+          ],
+          "hand_centroid": [
+            390.5921280384064,
+            571.3652849197388
+          ],
+          "closest_hand_surface": [
+            387.7387046813965,
+            547.0097064971924
+          ],
+          "closest_shaft_surface": [
+            387.7387046813965,
+            547.0097064971924
+          ]
+        }
+      },
+      "shaft": [
+        [
+          305.09650707244873,
+          481.1572551727295
+        ],
+        [
+          569.4460272789001,
+          691.8010950088501
+        ]
+      ],
+      "row": {
+        "index": 23,
+        "time_s": 0.23333333,
+        "percent": 16.66666671240307,
+        "historical_fixed_marker_error_H": 0.05143936881777318,
+        "right_reference_error_H": 0.0,
+        "right_hand_bone_fixed_reference_error_H": 1.4017321994035302e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0008770089491002807,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 5.2120613432832634e-17,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.06686171825595164,
+        "right_axial_displacement_H": -3.1354709660932616e-17,
+        "right_radial_distance_H": 5.77373798423129e-17,
+        "right_closest_axis_parameter": 0.19999999999999996,
+        "right_surface_closest_axis_parameter": 0.0,
+        "left_reference_error_H": 0.05143934805957998,
+        "left_hand_bone_fixed_reference_error_H": 0.04835992274237376,
+        "left_hand_centroid_fixed_reference_error_H": 0.048915552673131815,
+        "left_hand_relative_rotation_deg": 11.002668315283836,
+        "left_slot_axis_distance_H": 0.02909657657704122,
+        "left_slot_shaft_gap_H": 0.017096576577041216,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.04241931041244392,
+        "left_radial_distance_H": 0.029096576577041212,
+        "left_closest_axis_parameter": 0.3974807775501695,
+        "left_surface_closest_axis_parameter": 0.3126247234648318
+      }
+    },
+    {
+      "name": "baseline_synthetic-023-mains",
+      "config": "baseline_synthetic",
+      "index": 23,
+      "time_s": 0.23333333,
+      "percent": 16.66666671240307,
+      "view": "mains",
+      "reason": "maximum-historical_fixed_marker_error_H",
+      "projected": {
+        "r": {
+          "slot": [
+            469.36771273612976,
+            494.67945098876953
+          ],
+          "reference": [
+            469.36771273612976,
+            494.67945098876953
+          ],
+          "hand_bone_origin": [
+            475.9034216403961,
+            167.89565086364746
+          ],
+          "hand_centroid": [
+            411.2442135810852,
+            176.80039405822754
+          ],
+          "closest_hand_surface": [
+            367.00212955474854,
+            258.17179679870605
+          ],
+          "closest_shaft_surface": [
+            315.0266110897064,
+            367.99120903015137
+          ]
+        },
+        "l": {
+          "slot": [
+            601.2993454933167,
+            643.8477158546448
+          ],
+          "reference": [
+            567.8597092628479,
+            559.0562105178833
+          ],
+          "hand_bone_origin": [
+            655.7526588439941,
+            596.312403678894
+          ],
+          "hand_centroid": [
+            588.7559056282043,
+            623.1975317001343
+          ],
+          "closest_hand_surface": [
+            561.5338683128357,
+            554.9214839935303
+          ],
+          "closest_shaft_surface": [
+            561.5338683128357,
+            554.9214839935303
+          ]
+        }
+      },
+      "shaft": [
+        [
+          305.6982755661011,
+          387.7009868621826
+        ],
+        [
+          1124.0456104278564,
+          922.5930690765381
+        ]
+      ],
+      "row": {
+        "index": 23,
+        "time_s": 0.23333333,
+        "percent": 16.66666671240307,
+        "historical_fixed_marker_error_H": 0.05143936881777318,
+        "right_reference_error_H": 0.0,
+        "right_hand_bone_fixed_reference_error_H": 1.4017321994035302e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0008770089491002807,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 5.2120613432832634e-17,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.06686171825595164,
+        "right_axial_displacement_H": -3.1354709660932616e-17,
+        "right_radial_distance_H": 5.77373798423129e-17,
+        "right_closest_axis_parameter": 0.19999999999999996,
+        "right_surface_closest_axis_parameter": 0.0,
+        "left_reference_error_H": 0.05143934805957998,
+        "left_hand_bone_fixed_reference_error_H": 0.04835992274237376,
+        "left_hand_centroid_fixed_reference_error_H": 0.048915552673131815,
+        "left_hand_relative_rotation_deg": 11.002668315283836,
+        "left_slot_axis_distance_H": 0.02909657657704122,
+        "left_slot_shaft_gap_H": 0.017096576577041216,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.04241931041244392,
+        "left_radial_distance_H": 0.029096576577041212,
+        "left_closest_axis_parameter": 0.3974807775501695,
+        "left_surface_closest_axis_parameter": 0.3126247234648318
+      }
+    },
+    {
+      "name": "baseline_synthetic-040-ensemble",
+      "config": "baseline_synthetic",
+      "index": 40,
+      "time_s": 0.40000002,
+      "percent": 28.57143048656856,
+      "view": "ensemble",
+      "reason": "maximum-right_surface_shaft_gap_H",
+      "projected": {
+        "r": {
+          "slot": [
+            401.09848976135254,
+            580.9354066848755
+          ],
+          "reference": [
+            401.09848976135254,
+            580.9354066848755
+          ],
+          "hand_bone_origin": [
+            379.0714740753174,
+            463.7763023376465
+          ],
+          "hand_centroid": [
+            356.8373918533325,
+            472.7901220321655
+          ],
+          "closest_hand_surface": [
+            346.74182534217834,
+            505.60574531555176
+          ],
+          "closest_shaft_surface": [
+            336.2366557121277,
+            548.8137006759644
+          ]
+        },
+        "l": {
+          "slot": [
+            453.237384557724,
+            603.5313487052917
+          ],
+          "reference": [
+            441.2650167942047,
+            595.5998182296753
+          ],
+          "hand_bone_origin": [
+            468.26228499412537,
+            583.5995435714722
+          ],
+          "hand_centroid": [
+            444.9657201766968,
+            595.1126098632812
+          ],
+          "closest_hand_surface": [
+            423.4258532524109,
+            589.0868902206421
+          ],
+          "closest_shaft_surface": [
+            423.4258532524109,
+            589.0868902206421
+          ]
+        }
+      },
+      "shaft": [
+        [
+          334.35165882110596,
+          556.5667390823364
+        ],
+        [
+          668.0859923362732,
+          678.4099698066711
+        ]
+      ],
+      "row": {
+        "index": 40,
+        "time_s": 0.40000002,
+        "percent": 28.57143048656856,
+        "historical_fixed_marker_error_H": 0.021936917535967614,
+        "right_reference_error_H": 1.220051277748957e-17,
+        "right_hand_bone_fixed_reference_error_H": 1.1181954664024374e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0006024829969939712,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 3.1734528147239066e-17,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.06687641066772058,
+        "right_axial_displacement_H": 5.379353826831736e-17,
+        "right_radial_distance_H": 3.1874119626428384e-17,
+        "right_closest_axis_parameter": 0.20000000000000012,
+        "right_surface_closest_axis_parameter": 0.0,
+        "left_reference_error_H": 0.021936904849320416,
+        "left_hand_bone_fixed_reference_error_H": 0.02323412253066859,
+        "left_hand_centroid_fixed_reference_error_H": 0.01570388537288006,
+        "left_hand_relative_rotation_deg": 22.326914911709217,
+        "left_slot_axis_distance_H": 0.005150321512821972,
+        "left_slot_shaft_gap_H": 0.0,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.0213237552812446,
+        "left_radial_distance_H": 0.0051503215128219605,
+        "left_closest_axis_parameter": 0.3591252227661707,
+        "left_surface_closest_axis_parameter": 0.26690158699424865
+      }
+    },
+    {
+      "name": "baseline_synthetic-040-mains",
+      "config": "baseline_synthetic",
+      "index": 40,
+      "time_s": 0.40000002,
+      "percent": 28.57143048656856,
+      "view": "mains",
+      "reason": "maximum-right_surface_shaft_gap_H",
+      "projected": {
+        "r": {
+          "slot": [
+            505.47128915786743,
+            527.191948890686
+          ],
+          "reference": [
+            505.47128915786743,
+            527.191948890686
+          ],
+          "hand_bone_origin": [
+            420.0558066368103,
+            211.75503730773926
+          ],
+          "hand_centroid": [
+            358.92724990844727,
+            239.97492790222168
+          ],
+          "closest_hand_surface": [
+            335.7101082801819,
+            330.8237075805664
+          ],
+          "closest_shaft_surface": [
+            316.8220520019531,
+            450.6221294403076
+          ]
+        },
+        "l": {
+          "slot": [
+            655.8203101158142,
+            579.8481941223145
+          ],
+          "reference": [
+            621.0349798202515,
+            560.3338479995728
+          ],
+          "hand_bone_origin": [
+            704.1192650794983,
+            524.7214078903198
+          ],
+          "hand_centroid": [
+            641.0730481147766,
+            560.0235939025879
+          ],
+          "closest_hand_surface": [
+            569.7096586227417,
+            545.6145286560059
+          ],
+          "closest_shaft_surface": [
+            569.7096586227417,
+            545.6145286560059
+          ]
+        }
+      },
+      "shaft": [
+        [
+          313.43287229537964,
+          472.1182346343994
+        ],
+        [
+          1273.6250162124634,
+          747.4866986274719
+        ]
+      ],
+      "row": {
+        "index": 40,
+        "time_s": 0.40000002,
+        "percent": 28.57143048656856,
+        "historical_fixed_marker_error_H": 0.021936917535967614,
+        "right_reference_error_H": 1.220051277748957e-17,
+        "right_hand_bone_fixed_reference_error_H": 1.1181954664024374e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0006024829969939712,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 3.1734528147239066e-17,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.06687641066772058,
+        "right_axial_displacement_H": 5.379353826831736e-17,
+        "right_radial_distance_H": 3.1874119626428384e-17,
+        "right_closest_axis_parameter": 0.20000000000000012,
+        "right_surface_closest_axis_parameter": 0.0,
+        "left_reference_error_H": 0.021936904849320416,
+        "left_hand_bone_fixed_reference_error_H": 0.02323412253066859,
+        "left_hand_centroid_fixed_reference_error_H": 0.01570388537288006,
+        "left_hand_relative_rotation_deg": 22.326914911709217,
+        "left_slot_axis_distance_H": 0.005150321512821972,
+        "left_slot_shaft_gap_H": 0.0,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.0213237552812446,
+        "left_radial_distance_H": 0.0051503215128219605,
+        "left_closest_axis_parameter": 0.3591252227661707,
+        "left_surface_closest_axis_parameter": 0.26690158699424865
+      }
+    },
+    {
+      "name": "legacy_zero_pitch-121-ensemble",
+      "config": "legacy_zero_pitch",
+      "index": 121,
+      "time_s": 1.20000005,
+      "percent": 85.71429074541996,
+      "view": "ensemble",
+      "reason": "maximum-left_surface_shaft_gap_H",
+      "projected": {
+        "r": {
+          "slot": [
+            390.51923155784607,
+            495.1075553894043
+          ],
+          "reference": [
+            390.51923155784607,
+            495.1075553894043
+          ],
+          "hand_bone_origin": [
+            381.44388794898987,
+            380.88016510009766
+          ],
+          "hand_centroid": [
+            363.9187514781952,
+            390.6482696533203
+          ],
+          "closest_hand_surface": [
+            369.5038855075836,
+            396.6691493988037
+          ],
+          "closest_shaft_surface": [
+            369.5038855075836,
+            396.6691493988037
+          ]
+        },
+        "l": {
+          "slot": [
+            434.56438183784485,
+            509.95032787323
+          ],
+          "reference": [
+            395.759642124176,
+            519.654369354248
+          ],
+          "hand_bone_origin": [
+            450.257807970047,
+            490.1895999908447
+          ],
+          "hand_centroid": [
+            426.3036549091339,
+            499.15406703948975
+          ],
+          "closest_hand_surface": [
+            409.35930609703064,
+            524.4588613510132
+          ],
+          "closest_shaft_surface": [
+            405.5005609989166,
+            526.4531135559082
+          ]
+        }
+      },
+      "shaft": [
+        [
+          407.70044922828674,
+          575.5865573883057
+        ],
+        [
+          363.1221055984497,
+          366.776180267334
+        ]
+      ],
+      "row": {
+        "index": 121,
+        "time_s": 1.20000005,
+        "percent": 85.71429074541996,
+        "historical_fixed_marker_error_H": 0.020006375488643268,
+        "right_reference_error_H": 3.450826127566398e-17,
+        "right_hand_bone_fixed_reference_error_H": 1.1181954664024374e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0004165360195308563,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 5.456235186164289e-17,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 0.0,
+        "right_radial_distance_H": 4.880205110995828e-17,
+        "right_closest_axis_parameter": 0.3854166666666666,
+        "right_surface_closest_axis_parameter": 0.8568415789044155,
+        "left_reference_error_H": 0.06099905427760705,
+        "left_hand_bone_fixed_reference_error_H": 0.025918272498000935,
+        "left_hand_centroid_fixed_reference_error_H": 0.022312567759123606,
+        "left_hand_relative_rotation_deg": 9.430284885996787,
+        "left_slot_axis_distance_H": 0.06074334633563209,
+        "left_slot_shaft_gap_H": 0.047556252384008645,
+        "left_surface_shaft_gap_H": 0.006815847312989838,
+        "left_axial_displacement_H": -0.005579950669032844,
+        "left_radial_distance_H": 0.06074334633563209,
+        "left_closest_axis_parameter": 0.2546381602518376,
+        "left_surface_closest_axis_parameter": 0.2168236745687849
+      }
+    },
+    {
+      "name": "legacy_zero_pitch-121-mains",
+      "config": "legacy_zero_pitch",
+      "index": 121,
+      "time_s": 1.20000005,
+      "percent": 85.71429074541996,
+      "view": "mains",
+      "reason": "maximum-left_surface_shaft_gap_H",
+      "projected": {
+        "r": {
+          "slot": [
+            497.6663887500763,
+            537.61887550354
+          ],
+          "reference": [
+            497.6663887500763,
+            537.61887550354
+          ],
+          "hand_bone_origin": [
+            434.8527193069458,
+            225.56519508361816
+          ],
+          "hand_centroid": [
+            382.3290467262268,
+            254.24203872680664
+          ],
+          "closest_hand_surface": [
+            377.7502179145813,
+            266.084623336792
+          ],
+          "closest_shaft_surface": [
+            377.7502179145813,
+            266.084623336792
+          ]
+        },
+        "l": {
+          "slot": [
+            633.396565914154,
+            572.1484899520874
+          ],
+          "reference": [
+            527.5689363479614,
+            605.3292155265808
+          ],
+          "hand_bone_origin": [
+            683.3301782608032,
+            517.3283338546753
+          ],
+          "hand_centroid": [
+            617.6711320877075,
+            545.7561016082764
+          ],
+          "closest_hand_surface": [
+            571.8894004821777,
+            616.99298620224
+          ],
+          "closest_shaft_surface": [
+            561.2111687660217,
+            623.0354428291321
+          ]
+        }
+      },
+      "shaft": [
+        [
+          595.7046747207642,
+          759.6135765314102
+        ],
+        [
+          341.3350582122803,
+          183.62741470336914
+        ]
+      ],
+      "row": {
+        "index": 121,
+        "time_s": 1.20000005,
+        "percent": 85.71429074541996,
+        "historical_fixed_marker_error_H": 0.020006375488643268,
+        "right_reference_error_H": 3.450826127566398e-17,
+        "right_hand_bone_fixed_reference_error_H": 1.1181954664024374e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0004165360195308563,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 5.456235186164289e-17,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 0.0,
+        "right_radial_distance_H": 4.880205110995828e-17,
+        "right_closest_axis_parameter": 0.3854166666666666,
+        "right_surface_closest_axis_parameter": 0.8568415789044155,
+        "left_reference_error_H": 0.06099905427760705,
+        "left_hand_bone_fixed_reference_error_H": 0.025918272498000935,
+        "left_hand_centroid_fixed_reference_error_H": 0.022312567759123606,
+        "left_hand_relative_rotation_deg": 9.430284885996787,
+        "left_slot_axis_distance_H": 0.06074334633563209,
+        "left_slot_shaft_gap_H": 0.047556252384008645,
+        "left_surface_shaft_gap_H": 0.006815847312989838,
+        "left_axial_displacement_H": -0.005579950669032844,
+        "left_radial_distance_H": 0.06074334633563209,
+        "left_closest_axis_parameter": 0.2546381602518376,
+        "left_surface_closest_axis_parameter": 0.2168236745687849
+      }
+    },
+    {
+      "name": "legacy_pitch_175-000-ensemble",
+      "config": "legacy_pitch_175",
+      "index": 0,
+      "time_s": 0,
+      "percent": 0,
+      "view": "ensemble",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            368.17726492881775,
+            487.5584840774536
+          ],
+          "reference": [
+            369.0263330936432,
+            486.9493246078491
+          ],
+          "hand_bone_origin": [
+            379.7716200351715,
+            369.54970359802246
+          ],
+          "hand_centroid": [
+            360.7107102870941,
+            373.7121105194092
+          ],
+          "closest_hand_surface": [
+            360.7502579689026,
+            397.5902557373047
+          ],
+          "closest_shaft_surface": [
+            362.46195435523987,
+            393.27311515808105
+          ]
+        },
+        "l": {
+          "slot": [
+            396.17398381233215,
+            509.67607498168945
+          ],
+          "reference": [
+            371.7932999134064,
+            515.4656648635864
+          ],
+          "hand_bone_origin": [
+            412.9589796066284,
+            491.7194604873657
+          ],
+          "hand_centroid": [
+            388.46853375434875,
+            499.35946464538574
+          ],
+          "closest_hand_surface": [
+            372.7790117263794,
+            525.6242513656616
+          ],
+          "closest_shaft_surface": [
+            372.7790117263794,
+            525.6242513656616
+          ]
+        }
+      },
+      "shaft": [
+        [
+          358.20674896240234,
+          375.443172454834
+        ],
+        [
+          380.31524419784546,
+          603.2926082611084
+        ]
+      ],
+      "row": {
+        "index": 0,
+        "time_s": 0,
+        "percent": 0,
+        "historical_fixed_marker_error_H": 0.0,
+        "right_reference_error_H": 0.0019155506962482934,
+        "right_hand_bone_fixed_reference_error_H": 0.0,
+        "right_hand_centroid_fixed_reference_error_H": 0.0,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948023,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 6.568366578901997e-19,
+        "right_radial_distance_H": 0.0019155516133948023,
+        "right_closest_axis_parameter": 0.4893851405256117,
+        "right_surface_closest_axis_parameter": 0.10070946149868487,
+        "left_reference_error_H": 0.03826317384982962,
+        "left_hand_bone_fixed_reference_error_H": 0.0,
+        "left_hand_centroid_fixed_reference_error_H": 0.0,
+        "left_hand_relative_rotation_deg": 1.7075472925031877e-06,
+        "left_slot_axis_distance_H": 0.038263202325835056,
+        "left_slot_shaft_gap_H": 0.025076108374211613,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 1.1080561218448875e-17,
+        "left_radial_distance_H": 0.038263202325835056,
+        "left_closest_axis_parameter": 0.6145395504933464,
+        "left_surface_closest_axis_parameter": 0.659124202250261
+      }
+    },
+    {
+      "name": "legacy_pitch_175-000-mains",
+      "config": "legacy_pitch_175",
+      "index": 0,
+      "time_s": 0,
+      "percent": 0,
+      "view": "mains",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            489.04937505722046,
+            539.5317792892456
+          ],
+          "reference": [
+            491.6101396083832,
+            537.7794981002808
+          ],
+          "hand_bone_origin": [
+            490.37647247314453,
+            214.84570503234863
+          ],
+          "hand_centroid": [
+            432.21113085746765,
+            228.47728729248047
+          ],
+          "closest_hand_surface": [
+            420.23274302482605,
+            290.6719207763672
+          ],
+          "closest_shaft_surface": [
+            427.2167384624481,
+            279.13594245910645
+          ]
+        },
+        "l": {
+          "slot": [
+            581.6430449485779,
+            596.6644287109375
+          ],
+          "reference": [
+            515.0103569030762,
+            616.6606664657593
+          ],
+          "hand_bone_origin": [
+            635.2108120918274,
+            546.6093301773071
+          ],
+          "hand_centroid": [
+            567.7887797355652,
+            571.5211868286133
+          ],
+          "closest_hand_surface": [
+            523.3463048934937,
+            644.7611331939697
+          ],
+          "closest_shaft_surface": [
+            523.3463048934937,
+            644.7611331939697
+          ]
+        }
+      },
+      "shaft": [
+        [
+          400.1097083091736,
+          229.33402061462402
+        ],
+        [
+          587.0799422264099,
+          859.605348110199
+        ]
+      ],
+      "row": {
+        "index": 0,
+        "time_s": 0,
+        "percent": 0,
+        "historical_fixed_marker_error_H": 0.0,
+        "right_reference_error_H": 0.0019155506962482934,
+        "right_hand_bone_fixed_reference_error_H": 0.0,
+        "right_hand_centroid_fixed_reference_error_H": 0.0,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948023,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 6.568366578901997e-19,
+        "right_radial_distance_H": 0.0019155516133948023,
+        "right_closest_axis_parameter": 0.4893851405256117,
+        "right_surface_closest_axis_parameter": 0.10070946149868487,
+        "left_reference_error_H": 0.03826317384982962,
+        "left_hand_bone_fixed_reference_error_H": 0.0,
+        "left_hand_centroid_fixed_reference_error_H": 0.0,
+        "left_hand_relative_rotation_deg": 1.7075472925031877e-06,
+        "left_slot_axis_distance_H": 0.038263202325835056,
+        "left_slot_shaft_gap_H": 0.025076108374211613,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 1.1080561218448875e-17,
+        "left_radial_distance_H": 0.038263202325835056,
+        "left_closest_axis_parameter": 0.6145395504933464,
+        "left_surface_closest_axis_parameter": 0.659124202250261
+      }
+    },
+    {
+      "name": "legacy_pitch_175-033-ensemble",
+      "config": "legacy_pitch_175",
+      "index": 33,
+      "time_s": 0.33333333,
+      "percent": 23.809523976902348,
+      "view": "ensemble",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            369.8657155036926,
+            557.8062772750854
+          ],
+          "reference": [
+            370.88245153427124,
+            557.2189331054688
+          ],
+          "hand_bone_origin": [
+            370.40436267852783,
+            438.0235433578491
+          ],
+          "hand_centroid": [
+            347.3331034183502,
+            442.171049118042
+          ],
+          "closest_hand_surface": [
+            339.1333818435669,
+            462.22338676452637
+          ],
+          "closest_shaft_surface": [
+            342.4297869205475,
+            458.4961414337158
+          ]
+        },
+        "l": {
+          "slot": [
+            413.97854685783386,
+            600.5100131034851
+          ],
+          "reference": [
+            381.31293654441833,
+            587.6004219055176
+          ],
+          "hand_bone_origin": [
+            430.94080686569214,
+            583.6156606674194
+          ],
+          "hand_centroid": [
+            406.56518936157227,
+            592.1739816665649
+          ],
+          "closest_hand_surface": [
+            380.8789253234863,
+            586.3362550735474
+          ],
+          "closest_shaft_surface": [
+            380.8789253234863,
+            586.3362550735474
+          ]
+        }
+      },
+      "shaft": [
+        [
+          330.09660243988037,
+          438.41967582702637
+        ],
+        [
+          413.4375751018524,
+          681.1717629432678
+        ]
+      ],
+      "row": {
+        "index": 33,
+        "time_s": 0.33333333,
+        "percent": 23.809523976902348,
+        "historical_fixed_marker_error_H": 0.032616368136039735,
+        "right_reference_error_H": 0.0019155505569655824,
+        "right_hand_bone_fixed_reference_error_H": 9.52890509662829e-17,
+        "right_hand_centroid_fixed_reference_error_H": 0.0007901455926361592,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948054,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 3.9100046963410025e-19,
+        "right_radial_distance_H": 0.0019155516133948054,
+        "right_closest_axis_parameter": 0.4893851405256117,
+        "right_surface_closest_axis_parameter": 0.10095866949064845,
+        "left_reference_error_H": 0.052807053656603604,
+        "left_hand_bone_fixed_reference_error_H": 0.031007295362154977,
+        "left_hand_centroid_fixed_reference_error_H": 0.029927131594136396,
+        "left_hand_relative_rotation_deg": 17.776610106888864,
+        "left_slot_axis_distance_H": 0.04362105419337271,
+        "left_slot_shaft_gap_H": 0.030433960241749273,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.029762257207034723,
+        "left_radial_distance_H": 0.04362105419337271,
+        "left_closest_axis_parameter": 0.6850683979506996,
+        "left_surface_closest_axis_parameter": 0.609331848548803
+      }
+    },
+    {
+      "name": "legacy_pitch_175-033-mains",
+      "config": "legacy_pitch_175",
+      "index": 33,
+      "time_s": 0.33333333,
+      "percent": 23.809523976902348,
+      "view": "mains",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            483.57775807380676,
+            511.09206676483154
+          ],
+          "reference": [
+            486.46292090415955,
+            509.34557914733887
+          ],
+          "hand_bone_origin": [
+            462.5076353549957,
+            184.95535850524902
+          ],
+          "hand_centroid": [
+            397.00013399124146,
+            199.88346099853516
+          ],
+          "closest_hand_surface": [
+            361.7701828479767,
+            253.15632820129395
+          ],
+          "closest_shaft_surface": [
+            372.9093074798584,
+            242.89016723632812
+          ]
+        },
+        "l": {
+          "slot": [
+            615.3291463851929,
+            619.8603868484497
+          ],
+          "reference": [
+            527.3181200027466,
+            591.2670612335205
+          ],
+          "hand_bone_origin": [
+            669.933557510376,
+            572.7239847183228
+          ],
+          "hand_centroid": [
+            602.9998064041138,
+            600.1148343086243
+          ],
+          "closest_hand_surface": [
+            525.6181359291077,
+            587.8582715988159
+          ],
+          "closest_shaft_surface": [
+            525.6181359291077,
+            587.8582715988159
+          ]
+        }
+      },
+      "shaft": [
+        [
+          326.7088830471039,
+          189.01209831237793
+        ],
+        [
+          653.1471610069275,
+          843.5753226280212
+        ]
+      ],
+      "row": {
+        "index": 33,
+        "time_s": 0.33333333,
+        "percent": 23.809523976902348,
+        "historical_fixed_marker_error_H": 0.032616368136039735,
+        "right_reference_error_H": 0.0019155505569655824,
+        "right_hand_bone_fixed_reference_error_H": 9.52890509662829e-17,
+        "right_hand_centroid_fixed_reference_error_H": 0.0007901455926361592,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948054,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 3.9100046963410025e-19,
+        "right_radial_distance_H": 0.0019155516133948054,
+        "right_closest_axis_parameter": 0.4893851405256117,
+        "right_surface_closest_axis_parameter": 0.10095866949064845,
+        "left_reference_error_H": 0.052807053656603604,
+        "left_hand_bone_fixed_reference_error_H": 0.031007295362154977,
+        "left_hand_centroid_fixed_reference_error_H": 0.029927131594136396,
+        "left_hand_relative_rotation_deg": 17.776610106888864,
+        "left_slot_axis_distance_H": 0.04362105419337271,
+        "left_slot_shaft_gap_H": 0.030433960241749273,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.029762257207034723,
+        "left_radial_distance_H": 0.04362105419337271,
+        "left_closest_axis_parameter": 0.6850683979506996,
+        "left_surface_closest_axis_parameter": 0.609331848548803
+      }
+    },
+    {
+      "name": "legacy_pitch_175-084-ensemble",
+      "config": "legacy_pitch_175",
+      "index": 84,
+      "time_s": 0.83333333,
+      "percent": 59.523810299398725,
+      "view": "ensemble",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            511.43479347229004,
+            560.2965593338013
+          ],
+          "reference": [
+            511.2772583961487,
+            559.0353488922119
+          ],
+          "hand_bone_origin": [
+            403.8047194480896,
+            522.6753950119019
+          ],
+          "hand_centroid": [
+            398.4600305557251,
+            546.8631982803345
+          ],
+          "closest_hand_surface": [
+            416.54205322265625,
+            574.7733116149902
+          ],
+          "closest_shaft_surface": [
+            414.0017032623291,
+            568.2396650314331
+          ]
+        },
+        "l": {
+          "slot": [
+            541.8757200241089,
+            547.4417209625244
+          ],
+          "reference": [
+            541.6328310966492,
+            553.5796642303467
+          ],
+          "hand_bone_origin": [
+            534.2201590538025,
+            516.9140338897705
+          ],
+          "hand_centroid": [
+            527.8908610343933,
+            540.3339147567749
+          ],
+          "closest_hand_surface": [
+            567.6065683364868,
+            548.9114999771118
+          ],
+          "closest_shaft_surface": [
+            567.6065683364868,
+            548.9114999771118
+          ]
+        }
+      },
+      "shaft": [
+        [
+          392.57943630218506,
+          580.3684234619141
+        ],
+        [
+          635.1242661476135,
+          536.7768287658691
+        ]
+      ],
+      "row": {
+        "index": 84,
+        "time_s": 0.83333333,
+        "percent": 59.523810299398725,
+        "historical_fixed_marker_error_H": 0.03570034249382517,
+        "right_reference_error_H": 0.00191555038391916,
+        "right_hand_bone_fixed_reference_error_H": 1.2442130545651484e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0008121608464105316,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948175,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": -6.723442833902974e-19,
+        "right_radial_distance_H": 0.0019155516133948175,
+        "right_closest_axis_parameter": 0.4893851405256117,
+        "right_surface_closest_axis_parameter": 0.10072716386832442,
+        "left_reference_error_H": 0.01130568630477117,
+        "left_hand_bone_fixed_reference_error_H": 0.04573532703721243,
+        "left_hand_centroid_fixed_reference_error_H": 0.038279746546665994,
+        "left_hand_relative_rotation_deg": 27.30679608111074,
+        "left_slot_axis_distance_H": 0.010188228526161074,
+        "left_slot_shaft_gap_H": 0.0,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.004900883891091098,
+        "left_radial_distance_H": 0.010188228526161074,
+        "left_closest_axis_parameter": 0.626153377023925,
+        "left_surface_closest_axis_parameter": 0.7216280880056286
+      }
+    },
+    {
+      "name": "legacy_pitch_175-084-mains",
+      "config": "legacy_pitch_175",
+      "index": 84,
+      "time_s": 0.83333333,
+      "percent": 59.523810299398725,
+      "view": "mains",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            631.2010288238525,
+            436.0527515411377
+          ],
+          "reference": [
+            630.4987072944641,
+            432.6425313949585
+          ],
+          "hand_bone_origin": [
+            317.63020157814026,
+            351.0899543762207
+          ],
+          "hand_centroid": [
+            308.90029668807983,
+            418.11962127685547
+          ],
+          "closest_hand_surface": [
+            352.02351212501526,
+            488.8648509979248
+          ],
+          "closest_shaft_surface": [
+            345.4676866531372,
+            471.8137741088867
+          ]
+        },
+        "l": {
+          "slot": [
+            721.7675447463989,
+            397.1919059753418
+          ],
+          "reference": [
+            719.7832465171814,
+            413.52593898773193
+          ],
+          "hand_bone_origin": [
+            701.2352347373962,
+            316.51954650878906
+          ],
+          "hand_centroid": [
+            691.100001335144,
+            381.8784236907959
+          ],
+          "closest_hand_surface": [
+            796.1797118186951,
+            397.16882705688477
+          ],
+          "closest_shaft_surface": [
+            796.1797118186951,
+            397.16882705688477
+          ]
+        }
+      },
+      "shaft": [
+        [
+          281.3735604286194,
+          507.39309787750244
+        ],
+        [
+          994.7689771652222,
+          354.6492099761963
+        ]
+      ],
+      "row": {
+        "index": 84,
+        "time_s": 0.83333333,
+        "percent": 59.523810299398725,
+        "historical_fixed_marker_error_H": 0.03570034249382517,
+        "right_reference_error_H": 0.00191555038391916,
+        "right_hand_bone_fixed_reference_error_H": 1.2442130545651484e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0008121608464105316,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948175,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": -6.723442833902974e-19,
+        "right_radial_distance_H": 0.0019155516133948175,
+        "right_closest_axis_parameter": 0.4893851405256117,
+        "right_surface_closest_axis_parameter": 0.10072716386832442,
+        "left_reference_error_H": 0.01130568630477117,
+        "left_hand_bone_fixed_reference_error_H": 0.04573532703721243,
+        "left_hand_centroid_fixed_reference_error_H": 0.038279746546665994,
+        "left_hand_relative_rotation_deg": 27.30679608111074,
+        "left_slot_axis_distance_H": 0.010188228526161074,
+        "left_slot_shaft_gap_H": 0.0,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.004900883891091098,
+        "left_radial_distance_H": 0.010188228526161074,
+        "left_closest_axis_parameter": 0.626153377023925,
+        "left_surface_closest_axis_parameter": 0.7216280880056286
+      }
+    },
+    {
+      "name": "legacy_pitch_175-121-ensemble",
+      "config": "legacy_pitch_175",
+      "index": 121,
+      "time_s": 1.20000005,
+      "percent": 85.71429074541996,
+      "view": "ensemble",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            390.51923155784607,
+            495.1075553894043
+          ],
+          "reference": [
+            391.2309408187866,
+            494.25392150878906
+          ],
+          "hand_bone_origin": [
+            381.44388794898987,
+            380.88016510009766
+          ],
+          "hand_centroid": [
+            363.9187514781952,
+            390.6482696533203
+          ],
+          "closest_hand_surface": [
+            368.6496317386627,
+            418.17305088043213
+          ],
+          "closest_shaft_surface": [
+            369.451105594635,
+            412.7984285354614
+          ]
+        },
+        "l": {
+          "slot": [
+            434.56438183784485,
+            509.95032787323
+          ],
+          "reference": [
+            398.5481858253479,
+            518.4281826019287
+          ],
+          "hand_bone_origin": [
+            450.257807970047,
+            490.1895999908447
+          ],
+          "hand_centroid": [
+            426.3036549091339,
+            499.15406703948975
+          ],
+          "closest_hand_surface": [
+            408.2411229610443,
+            523.4074354171753
+          ],
+          "closest_shaft_surface": [
+            408.6245596408844,
+            523.1773376464844
+          ]
+        }
+      },
+      "shaft": [
+        [
+          362.618625164032,
+          399.7264862060547
+        ],
+        [
+          421.084463596344,
+          592.8820133209229
+        ]
+      ],
+      "row": {
+        "index": 121,
+        "time_s": 1.20000005,
+        "percent": 85.71429074541996,
+        "historical_fixed_marker_error_H": 0.020006375488643268,
+        "right_reference_error_H": 0.001915550740425918,
+        "right_hand_bone_fixed_reference_error_H": 1.1181954664024374e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0004165360195308563,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948208,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 2.3633364765514704e-17,
+        "right_radial_distance_H": 0.0019155516133948195,
+        "right_closest_axis_parameter": 0.4893851405256118,
+        "right_surface_closest_axis_parameter": 0.10062865270404622,
+        "left_reference_error_H": 0.05577849336020652,
+        "left_hand_bone_fixed_reference_error_H": 0.025918272498000935,
+        "left_hand_centroid_fixed_reference_error_H": 0.022312567759123606,
+        "left_hand_relative_rotation_deg": 9.430284885996787,
+        "left_slot_axis_distance_H": 0.055413711371536375,
+        "left_slot_shaft_gap_H": 0.04222661741991294,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.006369112373186812,
+        "left_radial_distance_H": 0.055413711371536375,
+        "left_closest_axis_parameter": 0.6296326985661699,
+        "left_surface_closest_axis_parameter": 0.6618403367043714
+      }
+    },
+    {
+      "name": "legacy_pitch_175-121-mains",
+      "config": "legacy_pitch_175",
+      "index": 121,
+      "time_s": 1.20000005,
+      "percent": 85.71429074541996,
+      "view": "mains",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            497.6663887500763,
+            537.61887550354
+          ],
+          "reference": [
+            499.76199865341187,
+            535.2186679840088
+          ],
+          "hand_bone_origin": [
+            434.8527193069458,
+            225.56519508361816
+          ],
+          "hand_centroid": [
+            382.3290467262268,
+            254.24203872680664
+          ],
+          "closest_hand_surface": [
+            385.5283260345459,
+            325.7931709289551
+          ],
+          "closest_shaft_surface": [
+            389.50857520103455,
+            311.4902973175049
+          ]
+        },
+        "l": {
+          "slot": [
+            633.396565914154,
+            572.1484899520874
+          ],
+          "reference": [
+            536.7739200592041,
+            601.7916560173035
+          ],
+          "hand_bone_origin": [
+            683.3301782608032,
+            517.3283338546753
+          ],
+          "hand_centroid": [
+            617.6711320877075,
+            545.7561016082764
+          ],
+          "closest_hand_surface": [
+            569.6351528167725,
+            614.5022869110107
+          ],
+          "closest_shaft_surface": [
+            570.6797242164612,
+            613.8131618499756
+          ]
+        }
+      },
+      "shaft": [
+        [
+          355.0359308719635,
+          274.90172386169434
+        ],
+        [
+          650.7663130760193,
+          806.8283013999462
+        ]
+      ],
+      "row": {
+        "index": 121,
+        "time_s": 1.20000005,
+        "percent": 85.71429074541996,
+        "historical_fixed_marker_error_H": 0.020006375488643268,
+        "right_reference_error_H": 0.001915550740425918,
+        "right_hand_bone_fixed_reference_error_H": 1.1181954664024374e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0004165360195308563,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948208,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 2.3633364765514704e-17,
+        "right_radial_distance_H": 0.0019155516133948195,
+        "right_closest_axis_parameter": 0.4893851405256118,
+        "right_surface_closest_axis_parameter": 0.10062865270404622,
+        "left_reference_error_H": 0.05577849336020652,
+        "left_hand_bone_fixed_reference_error_H": 0.025918272498000935,
+        "left_hand_centroid_fixed_reference_error_H": 0.022312567759123606,
+        "left_hand_relative_rotation_deg": 9.430284885996787,
+        "left_slot_axis_distance_H": 0.055413711371536375,
+        "left_slot_shaft_gap_H": 0.04222661741991294,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.006369112373186812,
+        "left_radial_distance_H": 0.055413711371536375,
+        "left_closest_axis_parameter": 0.6296326985661699,
+        "left_surface_closest_axis_parameter": 0.6618403367043714
+      }
+    },
+    {
+      "name": "legacy_pitch_175-142-ensemble",
+      "config": "legacy_pitch_175",
+      "index": 142,
+      "time_s": 1.39999994,
+      "percent": 99.99999741727552,
+      "view": "ensemble",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            368.17729473114014,
+            487.5584602355957
+          ],
+          "reference": [
+            369.0263628959656,
+            486.9493007659912
+          ],
+          "hand_bone_origin": [
+            379.7716200351715,
+            369.54965591430664
+          ],
+          "hand_centroid": [
+            360.7107102870941,
+            373.7121105194092
+          ],
+          "closest_hand_surface": [
+            360.750287771225,
+            397.5902557373047
+          ],
+          "closest_shaft_surface": [
+            362.46195435523987,
+            393.27311515808105
+          ]
+        },
+        "l": {
+          "slot": [
+            396.17401361465454,
+            509.67609882354736
+          ],
+          "reference": [
+            371.79332971572876,
+            515.4656171798706
+          ],
+          "hand_bone_origin": [
+            412.9590094089508,
+            491.71948432922363
+          ],
+          "hand_centroid": [
+            388.46853375434875,
+            499.35946464538574
+          ],
+          "closest_hand_surface": [
+            372.7790117263794,
+            525.6242752075195
+          ],
+          "closest_shaft_surface": [
+            372.7790117263794,
+            525.6242752075195
+          ]
+        }
+      },
+      "shaft": [
+        [
+          358.20674896240234,
+          375.443172454834
+        ],
+        [
+          380.31527400016785,
+          603.2925724983215
+        ]
+      ],
+      "row": {
+        "index": 142,
+        "time_s": 1.39999994,
+        "percent": 99.99999741727552,
+        "historical_fixed_marker_error_H": 5.5404023292791194e-08,
+        "right_reference_error_H": 0.0019155503814589632,
+        "right_hand_bone_fixed_reference_error_H": 5.030400286828739e-17,
+        "right_hand_centroid_fixed_reference_error_H": 1.2315077235409784e-11,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948175,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 4.8204910002675807e-17,
+        "right_radial_distance_H": 0.0019155516133948188,
+        "right_closest_axis_parameter": 0.48938514052561183,
+        "right_surface_closest_axis_parameter": 0.10070946127305948,
+        "left_reference_error_H": 0.03826315754217928,
+        "left_hand_bone_fixed_reference_error_H": 5.048992363768955e-08,
+        "left_hand_centroid_fixed_reference_error_H": 5.702219125369518e-08,
+        "left_hand_relative_rotation_deg": 7.540324677666867e-06,
+        "left_slot_axis_distance_H": 0.03826319192971863,
+        "left_slot_shaft_gap_H": 0.025076097978095194,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 4.9638592725481934e-08,
+        "left_radial_distance_H": 0.038263191929718623,
+        "left_closest_axis_parameter": 0.6145396681239652,
+        "left_surface_closest_axis_parameter": 0.6591243816832246
+      }
+    },
+    {
+      "name": "legacy_pitch_175-142-mains",
+      "config": "legacy_pitch_175",
+      "index": 142,
+      "time_s": 1.39999994,
+      "percent": 99.99999741727552,
+      "view": "mains",
+      "reason": "phase",
+      "projected": {
+        "r": {
+          "slot": [
+            489.04940485954285,
+            539.5317077636719
+          ],
+          "reference": [
+            491.61022901535034,
+            537.779426574707
+          ],
+          "hand_bone_origin": [
+            490.37647247314453,
+            214.845609664917
+          ],
+          "hand_centroid": [
+            432.21113085746765,
+            228.47728729248047
+          ],
+          "closest_hand_surface": [
+            420.2328026294708,
+            290.67187309265137
+          ],
+          "closest_shaft_surface": [
+            427.2167384624481,
+            279.1358947753906
+          ]
+        },
+        "l": {
+          "slot": [
+            581.6430449485779,
+            596.6644287109375
+          ],
+          "reference": [
+            515.0103569030762,
+            616.6605949401855
+          ],
+          "hand_bone_origin": [
+            635.2108120918274,
+            546.609354019165
+          ],
+          "hand_centroid": [
+            567.7887797355652,
+            571.5211629867554
+          ],
+          "closest_hand_surface": [
+            523.3463644981384,
+            644.7611808776855
+          ],
+          "closest_shaft_surface": [
+            523.3463644981384,
+            644.7611808776855
+          ]
+        }
+      },
+      "shaft": [
+        [
+          400.10976791381836,
+          229.33402061462402
+        ],
+        [
+          587.0800018310547,
+          859.6052527427673
+        ]
+      ],
+      "row": {
+        "index": 142,
+        "time_s": 1.39999994,
+        "percent": 99.99999741727552,
+        "historical_fixed_marker_error_H": 5.5404023292791194e-08,
+        "right_reference_error_H": 0.0019155503814589632,
+        "right_hand_bone_fixed_reference_error_H": 5.030400286828739e-17,
+        "right_hand_centroid_fixed_reference_error_H": 1.2315077235409784e-11,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948175,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 4.8204910002675807e-17,
+        "right_radial_distance_H": 0.0019155516133948188,
+        "right_closest_axis_parameter": 0.48938514052561183,
+        "right_surface_closest_axis_parameter": 0.10070946127305948,
+        "left_reference_error_H": 0.03826315754217928,
+        "left_hand_bone_fixed_reference_error_H": 5.048992363768955e-08,
+        "left_hand_centroid_fixed_reference_error_H": 5.702219125369518e-08,
+        "left_hand_relative_rotation_deg": 7.540324677666867e-06,
+        "left_slot_axis_distance_H": 0.03826319192971863,
+        "left_slot_shaft_gap_H": 0.025076097978095194,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 4.9638592725481934e-08,
+        "left_radial_distance_H": 0.038263191929718623,
+        "left_closest_axis_parameter": 0.6145396681239652,
+        "left_surface_closest_axis_parameter": 0.6591243816832246
+      }
+    },
+    {
+      "name": "legacy_zero_pitch-023-ensemble",
+      "config": "legacy_zero_pitch",
+      "index": 23,
+      "time_s": 0.23333333,
+      "percent": 16.66666671240307,
+      "view": "ensemble",
+      "reason": "same-pose-comparison",
+      "projected": {
+        "r": {
+          "slot": [
+            357.9663932323456,
+            523.2860326766968
+          ],
+          "reference": [
+            357.9663932323456,
+            523.2860326766968
+          ],
+          "hand_bone_origin": [
+            368.6678111553192,
+            403.9584159851074
+          ],
+          "hand_centroid": [
+            346.693217754364,
+            406.0754060745239
+          ],
+          "closest_hand_surface": [
+            344.8048233985901,
+            402.1338701248169
+          ],
+          "closest_shaft_surface": [
+            344.8048233985901,
+            402.1338701248169
+          ]
+        },
+        "l": {
+          "slot": [
+            398.06050062179565,
+            580.0373077392578
+          ],
+          "reference": [
+            361.24610900878906,
+            553.4758567810059
+          ],
+          "hand_bone_origin": [
+            414.9934649467468,
+            562.9971742630005
+          ],
+          "hand_centroid": [
+            390.5921280384064,
+            571.3652849197388
+          ],
+          "closest_hand_surface": [
+            367.7579164505005,
+            574.6364116668701
+          ],
+          "closest_shaft_surface": [
+            371.46931886672974,
+            573.540210723877
+          ]
+        }
+      },
+      "shaft": [
+        [
+          368.71927976608276,
+          622.2662448883057
+        ],
+        [
+          340.8198952674866,
+          365.4527187347412
+        ]
+      ],
+      "row": {
+        "index": 23,
+        "time_s": 0.23333333,
+        "percent": 16.66666671240307,
+        "historical_fixed_marker_error_H": 0.05143936881777318,
+        "right_reference_error_H": 0.0,
+        "right_hand_bone_fixed_reference_error_H": 1.4017321994035302e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0008770089491002807,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 3.450826127566398e-17,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 7.320307666493742e-17,
+        "right_radial_distance_H": 2.440102555497914e-17,
+        "right_closest_axis_parameter": 0.38541666666666674,
+        "right_surface_closest_axis_parameter": 0.8571682151590223,
+        "left_reference_error_H": 0.07172985614004908,
+        "left_hand_bone_fixed_reference_error_H": 0.04835992274237376,
+        "left_hand_centroid_fixed_reference_error_H": 0.048915552673131815,
+        "left_hand_relative_rotation_deg": 11.002668315283836,
+        "left_slot_axis_distance_H": 0.050665258188184195,
+        "left_slot_shaft_gap_H": 0.03747816423656075,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": -0.050776068370069066,
+        "left_radial_distance_H": 0.050665258188184195,
+        "left_closest_axis_parameter": 0.14753505752589502,
+        "left_surface_closest_axis_parameter": 0.1807698424483629
+      }
+    },
+    {
+      "name": "legacy_zero_pitch-023-mains",
+      "config": "legacy_zero_pitch",
+      "index": 23,
+      "time_s": 0.23333333,
+      "percent": 16.66666671240307,
+      "view": "mains",
+      "reason": "same-pose-comparison",
+      "projected": {
+        "r": {
+          "slot": [
+            469.36771273612976,
+            494.67945098876953
+          ],
+          "reference": [
+            469.36771273612976,
+            494.67945098876953
+          ],
+          "hand_bone_origin": [
+            475.9034216403961,
+            167.89565086364746
+          ],
+          "hand_centroid": [
+            411.2442135810852,
+            176.80039405822754
+          ],
+          "closest_hand_surface": [
+            384.960800409317,
+            162.98160552978516
+          ],
+          "closest_shaft_surface": [
+            384.960800409317,
+            162.98160552978516
+          ]
+        },
+        "l": {
+          "slot": [
+            601.2993454933167,
+            643.8477158546448
+          ],
+          "reference": [
+            490.4010593891144,
+            577.3349761962891
+          ],
+          "hand_bone_origin": [
+            655.7526588439941,
+            596.312403678894
+          ],
+          "hand_centroid": [
+            588.7559056282043,
+            623.1975317001343
+          ],
+          "closest_hand_surface": [
+            517.622172832489,
+            634.6682071685791
+          ],
+          "closest_shaft_surface": [
+            528.2041430473328,
+            631.1200022697449
+          ]
+        }
+      },
+      "shaft": [
+        [
+          538.3273959159851,
+          765.6735152006149
+        ],
+        [
+          359.404981136322,
+          62.55364418029785
+        ]
+      ],
+      "row": {
+        "index": 23,
+        "time_s": 0.23333333,
+        "percent": 16.66666671240307,
+        "historical_fixed_marker_error_H": 0.05143936881777318,
+        "right_reference_error_H": 0.0,
+        "right_hand_bone_fixed_reference_error_H": 1.4017321994035302e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0008770089491002807,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 3.450826127566398e-17,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 7.320307666493742e-17,
+        "right_radial_distance_H": 2.440102555497914e-17,
+        "right_closest_axis_parameter": 0.38541666666666674,
+        "right_surface_closest_axis_parameter": 0.8571682151590223,
+        "left_reference_error_H": 0.07172985614004908,
+        "left_hand_bone_fixed_reference_error_H": 0.04835992274237376,
+        "left_hand_centroid_fixed_reference_error_H": 0.048915552673131815,
+        "left_hand_relative_rotation_deg": 11.002668315283836,
+        "left_slot_axis_distance_H": 0.050665258188184195,
+        "left_slot_shaft_gap_H": 0.03747816423656075,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": -0.050776068370069066,
+        "left_radial_distance_H": 0.050665258188184195,
+        "left_closest_axis_parameter": 0.14753505752589502,
+        "left_surface_closest_axis_parameter": 0.1807698424483629
+      }
+    },
+    {
+      "name": "legacy_pitch_175-023-ensemble",
+      "config": "legacy_pitch_175",
+      "index": 23,
+      "time_s": 0.23333333,
+      "percent": 16.66666671240307,
+      "view": "ensemble",
+      "reason": "same-pose-comparison",
+      "projected": {
+        "r": {
+          "slot": [
+            357.9663932323456,
+            523.2860326766968
+          ],
+          "reference": [
+            358.94855856895447,
+            522.7796792984009
+          ],
+          "hand_bone_origin": [
+            368.6678111553192,
+            403.9584159851074
+          ],
+          "hand_centroid": [
+            346.693217754364,
+            406.0754060745239
+          ],
+          "closest_hand_surface": [
+            341.23554825782776,
+            425.75762271881104
+          ],
+          "closest_shaft_surface": [
+            344.0774083137512,
+            422.26595878601074
+          ]
+        },
+        "l": {
+          "slot": [
+            398.06050062179565,
+            580.0373077392578
+          ],
+          "reference": [
+            364.82274532318115,
+            553.8224935531616
+          ],
+          "hand_bone_origin": [
+            414.9934649467468,
+            562.9971742630005
+          ],
+          "hand_centroid": [
+            390.5921280384064,
+            571.3652849197388
+          ],
+          "closest_hand_surface": [
+            372.5150227546692,
+            594.4730520248413
+          ],
+          "closest_shaft_surface": [
+            372.5150227546692,
+            594.4730520248413
+          ]
+        }
+      },
+      "shaft": [
+        [
+          335.9789848327637,
+          401.3946533203125
+        ],
+        [
+          382.91457295417786,
+          649.4304776191711
+        ]
+      ],
+      "row": {
+        "index": 23,
+        "time_s": 0.23333333,
+        "percent": 16.66666671240307,
+        "historical_fixed_marker_error_H": 0.05143936881777318,
+        "right_reference_error_H": 0.001915550512797195,
+        "right_hand_bone_fixed_reference_error_H": 1.4017321994035302e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0008770089491002807,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133947902,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": -4.715707287515151e-17,
+        "right_radial_distance_H": 0.001915551613394789,
+        "right_closest_axis_parameter": 0.4893851405256116,
+        "right_surface_closest_axis_parameter": 0.10082133674084456,
+        "left_reference_error_H": 0.06597775208754386,
+        "left_hand_bone_fixed_reference_error_H": 0.04835992274237376,
+        "left_hand_centroid_fixed_reference_error_H": 0.048915552673131815,
+        "left_hand_relative_rotation_deg": 11.002668315283836,
+        "left_slot_axis_distance_H": 0.041982795612934026,
+        "left_slot_shaft_gap_H": 0.028795701661310586,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.05089708280126361,
+        "left_radial_distance_H": 0.04198279561293403,
+        "left_closest_axis_parameter": 0.7351524651638814,
+        "left_surface_closest_axis_parameter": 0.778429429679235
+      }
+    },
+    {
+      "name": "legacy_pitch_175-023-mains",
+      "config": "legacy_pitch_175",
+      "index": 23,
+      "time_s": 0.23333333,
+      "percent": 16.66666671240307,
+      "view": "mains",
+      "reason": "same-pose-comparison",
+      "projected": {
+        "r": {
+          "slot": [
+            469.36771273612976,
+            494.67945098876953
+          ],
+          "reference": [
+            472.2498059272766,
+            493.1725025177002
+          ],
+          "hand_bone_origin": [
+            475.9034216403961,
+            167.89565086364746
+          ],
+          "hand_centroid": [
+            411.2442135810852,
+            176.80039405822754
+          ],
+          "closest_hand_surface": [
+            382.7604651451111,
+            228.4543514251709
+          ],
+          "closest_shaft_surface": [
+            392.9624855518341,
+            218.95580291748047
+          ]
+        },
+        "l": {
+          "slot": [
+            601.2993454933167,
+            643.8477158546448
+          ],
+          "reference": [
+            501.68025493621826,
+            577.8723001480103
+          ],
+          "hand_bone_origin": [
+            655.7526588439941,
+            596.312403678894
+          ],
+          "hand_centroid": [
+            588.7559056282043,
+            623.1975317001343
+          ],
+          "closest_hand_surface": [
+            540.2195453643799,
+            688.7867569923401
+          ],
+          "closest_shaft_surface": [
+            540.2195453643799,
+            688.7867569923401
+          ]
+        }
+      },
+      "shaft": [
+        [
+          357.1692705154419,
+          161.97509765625
+        ],
+        [
+          592.322587966919,
+          838.7373447418213
+        ]
+      ],
+      "row": {
+        "index": 23,
+        "time_s": 0.23333333,
+        "percent": 16.66666671240307,
+        "historical_fixed_marker_error_H": 0.05143936881777318,
+        "right_reference_error_H": 0.001915550512797195,
+        "right_hand_bone_fixed_reference_error_H": 1.4017321994035302e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0008770089491002807,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133947902,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": -4.715707287515151e-17,
+        "right_radial_distance_H": 0.001915551613394789,
+        "right_closest_axis_parameter": 0.4893851405256116,
+        "right_surface_closest_axis_parameter": 0.10082133674084456,
+        "left_reference_error_H": 0.06597775208754386,
+        "left_hand_bone_fixed_reference_error_H": 0.04835992274237376,
+        "left_hand_centroid_fixed_reference_error_H": 0.048915552673131815,
+        "left_hand_relative_rotation_deg": 11.002668315283836,
+        "left_slot_axis_distance_H": 0.041982795612934026,
+        "left_slot_shaft_gap_H": 0.028795701661310586,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.05089708280126361,
+        "left_radial_distance_H": 0.04198279561293403,
+        "left_closest_axis_parameter": 0.7351524651638814,
+        "left_surface_closest_axis_parameter": 0.778429429679235
+      }
+    },
+    {
+      "name": "legacy_pitch_175-121-ensemble",
+      "config": "legacy_pitch_175",
+      "index": 121,
+      "time_s": 1.20000005,
+      "percent": 85.71429074541996,
+      "view": "ensemble",
+      "reason": "zero-pitch-gap-comparison",
+      "projected": {
+        "r": {
+          "slot": [
+            390.51923155784607,
+            495.1075553894043
+          ],
+          "reference": [
+            391.2309408187866,
+            494.25392150878906
+          ],
+          "hand_bone_origin": [
+            381.44388794898987,
+            380.88016510009766
+          ],
+          "hand_centroid": [
+            363.9187514781952,
+            390.6482696533203
+          ],
+          "closest_hand_surface": [
+            368.6496317386627,
+            418.17305088043213
+          ],
+          "closest_shaft_surface": [
+            369.451105594635,
+            412.7984285354614
+          ]
+        },
+        "l": {
+          "slot": [
+            434.56438183784485,
+            509.95032787323
+          ],
+          "reference": [
+            398.5481858253479,
+            518.4281826019287
+          ],
+          "hand_bone_origin": [
+            450.257807970047,
+            490.1895999908447
+          ],
+          "hand_centroid": [
+            426.3036549091339,
+            499.15406703948975
+          ],
+          "closest_hand_surface": [
+            408.2411229610443,
+            523.4074354171753
+          ],
+          "closest_shaft_surface": [
+            408.6245596408844,
+            523.1773376464844
+          ]
+        }
+      },
+      "shaft": [
+        [
+          362.618625164032,
+          399.7264862060547
+        ],
+        [
+          421.084463596344,
+          592.8820133209229
+        ]
+      ],
+      "row": {
+        "index": 121,
+        "time_s": 1.20000005,
+        "percent": 85.71429074541996,
+        "historical_fixed_marker_error_H": 0.020006375488643268,
+        "right_reference_error_H": 0.001915550740425918,
+        "right_hand_bone_fixed_reference_error_H": 1.1181954664024374e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0004165360195308563,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948208,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 2.3633364765514704e-17,
+        "right_radial_distance_H": 0.0019155516133948195,
+        "right_closest_axis_parameter": 0.4893851405256118,
+        "right_surface_closest_axis_parameter": 0.10062865270404622,
+        "left_reference_error_H": 0.05577849336020652,
+        "left_hand_bone_fixed_reference_error_H": 0.025918272498000935,
+        "left_hand_centroid_fixed_reference_error_H": 0.022312567759123606,
+        "left_hand_relative_rotation_deg": 9.430284885996787,
+        "left_slot_axis_distance_H": 0.055413711371536375,
+        "left_slot_shaft_gap_H": 0.04222661741991294,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.006369112373186812,
+        "left_radial_distance_H": 0.055413711371536375,
+        "left_closest_axis_parameter": 0.6296326985661699,
+        "left_surface_closest_axis_parameter": 0.6618403367043714
+      }
+    },
+    {
+      "name": "legacy_pitch_175-121-mains",
+      "config": "legacy_pitch_175",
+      "index": 121,
+      "time_s": 1.20000005,
+      "percent": 85.71429074541996,
+      "view": "mains",
+      "reason": "zero-pitch-gap-comparison",
+      "projected": {
+        "r": {
+          "slot": [
+            497.6663887500763,
+            537.61887550354
+          ],
+          "reference": [
+            499.76199865341187,
+            535.2186679840088
+          ],
+          "hand_bone_origin": [
+            434.8527193069458,
+            225.56519508361816
+          ],
+          "hand_centroid": [
+            382.3290467262268,
+            254.24203872680664
+          ],
+          "closest_hand_surface": [
+            385.5283260345459,
+            325.7931709289551
+          ],
+          "closest_shaft_surface": [
+            389.50857520103455,
+            311.4902973175049
+          ]
+        },
+        "l": {
+          "slot": [
+            633.396565914154,
+            572.1484899520874
+          ],
+          "reference": [
+            536.7739200592041,
+            601.7916560173035
+          ],
+          "hand_bone_origin": [
+            683.3301782608032,
+            517.3283338546753
+          ],
+          "hand_centroid": [
+            617.6711320877075,
+            545.7561016082764
+          ],
+          "closest_hand_surface": [
+            569.6351528167725,
+            614.5022869110107
+          ],
+          "closest_shaft_surface": [
+            570.6797242164612,
+            613.8131618499756
+          ]
+        }
+      },
+      "shaft": [
+        [
+          355.0359308719635,
+          274.90172386169434
+        ],
+        [
+          650.7663130760193,
+          806.8283013999462
+        ]
+      ],
+      "row": {
+        "index": 121,
+        "time_s": 1.20000005,
+        "percent": 85.71429074541996,
+        "historical_fixed_marker_error_H": 0.020006375488643268,
+        "right_reference_error_H": 0.001915550740425918,
+        "right_hand_bone_fixed_reference_error_H": 1.1181954664024374e-16,
+        "right_hand_centroid_fixed_reference_error_H": 0.0004165360195308563,
+        "right_hand_relative_rotation_deg": 0.0,
+        "right_slot_axis_distance_H": 0.0019155516133948208,
+        "right_slot_shaft_gap_H": 0.0,
+        "right_surface_shaft_gap_H": 0.0,
+        "right_axial_displacement_H": 2.3633364765514704e-17,
+        "right_radial_distance_H": 0.0019155516133948195,
+        "right_closest_axis_parameter": 0.4893851405256118,
+        "right_surface_closest_axis_parameter": 0.10062865270404622,
+        "left_reference_error_H": 0.05577849336020652,
+        "left_hand_bone_fixed_reference_error_H": 0.025918272498000935,
+        "left_hand_centroid_fixed_reference_error_H": 0.022312567759123606,
+        "left_hand_relative_rotation_deg": 9.430284885996787,
+        "left_slot_axis_distance_H": 0.055413711371536375,
+        "left_slot_shaft_gap_H": 0.04222661741991294,
+        "left_surface_shaft_gap_H": 0.0,
+        "left_axial_displacement_H": 0.006369112373186812,
+        "left_radial_distance_H": 0.055413711371536375,
+        "left_closest_axis_parameter": 0.6296326985661699,
+        "left_surface_closest_axis_parameter": 0.6618403367043714
+      }
+    }
+  ]
+}

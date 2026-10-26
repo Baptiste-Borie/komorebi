@@ -29,6 +29,8 @@ rows = [
 table='| Mesure | Ranger | v051 | Seuil |\n|---|---:|---:|---:|\n'+'\n'.join('| '+' | '.join(row)+' |' for row in rows)
 doc=f'''# Digging v044 — arrêt au contrôle des références
 
+> Actualisation : le [diagnostic des contacts](DIGGING_CONTACT_DIAGNOSIS.md) montre que les 5,14 % H ne prouvent pas un défaut de contact de Digging. Ce rapport historique décrit le montage et le critère initiaux ; sa conclusion sur la nécessité d’un clip corrigé est remplacée par le nouveau diagnostic. Les mesures originales restent conservées.
+
 Branche : `gardener-v044-digging`. Base : `5dda097`. Sources du personnage inchangées.
 Blender 5.2.2 LTS ; Three.js installé dans le projet. Action : `Digging`, 1,4 s.
 143 instants mesurés par modèle : 101 échantillons uniformes et les temps des clés natives (sans arrondir leur durée).

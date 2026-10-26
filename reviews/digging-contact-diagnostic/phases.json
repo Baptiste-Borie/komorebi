@@ -1,0 +1,143 @@
+[
+  {
+    "name": "Descente / appui apparent",
+    "start_s": 0,
+    "end_s": 0.33333333,
+    "first_index": 0,
+    "last_index": 32,
+    "samples": 33,
+    "observation": "La main gauche descend sur le manche ; mouvement compatible avec un coulissement. La main droite conserve sa relation rigide avec le rep\u00e8re de pelle.",
+    "metrics": {
+      "r": {
+        "max_centroid_drift_from_phase_start_H": 0.0009170135038744541,
+        "axial_centroid_range_H": 0.00044340925360700917,
+        "max_surface_shaft_gap_H": 0.0,
+        "max_slot_reference_error_H": 0.0019155507669596627,
+        "first_centroid_local": [
+          -0.0883430232012335,
+          -0.3881316061234166,
+          -0.07178832781770683
+        ],
+        "last_centroid_local": [
+          -0.08829497965094402,
+          -0.388364990489952,
+          -0.06993726565730429
+        ]
+      },
+      "l": {
+        "max_centroid_drift_from_phase_start_H": 0.04891555267313184,
+        "axial_centroid_range_H": 0.048233588712129793,
+        "max_surface_shaft_gap_H": 0.0,
+        "max_slot_reference_error_H": 0.06597775208754386,
+        "first_centroid_local": [
+          -0.016320343600180642,
+          0.1104189464238822,
+          -0.11823344301235489
+        ],
+        "last_centroid_local": [
+          0.00922838912622026,
+          0.18095317603155103,
+          -0.10031431886792919
+        ]
+      }
+    },
+    "source_authored_contact_annotation": false,
+    "right_interpretation": "Fixed dominant grip is supported by the rigid hand-bone/tool relationship.",
+    "left_interpretation": "Sliding/pivoting contact is compatible with the poses; deliberate release or discrete regrip is not established.",
+    "contact_intention_certainty": "Visual/kinematic hypothesis; no source tool or author contact labels."
+  },
+  {
+    "name": "Relevage / bascule",
+    "start_s": 0.33333333,
+    "end_s": 0.83333333,
+    "first_index": 33,
+    "last_index": 83,
+    "samples": 51,
+    "observation": "La pelle se rel\u00e8ve et bascule ; la main gauche pivote et se rapproche de la main haute. Une prise mat\u00e9rielle strictement fixe n\u2019est pas conserv\u00e9e.",
+    "metrics": {
+      "r": {
+        "max_centroid_drift_from_phase_start_H": 0.0005867483824050685,
+        "axial_centroid_range_H": 0.0008856452041946863,
+        "max_surface_shaft_gap_H": 0.0,
+        "max_slot_reference_error_H": 0.0019155511641339288,
+        "first_centroid_local": [
+          -0.08828157443998064,
+          -0.3882388781596179,
+          -0.06999504105277754
+        ],
+        "last_centroid_local": [
+          -0.08848236286202577,
+          -0.3894468765946144,
+          -0.07050633282796566
+        ]
+      },
+      "l": {
+        "max_centroid_drift_from_phase_start_H": 0.05213729823011527,
+        "axial_centroid_range_H": 0.03546454532955284,
+        "max_surface_shaft_gap_H": 0.0,
+        "max_slot_reference_error_H": 0.053700938740613796,
+        "first_centroid_local": [
+          0.00978989791239121,
+          0.1704789773239074,
+          -0.09962397764068265
+        ],
+        "last_centroid_local": [
+          -0.08022388665979585,
+          0.11261402827589442,
+          -0.05786626167839193
+        ]
+      }
+    },
+    "source_authored_contact_annotation": false,
+    "right_interpretation": "Fixed dominant grip is supported by the rigid hand-bone/tool relationship.",
+    "left_interpretation": "Sliding/pivoting contact is compatible with the poses; deliberate release or discrete regrip is not established.",
+    "contact_intention_certainty": "Visual/kinematic hypothesis; no source tool or author contact labels."
+  },
+  {
+    "name": "Retour / remise en position",
+    "start_s": 0.83333333,
+    "end_s": 1.399999976158142,
+    "first_index": 84,
+    "last_index": 142,
+    "samples": 59,
+    "observation": "Retour continu vers la pose initiale ; la main gauche reprend sa position et son orientation initiales, sans saut de pose ni ouverture visible.",
+    "metrics": {
+      "r": {
+        "max_centroid_drift_from_phase_start_H": 0.0020019637079997767,
+        "axial_centroid_range_H": 0.0018954173447806172,
+        "max_surface_shaft_gap_H": 0.0,
+        "max_slot_reference_error_H": 0.0019155507824511918,
+        "first_centroid_local": [
+          -0.08848167963115117,
+          -0.38944775217077415,
+          -0.07049904197584497
+        ],
+        "last_centroid_local": [
+          -0.08834302319644277,
+          -0.388131606108871,
+          -0.07178832784116718
+        ]
+      },
+      "l": {
+        "max_centroid_drift_from_phase_start_H": 0.06106048984570898,
+        "axial_centroid_range_H": 0.01766280492680411,
+        "max_surface_shaft_gap_H": 0.0,
+        "max_slot_reference_error_H": 0.05653965244389234,
+        "first_centroid_local": [
+          -0.07978833144947928,
+          0.11288046698969806,
+          -0.058655950317191397
+        ],
+        "last_centroid_local": [
+          -0.016320402415514468,
+          0.11041905908287078,
+          -0.11823346902569154
+        ]
+      }
+    },
+    "source_authored_contact_annotation": false,
+    "right_interpretation": "Fixed dominant grip is supported by the rigid hand-bone/tool relationship.",
+    "left_interpretation": "Sliding/pivoting contact is compatible with the poses; deliberate release or discrete regrip is not established.",
+    "contact_intention_certainty": "Visual/kinematic hypothesis; no source tool or author contact labels."
+  }
+]
