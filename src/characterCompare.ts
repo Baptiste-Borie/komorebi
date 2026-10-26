@@ -47,11 +47,11 @@ export function openCharacterCompare() {
   const root = document.createElement('section');
   root.id = 'character-compare';
   root.innerHTML = `
-    <header class="cc-head"><div><small>KOMOREBI / DIRECTION ARTISTIQUE</small><h2>Assembler notre jardinier</h2></div>
-      <button data-close type="button">✕ Retour</button></header>
+    <header class="cc-head"><div><small>KOMOREBI / PERSONNAGES / COMPARAISON</small><h2>Comparer les références</h2></div>
+      <button data-close type="button">← Retour aux ateliers</button></header>
     <main class="cc-layout">
       <div class="cc-view">
-        <div class="cc-names"><span>ANCIEN · V0.44</span><span>NOUVEAU · V0.47</span></div>
+        <div class="cc-names"><span>NOTRE ANCIEN JARDINIER · V0.44</span><span>RANGER RETRAVAILLÉ · V0.47</span></div>
         <div class="cc-canvas"></div>
         <div class="cc-camera">
           <button data-view="front">Face</button><button data-view="three-quarter" class="active">3/4</button>
@@ -60,10 +60,12 @@ export function openCharacterCompare() {
         </div>
       </div>
       <aside class="cc-panel">
-        <div class="cc-intro"><strong>Ce n'est pas encore un nouveau modèle.</strong>
-          <p>Choisis la référence de chaque partie, écris ce qui ne va pas, puis exporte tes retours avec une capture.</p>
-          <p>Les deux modèles ont des squelettes différents : le futur personnage sera réellement remodelé sur un seul rig.</p>
+        <div class="cc-intro"><strong>Deux références, pas encore un personnage hybride.</strong>
+          <p>À gauche notre ancien jardinier, à droite la version KayKit. Tes préférences servent à préparer le futur modèle.</p>
+          <p>Cliquer sur « V0.44 » ou « V0.47 » n'applique pas une transformation : cela enregistre une référence esthétique.</p>
         </div>
+        <div class="cc-review-state"><strong>À construire :</strong> visage V0.47, tenue V0.44, bras V0.44 avec articulations KayKit, jambes et bottes V0.47. <strong>Pas encore modélisé.</strong></div>
+        <div class="cc-tabs" aria-label="Parties à comparer"><button type="button" data-group-tab="face" class="active">Visage</button><button type="button" data-group-tab="body">Corps</button><button type="button" data-group-tab="legs">Jambes</button></div>
         <div class="cc-choices"></div>
         <div class="cc-inspector"><strong>Pièce sélectionnée</strong><div data-mesh> Clique sur le personnage pour identifier son maillage.</div></div>
         <label class="cc-summary">Avis général
@@ -103,12 +105,17 @@ export function openCharacterCompare() {
   const rows = root.querySelector<HTMLElement>('.cc-choices')!;
   const textSummary = root.querySelector<HTMLTextAreaElement>('[data-summary]')!;
   const persist = () => localStorage.setItem(STORAGE, JSON.stringify(choices));
+  const grouped: Record<Region, 'face' | 'body' | 'legs'> = {
+    face: 'face', mouth: 'face', eyes: 'face', hair: 'face', hat: 'face',
+    torso: 'body', arms: 'body', legs: 'legs', boots: 'legs',
+  };
   const safe = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   for (const item of REGIONS) {
     const el = document.createElement('section');
     el.className = 'cc-region';
+    el.dataset.group = grouped[item.id];
     el.innerHTML = `<strong>${safe(item.name)}</strong><div class="cc-region-switch">
-      <button type="button" data-source="old">Ancien</button><button type="button" data-source="new">Nouveau</button></div>
+      <button type="button" data-source="old">V0.44</button><button type="button" data-source="new">V0.47</button></div>
       <textarea rows="2" aria-label="Remarques : ${safe(item.name)}" placeholder="Ce qui doit changer…"></textarea>`;
     const buttons = el.querySelectorAll<HTMLButtonElement>('[data-source]');
     const sync = () => buttons.forEach(b => { const active = b.dataset.source === choices[item.id].source; b.classList.toggle('active', active); b.setAttribute('aria-pressed', String(active)); });
@@ -118,6 +125,16 @@ export function openCharacterCompare() {
     input.addEventListener('input', () => { choices[item.id].note = input.value; persist(); });
     sync(); rows.append(el);
   }
+  const changeGroup = (group: string) => {
+    rows.querySelectorAll<HTMLElement>('.cc-region').forEach(item => { item.hidden = item.dataset.group !== group; });
+    root.querySelectorAll<HTMLButtonElement>('[data-group-tab]').forEach(button => {
+      const isActive = button.dataset.groupTab === group;
+      button.classList.toggle('active', isActive);
+      button.setAttribute('aria-pressed', String(isActive));
+    });
+  };
+  root.querySelectorAll<HTMLButtonElement>('[data-group-tab]').forEach(button => button.onclick = () => changeGroup(button.dataset.groupTab || 'face'));
+  changeGroup('face');
   const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
   configureRenderer(renderer);
   host.append(renderer.domElement);
@@ -209,7 +226,7 @@ export function openCharacterCompare() {
         scene.add(pedestal);
       }
       loaded = true;
-      status.textContent = 'Deux modèles chargés · Cliquer sur les parties pour identifier les maillages · Aucun choix n’est encore validé.';
+      status.textContent = 'Références V0.44 et V0.47 chargées · tes préférences sont enregistrables · aucune pièce hybride générée.';
       root.dataset.ready = 'true';
     } catch (err) {
       status.textContent = `Impossible de charger les modèles : ${err instanceof Error ? err.message : String(err)}`;
@@ -248,5 +265,6 @@ export function openCharacterCompare() {
     // GLB geometry is owned by this viewer; the other character lab loads its own copies.
     for (const obj of Object.values(roots)) obj.traverse(n => { if (n instanceof THREE.Mesh) n.geometry.dispose(); });
     renderer.dispose(); css.remove(); root.remove();
+    if (!document.querySelector('#kaykit-lab')) window.dispatchEvent(new Event('komorebi:workspace-open'));
   };
 }

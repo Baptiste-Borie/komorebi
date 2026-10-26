@@ -51,17 +51,18 @@ export function openKaykitLab() {
   const root = document.createElement('section');
   root.id = 'kaykit-lab';
   root.innerHTML = `
-    <header class="kkl-top"><div><small>KOMOREBI / V0.47 · KAYKIT</small><h2>Atelier du jardinier</h2></div>
-    <button data-close type="button">✕ Fermer</button></header>
+    <header class="kkl-top"><div><small>KOMOREBI / PERSONNAGES / ANIMATIONS</small><h2>Tester les mouvements · V0.47</h2></div>
+    <button data-close type="button">← Retour aux ateliers</button></header>
     <div class="kkl-stage"></div>
     <footer class="kkl-bottom">
-      <div class="kkl-buttons" data-animations></div>
-      <div class="kkl-row"><button data-character-compare type="button">Comparer avec notre ancien jardinier ↗</button><button data-variant type="button">Comparer : Ranger original</button><button data-pause>Pause</button><label>Pose <input data-scrub type="range" min="0" max="100" value="0"></label>
+      <strong class="kkl-section-title">01 / ANIMATION</strong><div class="kkl-buttons" data-animations></div>
+      <strong class="kkl-section-title">02 / MODÈLE ET RÉFÉRENCES</strong>
+      <div class="kkl-row"><button data-character-compare type="button">Comparer avec notre ancien jardinier ↗</button><button data-variant type="button">Comparer : Ranger original</button></div><strong class="kkl-section-title">03 / LECTURE</strong><div class="kkl-row"><button data-pause>Pause</button><label>Pose <input data-scrub type="range" min="0" max="100" value="0"></label>
       <label>Vitesse <input data-speed type="range" min="0.2" max="1.5" step="0.1" value="0.8"></label>
       <label>Angle pelle <input data-spade-pitch type="range" min="-90" max="90" step="5" value="0"></label>
       <button data-angle>Vue : 3/4</button></div>
       <small data-status>Chargement des assets…</small>
-      <small>Jardinier V0.47 : bras simplifiés · Sourcils adoucis · Pelle liée à la main · Comparaison Ranger.</small>
+      <small class="kkl-note">Cette V0.47 est un prototype animé. Le modèle hybride V0.44 + V0.47 n’a pas encore été réalisé.</small>
       <small>Tourner : glisser · Zoom : molette · Comparer la silhouette et vérifier les mains/pieds</small>
     </footer>`;
   document.body.append(root);
@@ -299,5 +300,6 @@ export function openKaykitLab() {
     renderer.dispose();
     css.remove();
     root.remove();
+    window.dispatchEvent(new Event('komorebi:workspace-open'));
   };
 }

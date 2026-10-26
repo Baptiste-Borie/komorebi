@@ -1,0 +1,60 @@
+/* Clear, project-wide navigation; old experiment shortcuts remain addressable by scripts. */
+#earthworks-open,#kaykit-lab-open { display:none !important; }
+#workspace-open { border:1px solid #95a893 !important; border-radius:9px !important; padding:9px 16px !important; min-width:98px !important; width:auto !important; background:#f8faf0 !important; color:#254634 !important; font-weight:700 !important; white-space:nowrap; }
+#workspace-home[hidden]{display:none !important}
+#workspace-home{position:fixed;inset:0;z-index:190;overflow:auto;background:#f6f5ee;color:#293b2e;font:15px/1.5 system-ui,-apple-system,sans-serif}
+#workspace-home *{box-sizing:border-box}
+#workspace-home button{font:inherit;cursor:pointer;color:inherit}
+.ws-shell{max-width:1300px;min-height:100%;margin:0 auto;padding:0 clamp(20px,5vw,72px);display:flex;flex-direction:column}
+.ws-header{min-height:84px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #dedfd1;gap:20px}
+.ws-brand{font-size:17px;letter-spacing:.10em;font-weight:850;display:flex;align-items:center;gap:11px}.ws-brand small{font-size:9px;margin-left:10px;opacity:.65;letter-spacing:.2em}
+.ws-leaf{width:31px;height:31px;border-radius:11px;background:#dce6cf;color:#51764a;display:inline-flex;align-items:center;justify-content:center}
+.ws-back{border:1px solid #bdc8b5;background:#fffdf7;padding:10px 16px;border-radius:9px;font-weight:650 !important}
+.ws-back:hover{background:#e7eddc}
+.ws-content{width:100%;max-width:1090px;margin:0 auto;padding:clamp(30px,5vw,64px) 0 36px;flex:1}
+.ws-eyebrow,.ws-tag{font-size:11px;font-weight:800;letter-spacing:.16em;color:#72816b}
+.ws-heading h1{font-size:clamp(36px,5vw,60px);line-height:1.07;letter-spacing:-.045em;margin:13px 0 18px;font-weight:750}
+.ws-heading p{font-size:16px;color:#6e776b;max-width:650px;margin:0 0 34px}
+.ws-primary{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}
+#workspace-home .ws-card{border:1px solid #d7dacf;background:#fffef8;text-align:left;border-radius:17px;display:flex;flex-direction:column;justify-content:flex-start;padding:24px;min-height:155px;box-shadow:0 9px 32px #283a2910;transition:transform .13s,box-shadow .13s,border-color .13s}
+#workspace-home .ws-card:hover{transform:translateY(-2px);box-shadow:0 14px 36px #283a2920;border-color:#98b49b}
+#workspace-home .ws-card:focus-visible{outline:3px solid #6c9270;outline-offset:3px}
+.ws-primary .ws-card{min-height:254px !important;gap:15px}
+#workspace-home .ws-main{background:#deeadb;border-color:#b8d1b9}
+.ws-card strong{font-size:25px;line-height:1.19;letter-spacing:-.02em;font-weight:750}.ws-card strong span{float:right;font-size:20px;margin-left:16px;opacity:.55}
+.ws-description{max-width:400px;color:#606f5f;line-height:1.5}.ws-foot{font-size:12px;color:#607463;margin-top:auto !important;padding-top:6px;font-weight:650}
+.ws-secondary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+#workspace-home .ws-secondary .ws-card{min-height:136px;padding:19px 21px;gap:14px}.ws-secondary .ws-card strong{font-size:19px}.ws-secondary .ws-card>span{font-size:13px;color:#69786c}
+.ws-note{border-left:3px solid #92aa8b;padding:11px 16px;margin-top:32px;background:#eaeee4;border-radius:0 7px 7px 0;font-size:13px;color:#59665c}
+.ws-footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #dedfd1;padding:19px 0;color:#8b9386;font-size:11px}
+/* Comparator: keep the two reference versions unmistakable and the controls focused. */
+body #character-compare{background:#f1f1e9}
+body #character-compare .cc-head{padding:15px 26px;min-height:81px}
+body #character-compare .cc-head h2{font-size:24px;letter-spacing:-.02em}
+body #character-compare .cc-panel{padding:20px;background:#fafaf5;gap:16px}
+body #character-compare .cc-intro{background:#e8eee7;border:1px solid #d5e2d2;padding:16px}
+body #character-compare .cc-names{top:24px;gap:10px;padding:0 24px}
+body #character-compare .cc-names span{border-radius:8px;background:#f9faf2ea;border:1px solid #dce0d2;padding:8px 4px;letter-spacing:.02em}
+body #character-compare .cc-tabs{display:flex;gap:6px;background:#e9ece3;padding:5px;border-radius:10px}
+body #character-compare .cc-tabs button{flex:1;min-width:0;padding:10px 5px;font-size:12px;font-weight:650;border:0;background:transparent}
+body #character-compare .cc-tabs button.active{background:#426b51;color:white}
+body #character-compare .cc-region{padding:13px}
+body #character-compare .cc-region[hidden]{display:none}
+body #character-compare .cc-region-switch button{font-weight:650}
+body #character-compare .cc-status{font-size:12px;color:#657365}
+body #character-compare .cc-review-state{background:#fff9eb;border:1px solid #e9dfb9;border-radius:8px;padding:12px;font-size:12px;color:#6a6042;line-height:1.55}
+/* Animation controls live in a tidy side panel, leaving the 3D viewer prominent. */
+body #kaykit-lab{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:auto minmax(0,1fr)}
+body #kaykit-lab .kkl-top{grid-column:1/-1;grid-row:1;background:#fafaf5;padding:17px 25px}
+body #kaykit-lab .kkl-stage{grid-column:1;grid-row:2;min-height:0;height:100%}
+body #kaykit-lab .kkl-bottom{grid-column:2;grid-row:2;min-height:0;overflow:auto;align-content:start;display:flex;flex-direction:column;gap:18px;padding:20px;border-top:0;border-left:1px solid #d5d7cb;background:#fafaf5}
+body #kaykit-lab .kkl-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+body #kaykit-lab .kkl-buttons button{font-size:12px;padding:12px 5px}
+body #kaykit-lab .kkl-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+body #kaykit-lab .kkl-row label{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;padding:5px 0}
+body #kaykit-lab .kkl-row label input{width:56%}
+body #kaykit-lab .kkl-row button[data-character-compare]{grid-column:1/-1;background:#e4eddf;font-weight:700}
+body #kaykit-lab .kkl-section-title{display:block;font-size:11px;font-weight:850;letter-spacing:.12em;color:#69806c;margin:0 0 0;padding-top:5px}
+body #kaykit-lab .kkl-note{display:block;background:#e9eee3;padding:12px;border-radius:9px;color:#5b6b5c;font-size:12px;line-height:1.5}
+@media(max-width:900px){.ws-primary{grid-template-columns:1fr}.ws-secondary{grid-template-columns:1fr}.ws-primary .ws-card{min-height:188px !important}body #kaykit-lab{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(270px,1fr) auto}body #kaykit-lab .kkl-stage{grid-column:1;grid-row:2}body #kaykit-lab .kkl-bottom{grid-column:1;grid-row:3;max-height:40vh;border-left:0;border-top:1px solid #d5d7cb}body #character-compare .cc-layout{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(280px,1fr) minmax(250px,40vh)}body #character-compare .cc-panel{border-left:0;border-top:1px solid #d5d7cb}}
+@media(max-width:580px){.ws-shell{padding:0 19px}.ws-header{min-height:69px}.ws-brand small{display:none}.ws-heading h1{font-size:40px}.ws-card strong{font-size:22px}.ws-footer span:last-child{display:none}}

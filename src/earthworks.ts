@@ -49,7 +49,7 @@ class Earth {
 export function openEarthworks(app:HTMLElement){
  if(document.getElementById('earthworks-root'))return;
  const root=document.createElement('section');root.id='earthworks-root';
- root.innerHTML=`<div class="earthworks-head"><div><small>KOMOREBI / EXPÉRIENCE TERRAIN</small><h2>Earthworks</h2></div><button id="earthworks-close">← Retour au jardin</button></div><div class="earthworks-viewport"></div><div class="earthworks-toolbar"><div class="earthworks-actions"><button data-earth="dig" class="active">↧ Creuser</button><button data-earth="fill">↥ Remplir</button><button data-earth="level">━ Aplatir</button></div><div class="earthworks-help">Clic maintenu : coups répétés · Déplacer : tracer · Clic droit : tourner · Molette : zoom</div><button id="earthworks-reset">Réinitialiser</button></div>`;
+ root.innerHTML=`<div class="earthworks-head"><div><small>KOMOREBI / EXPÉRIENCE TERRAIN</small><h2>Atelier du terrain</h2></div><button id="earthworks-close">← Retour au jardin</button></div><div class="earthworks-viewport"></div><div class="earthworks-toolbar"><div class="earthworks-actions"><button data-earth="dig" class="active">↧ Creuser</button><button data-earth="fill">↥ Remplir</button><button data-earth="level">━ Aplatir</button></div><div class="earthworks-help">Clic maintenu : coups répétés · Déplacer : tracer · Clic droit : tourner · Molette : zoom</div><button id="earthworks-reset">Réinitialiser</button></div>`;
  app.append(root);
  const host=root.querySelector<HTMLElement>('.earthworks-viewport')!;
  const earth=new Earth();earth.load();
