@@ -1,0 +1,43 @@
+{
+  "createdAt": "2026-11-09T14:55:48.301Z",
+  "results": [
+    {
+      "view": "normal",
+      "file": "oak-normal-1920x1080.webp",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "marks": 67252,
+      "branches": 806,
+      "canopyMasses": 97,
+      "generationMs": 444.19999999925494
+    },
+    {
+      "view": "close",
+      "file": "oak-close-1920x1080.webp",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "marks": 67252,
+      "branches": 806,
+      "canopyMasses": 97,
+      "generationMs": 504.5
+    },
+    {
+      "view": "far",
+      "file": "oak-far-1920x1080.webp",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "marks": 67252,
+      "branches": 806,
+      "canopyMasses": 97,
+      "generationMs": 451.8999999985099
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": []
+}

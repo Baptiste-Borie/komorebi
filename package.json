@@ -12,6 +12,7 @@
     "review:full": "node scripts/review.mjs --full && node scripts/auto_push.mjs review-full",
     "review:gardener": "node scripts/review_character_v052.mjs && node scripts/auto_push.mjs gardener-v052",
     "review:clean": "node scripts/clean_reviews.mjs",
+    "review:generative-oak": "node scripts/review_generative_oak.mjs",
     "review:kaykit-legacy": "node scripts/review_kaykit_v045.mjs"
   },
   "dependencies": {
