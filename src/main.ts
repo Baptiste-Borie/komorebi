@@ -65,18 +65,18 @@ earthworksButton.addEventListener('click',()=>openEarthworks(app));
 // The new KayKit gardener is an opt-in study; the V0.44 garden remains untouched.
 const kaykitLabButton = document.createElement('button');
 kaykitLabButton.id = 'kaykit-lab-open';
-kaykitLabButton.textContent = 'Jardinier hybride V0.51';
+kaykitLabButton.textContent = 'Gestes V0.52';
 kaykitLabButton.title = 'Atelier de personnage KayKit (gratuit)';
 app.querySelector('.hud-actions')?.prepend(kaykitLabButton);
 kaykitLabButton.addEventListener('click', () => {
-  void import('./kaykitLab').then(m => m.openKaykitLab());
+  void import('./shovelWorkshop').then(m => m.openShovelWorkshop());
 });
 if (new URLSearchParams(window.location.search).has('kaykit')) {
-  queueMicrotask(() => { void import('./kaykitLab').then(m => m.openKaykitLab()); });
+  queueMicrotask(() => { void import('./shovelWorkshop').then(m => m.openShovelWorkshop()); });
 }
 mountWorkspaceNavigation(app, {
   compare: () => import('./characterCompare').then(m => m.openCharacterCompare()),
-  animations: () => import('./kaykitLab').then(m => m.openKaykitLab()),
+  animations: () => import('./shovelWorkshop').then(m => m.openShovelWorkshop()),
   botany: () => { app.querySelector<HTMLButtonElement>('#botany-open')?.click(); },
   terrain: () => openEarthworks(app),
 });

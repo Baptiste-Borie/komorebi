@@ -60,7 +60,7 @@ export function openCharacterLab() {
   updateCamera();
   let actor: THREE.Group | undefined;
   let alive = true;
-  new GLTFLoader().load('/assets/gardener-v044.glb', gltf => {
+  new GLTFLoader().load('/assets/gardener-v052.glb', gltf => {
     if (!alive) return;
     actor = gltf.scene;
     actor.traverse(node => {
@@ -74,7 +74,7 @@ export function openCharacterLab() {
     status.textContent = `Modèle Blender · GLB chargé · ${meshes} groupes`;
     renderer.shadowMap.needsUpdate = true;
   }, undefined, error => {
-    status.textContent = 'Impossible de charger public/assets/gardener-v044.glb';
+    status.textContent = 'Impossible de charger public/assets/gardener-v052.glb';
     console.error('Character Lab:', error);
   });
   const angles: Record<string, number> = { front: 0, 'three-quarter': .63, side: Math.PI / 2 };

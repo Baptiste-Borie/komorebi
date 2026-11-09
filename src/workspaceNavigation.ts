@@ -34,15 +34,15 @@ export function mountWorkspaceNavigation(app: HTMLElement, actions: WorkspaceAct
         <div class="ws-primary">
           <button type="button" data-workspace="compare" class="ws-card ws-main">
             <span class="ws-tag">PRIORITÉ · PERSONNAGE</span>
-            <strong>Comparer V0.44 et le nouvel hybride <span>↗</span></strong>
-            <span class="ws-description">Ancien V0.44 et véritable hybride V0.51 côte à côte. Examiner les raccords et les proportions.</span>
-            <span class="ws-foot">Premier hybride 3D · en attente de validation</span>
+            <strong>Comparer V0.44 et la correction V0.52 <span>↗</span></strong>
+            <span class="ws-description">Notre ancien jardinier avant/après : seulement les épaules et les plis des manches.</span>
+            <span class="ws-foot">Deux corrections locales · en attente de validation</span>
           </button>
           <button type="button" data-workspace="animations" class="ws-card ws-animation">
             <span class="ws-tag">ANIMATION</span>
             <strong>Tester les mouvements <span>↗</span></strong>
-            <span class="ws-description">Marcher, courir et creuser avec la V0.51. Examiner la pelle et les articulations.</span>
-            <span class="ws-foot">Hybride V0.51 sur rig KayKit</span>
+            <span class="ws-description">Rig original V0.44 : tester creuser, remplir et aplatir.</span>
+            <span class="ws-foot">Rig original V0.44 · animations existantes</span>
           </button>
         </div>
         <div class="ws-secondary">
@@ -50,7 +50,7 @@ export function mountWorkspaceNavigation(app: HTMLElement, actions: WorkspaceAct
           <button type="button" data-workspace="botany" class="ws-card"><strong>Bibliothèque végétale <span>↗</span></strong><span>Observer les espèces et leurs variantes.</span></button>
           <button type="button" data-workspace="terrain" class="ws-card"><strong>Travail du terrain <span>↗</span></strong><span>Creuser et façonner le sol · expérimental.</span></button>
         </div>
-        <div class="ws-note"><strong>État du projet</strong> — Tes choix pour le futur jardinier hybride sont enregistrés. <strong>Le premier hybride V0.51 est disponible pour une revue critique.</strong> Le comparateur affiche intentionnellement l’ancien V0.44 et le nouvel hybride V0.51.</div>
+        <div class="ws-note"><strong>État du projet</strong> — Retour définitif au modèle V0.44. <strong>V0.52 corrige seulement les épaules et le pli des manches.</strong> Prochaine étape : rigging et animations.</div>
       </div>
       <footer class="ws-footer"><span>Komorebi · Prototype de jardin 3D</span><span>Échap pour revenir au jardin</span></footer>
     </div>`;

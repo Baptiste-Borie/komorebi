@@ -48,7 +48,7 @@ export function makeGardener(){
  let active:ShovelAction|null=null;
  let currentAction:THREE.AnimationAction|null=null;
  const legacyChildren=[...group.children];
- new GLTFLoader().load('/assets/gardener-v044.glb',gltf=>{
+ new GLTFLoader().load('/assets/gardener-v052.glb',gltf=>{
   const find=(name:string)=>gltf.animations.find(clip=>clip.name.toLowerCase().includes(name));
   const clips={dig:find('dig'),fill:find('fill'),level:find('level')};
   if(!clips.dig||!clips.fill||!clips.level){
@@ -57,7 +57,7 @@ export function makeGardener(){
   for(const child of legacyChildren)child.visible=false;
   const visual=gltf.scene;
   visual.traverse(obj=>{if(obj instanceof THREE.Mesh){obj.castShadow=true;obj.receiveShadow=true;}});
-  group.add(visual);mixer=new THREE.AnimationMixer(visual);
+  group.add(visual);document.body.dataset.gardenerLoaded='v052';mixer=new THREE.AnimationMixer(visual);
   loadedClips=clips;active=null;currentAction=null;
   pose('dig',0);
  },undefined,error=>console.error('Komorebi V0.44: chargement du rig échoué',error));

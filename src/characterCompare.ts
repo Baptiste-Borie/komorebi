@@ -51,7 +51,7 @@ export function openCharacterCompare() {
       <button data-close type="button">← Retour aux ateliers</button></header>
     <main class="cc-layout">
       <div class="cc-view">
-        <div class="cc-names"><span>NOTRE ANCIEN JARDINIER · V0.44</span><span>PREMIER HYBRIDE · V0.51</span></div>
+        <div class="cc-names"><span>NOTRE ANCIEN JARDINIER · V0.44</span><span>V0.44 CORRIGÉ · V0.52</span></div>
         <div class="cc-canvas"></div>
         <div class="cc-camera">
           <button data-view="front">Face</button><button data-view="three-quarter" class="active">3/4</button>
@@ -60,11 +60,11 @@ export function openCharacterCompare() {
         </div>
       </div>
       <aside class="cc-panel">
-        <div class="cc-intro"><strong>Le prototype hybride est maintenant modélisé.</strong>
-          <p>À gauche l’ancien V0.44, à droite le nouvel hybride V0.51 : compare leurs raccords et leurs silhouettes.</p>
-          <p>Tes choix enregistrent des corrections à effectuer : ils ne changent pas instantanément la géométrie.</p>
+        <div class="cc-intro"><strong>Même jardinier V0.44, deux corrections localisées.</strong>
+          <p>À gauche V0.44 intact, à droite V0.52 : épaule remontée et peau cachée sous le revers de manche.</p>
+          <p>Il ne s’agit PAS d’un hybride : le visage, les cheveux, le corps, les jambes et les chaussures sont ceux de V0.44.</p>
         </div>
-        <div class="cc-review-state"><strong>V0.51 modélisée :</strong> visage KayKit, tenue V0.44, articulations KayKit, jambes et bottes Ranger. <strong>À valider visuellement.</strong></div>
+        <div class="cc-review-state"><strong>Corrections V0.52 :</strong> raccord épaule–corps et couleur/position de la peau sous les manches. <strong>Reste à valider visuellement.</strong></div>
         <div class="cc-tabs" aria-label="Parties à comparer"><button type="button" data-group-tab="face" class="active">Visage</button><button type="button" data-group-tab="body">Corps</button><button type="button" data-group-tab="legs">Jambes</button></div>
         <div class="cc-choices"></div>
         <div class="cc-inspector"><strong>Pièce sélectionnée</strong><div data-mesh> Clique sur le personnage pour identifier son maillage.</div></div>
@@ -97,6 +97,8 @@ export function openCharacterCompare() {
   .cc-region-switch button{flex:1;padding:6px!important;font-size:12px!important}.cc-region textarea,.cc-summary textarea{resize:vertical;width:100%;padding:8px;border:1px solid #d0d3c7;border-radius:5px;font:12px system-ui}
   .cc-summary{font-weight:650;display:grid;gap:6px}.cc-inspector{display:grid;gap:4px;background:#edece4;padding:10px;border-radius:7px}
   .cc-inspector [data-mesh]{font-size:12px;overflow-wrap:anywhere}.cc-export{background:#3f6650!important;color:white!important;font-weight:700!important}
+  /* v052-hide-old-pickers: this is a two-fix before/after, not a hybrid creator */
+  #character-compare .cc-tabs,#character-compare .cc-choices,#character-compare .cc-summary,#character-compare .cc-export{display:none!important}
   .cc-status{display:block;padding-bottom:10px;line-height:1.4}@media(max-width:900px){.cc-layout{grid-template-columns:minmax(0,1fr) 285px}.cc-names span{font-size:10px}}
   `;
   document.head.append(css);
@@ -115,7 +117,7 @@ export function openCharacterCompare() {
     el.className = 'cc-region';
     el.dataset.group = grouped[item.id];
     el.innerHTML = `<strong>${safe(item.name)}</strong><div class="cc-region-switch">
-      <button type="button" data-source="old">V0.44</button><button type="button" data-source="new">V0.51</button></div>
+      <button type="button" data-source="old">V0.44</button><button type="button" data-source="new">V0.52</button></div>
       <textarea rows="2" aria-label="Remarques : ${safe(item.name)}" placeholder="Ce qui doit changer…"></textarea>`;
     const buttons = el.querySelectorAll<HTMLButtonElement>('[data-source]');
     const sync = () => buttons.forEach(b => { const active = b.dataset.source === choices[item.id].source; b.classList.toggle('active', active); b.setAttribute('aria-pressed', String(active)); });
@@ -200,7 +202,7 @@ export function openCharacterCompare() {
     try {
       const [older, newer] = await Promise.all([
         gltfLoader.loadAsync('/assets/gardener-v044.glb'),
-        gltfLoader.loadAsync('/assets/kaykit-v045/gardener-v051.glb'),
+        gltfLoader.loadAsync('/assets/gardener-v052.glb'),
       ]);
       if (!alive) return;
       roots.old = older.scene; roots.new = newer.scene;
@@ -241,7 +243,7 @@ export function openCharacterCompare() {
       type: 'komorebi-character-review', version: 1,
       createdAt: new Date().toISOString(),
       status: 'propositions_non_validees',
-      reference: { old: 'gardener-v044.glb', new: 'gardener-v051.glb' },
+      reference: { old: 'gardener-v044.glb', new: 'gardener-v052.glb' },
       rigNote: 'Références esthétiques seulement : les deux rigs ne sont pas interchangeables.',
       selections: choices,
       comment: textSummary.value,
