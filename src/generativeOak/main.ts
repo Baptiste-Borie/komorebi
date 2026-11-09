@@ -10,7 +10,7 @@ root.innerHTML = `
   <main class="art-shell">
     <canvas id="oak-canvas" aria-label="Chêne anglais généré par des milliers de marques colorées"></canvas>
     <header class="art-title">
-      <span>KOMOREBI · ÉTUDE GÉNÉRATIVE 001</span>
+      <span>KOMOREBI · ÉTUDE GÉNÉRATIVE 002</span>
       <h1>Quercus <em>robur</em></h1>
       <p>Une canopée dessinée marque après marque.</p>
     </header>

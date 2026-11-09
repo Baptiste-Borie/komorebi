@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-11-09T14:55:48.301Z",
+  "createdAt": "2026-11-09T15:20:48.327Z",
   "results": [
     {
       "view": "normal",
@@ -8,10 +8,10 @@
         1920,
         1080
       ],
-      "marks": 67252,
-      "branches": 806,
-      "canopyMasses": 97,
-      "generationMs": 444.19999999925494
+      "marks": 44859,
+      "branches": 151,
+      "canopyMasses": 19,
+      "generationMs": 375.19999999925494
     },
     {
       "view": "close",
@@ -20,10 +20,10 @@
         1920,
         1080
       ],
-      "marks": 67252,
-      "branches": 806,
-      "canopyMasses": 97,
-      "generationMs": 504.5
+      "marks": 44859,
+      "branches": 151,
+      "canopyMasses": 19,
+      "generationMs": 457
     },
     {
       "view": "far",
@@ -32,12 +32,13 @@
         1920,
         1080
       ],
-      "marks": 67252,
-      "branches": 806,
-      "canopyMasses": 97,
-      "generationMs": 451.8999999985099
+      "marks": 44859,
+      "branches": 151,
+      "canopyMasses": 19,
+      "generationMs": 414.70000000298023
     }
   ],
+  "comparison": "oak-comparison-previous-current.webp",
   "pageErrors": [],
   "consoleErrors": []
 }

@@ -55,10 +55,25 @@ try {
     results.push({ view: view.id, file: filename, ...metrics });
   }
   if (errors.length || consoleErrors.length) throw new Error(`Erreurs navigateur : ${[...errors, ...consoleErrors].join(' | ')}`);
-  const manifest = { createdAt: new Date().toISOString(), results, pageErrors: errors, consoleErrors };
+  const previous = spawnSync('git', ['show', 'HEAD:reviews/generative-art-001/oak-normal-1920x1080.webp'], { cwd: root });
+  if (previous.status !== 0 || !previous.stdout.length) throw new Error('Capture précédente introuvable dans HEAD');
+  const currentPath = join(folder, 'oak-normal-1920x1080.webp');
+  const previousPanel = await sharp(previous.stdout).resize(960, 540, { fit: 'cover' }).toBuffer();
+  const currentPanel = await sharp(currentPath).resize(960, 540, { fit: 'cover' }).toBuffer();
+  const labels = Buffer.from(`<svg width="1920" height="540" xmlns="http://www.w3.org/2000/svg">
+    <style>.label{font:700 14px Arial,sans-serif;letter-spacing:3px;fill:#f4eddd}.back{fill:#203729;fill-opacity:.82}</style>
+    <rect class="back" x="24" y="22" width="154" height="38" rx="19"/><text class="label" x="45" y="47">AVANT</text>
+    <rect class="back" x="984" y="22" width="154" height="38" rx="19"/><text class="label" x="1005" y="47">APRÈS</text>
+  </svg>`);
+  const comparisonFile = 'oak-comparison-previous-current.webp';
+  await sharp({ create: { width: 1920, height: 540, channels: 3, background: '#e7dfcc' } })
+    .composite([{ input: previousPanel, left: 0, top: 0 }, { input: currentPanel, left: 960, top: 0 }, { input: labels, left: 0, top: 0 }])
+    .webp({ quality: 92, effort: 5 })
+    .toFile(join(folder, comparisonFile));
+  const manifest = { createdAt: new Date().toISOString(), results, comparison: comparisonFile, pageErrors: errors, consoleErrors };
   await writeFile(join(folder, 'manifest.json'), JSON.stringify(manifest, null, 2));
   await rm(archive, { force: true });
-  const zip = spawnSync('zip', ['-q', '-j', archive, ...results.map((result) => join(folder, result.file)), join(folder, 'manifest.json')], { stdio: 'inherit' });
+  const zip = spawnSync('zip', ['-q', '-j', archive, ...results.map((result) => join(folder, result.file)), join(folder, comparisonFile), join(folder, 'manifest.json')], { stdio: 'inherit' });
   if (zip.status !== 0) throw new Error('Impossible de créer le ZIP des captures');
   console.log(`Captures : ${folder}`);
   console.log(`Archive : ${archive}`);
