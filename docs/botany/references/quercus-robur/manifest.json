@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "speciesId": "quercus-robur",
+  "reviewedOn": "2026-11-09",
+  "policy": "Only files with an explicit free licence or public-domain dedication are bundled. Copyright-restricted or unclear images must be metadata-only.",
+  "images": [
+    {
+      "id": "qr-open-grown-crown",
+      "subjects": ["silhouette", "open-grown"],
+      "localPath": "images/open-grown-crown.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Ch%C3%AAne,_colza,_Jura_(horizontal).jpg",
+      "originalFile": "https://upload.wikimedia.org/wikipedia/commons/7/77/Ch%C3%AAne%2C_colza%2C_Jura_%28horizontal%29.jpg",
+      "photographer": "ZarlokX",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "modifications": "Downscaled by Wikimedia thumbnail service; no crop or colour change.",
+      "redistribution": "bundled",
+      "selectionNote": "Featured Commons photograph of an isolated pedunculate oak in an open field; strongest whole-tree context reference."
+    },
+    {
+      "id": "qr-winter-branching",
+      "subjects": ["silhouette", "branching"],
+      "localPath": "images/winter-branch-structure.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Quercus_robur_in_winter.JPG",
+      "originalFile": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Quercus_robur_in_winter.JPG",
+      "photographer": "Betelguese",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "modifications": "Downscaled by Wikimedia thumbnail service; no crop or colour change.",
+      "redistribution": "bundled",
+      "selectionNote": "Leafless habit makes the low forks, major bough curvature and fine branching visible."
+    },
+    {
+      "id": "qr-root-flare",
+      "subjects": ["root-flare"],
+      "localPath": "images/root-flare.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fagales_-_Quercus_robur_-_57.jpg",
+      "originalFile": "https://upload.wikimedia.org/wikipedia/commons/5/52/Fagales_-_Quercus_robur_-_57.jpg",
+      "photographer": "Emőke Dénes",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "modifications": "Downscaled by Wikimedia thumbnail service; no crop or colour change.",
+      "redistribution": "bundled",
+      "selectionNote": "Close view of the trunk-to-ground transition. Treat as one specimen, not a quantified species norm."
+    },
+    {
+      "id": "qr-bark",
+      "subjects": ["bark"],
+      "localPath": "images/bark.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Quercus_robur_bark.jpg",
+      "originalFile": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Quercus_robur_bark.jpg",
+      "photographer": "Lumbar~commonswiki (assumed from upload and copyright claim)",
+      "license": "Public domain (PD-self)",
+      "licenseUrl": null,
+      "modifications": "Downscaled by Wikimedia thumbnail service; no crop or colour change.",
+      "redistribution": "bundled",
+      "selectionNote": "Clear close-up of longitudinal mature-bark fissures. Commons flags source/author as not machine-readable, so that caveat is preserved."
+    },
+    {
+      "id": "qr-leaves",
+      "subjects": ["leaves"],
+      "localPath": "images/leaves.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Quercus_robur_-_leaves.jpg",
+      "originalFile": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Quercus_robur_-_leaves.jpg",
+      "photographer": "4nuc",
+      "license": "CC BY-SA 3.0 (also offered under GFDL 1.2+)",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "modifications": "Downscaled by Wikimedia thumbnail service; no crop or colour change.",
+      "redistribution": "bundled",
+      "selectionNote": "Shows rounded lobes, short petioles and leaf grouping on a shoot."
+    },
+    {
+      "id": "qr-early-spring-silhouette",
+      "subjects": ["silhouette", "branching"],
+      "localPath": "images/early-spring-silhouette.jpg",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:20130425Quercus_robur01.jpg",
+      "originalFile": "https://upload.wikimedia.org/wikipedia/commons/5/58/20130425Quercus_robur01.jpg",
+      "photographer": "AnRo0002",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "modifications": "Downscaled by Wikimedia thumbnail service; no crop or colour change.",
+      "redistribution": "bundled",
+      "selectionNote": "Early-spring whole-tree view with crown structure still legible."
+    }
+  ]
+}

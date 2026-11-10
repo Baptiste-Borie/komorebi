@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc --noEmit && vite build",
+    "botany:board": "node scripts/build_botanical_reference_board.mjs quercus-robur",
+    "botany:validate": "node scripts/validate_botanical_library.mjs",
     "preview": "vite preview",
     "review": "node scripts/review.mjs && node scripts/auto_push.mjs review-garden",
     "review:quick": "node scripts/review.mjs --quick && node scripts/auto_push.mjs review-quick",
