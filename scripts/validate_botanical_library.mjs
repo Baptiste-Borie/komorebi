@@ -1,5 +1,6 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
+import { assertResearchDossier } from './botany/lib/normalize.mjs';
 
 const manifestPath = path.resolve('docs/botany/references/quercus-robur/manifest.json');
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
@@ -35,5 +36,22 @@ for (const requiredFile of [
   catch { errors.push(`missing required file: ${requiredFile}`); }
 }
 
+const researchRoot = path.resolve('docs/botany/research');
+let researchCount = 0;
+try {
+  for (const entry of await readdir(researchRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const researchPath = path.join(researchRoot, entry.name, 'research.json');
+    try {
+      assertResearchDossier(JSON.parse(await readFile(researchPath, 'utf8')));
+      await access(path.join(researchRoot, entry.name, 'DOSSIER.md'));
+      researchCount += 1;
+    }
+    catch (error) { errors.push(`${entry.name}: ${error instanceof Error ? error.message : error}`); }
+  }
+} catch (error) {
+  if (error?.code !== 'ENOENT') throw error;
+}
+
 if (errors.length) throw new Error(`Botanical Library validation failed:\n- ${errors.join('\n- ')}`);
-console.log(`Botanical Library valid: ${manifest.speciesId}, ${manifest.images.length} references, all target subjects covered.`);
+console.log(`Botanical Library valid: ${manifest.speciesId}, ${manifest.images.length} references, ${researchCount} automated research dossier(s).`);
