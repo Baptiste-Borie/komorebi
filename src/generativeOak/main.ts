@@ -10,9 +10,9 @@ root.innerHTML = `
   <main class="art-shell">
     <canvas id="oak-canvas" aria-label="Chêne anglais généré par des milliers de marques colorées"></canvas>
     <header class="art-title">
-      <span>KOMOREBI · ÉTUDE GÉNÉRATIVE 002</span>
+      <span>KOMOREBI · ÉTUDE GÉNÉRATIVE 003</span>
       <h1>Quercus <em>robur</em></h1>
-      <p>Une canopée dessinée marque après marque.</p>
+      <p>Un chêne structuré, du sol jusqu'à la canopée.</p>
     </header>
     <aside class="art-key" aria-label="Informations sur l'œuvre">
       <span class="seed">GRAINE · 4B4F4D4F</span>
@@ -34,7 +34,7 @@ const structure = generateOak(ENGLISH_OAK);
 const cache = renderOakArtwork(structure);
 const query = new URLSearchParams(window.location.search);
 const requestedView = query.get('view');
-const initialZoom = requestedView === 'close' ? 0.80 : requestedView === 'far' ? 0.31 : 0.44;
+const initialZoom = requestedView === 'trunk' ? 0.92 : requestedView === 'foliage' ? 0.82 : requestedView === 'far' ? 0.28 : 0.40;
 let dirty = true;
 
 function resize(): void {
@@ -49,6 +49,8 @@ function resize(): void {
 }
 
 const camera = attachCamera(oakCanvas, initialZoom, () => { dirty = true; });
+if (requestedView === 'trunk') camera.state.y = -655;
+if (requestedView === 'foliage') camera.state.y = 90;
 resetButton.addEventListener('click', () => camera.reset());
 window.addEventListener('resize', resize);
 
